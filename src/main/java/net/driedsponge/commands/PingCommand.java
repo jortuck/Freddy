@@ -1,4 +1,4 @@
-package net.driedsponge;
+package net.driedsponge.commands;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

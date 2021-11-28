@@ -1,4 +1,4 @@
-package net.driedsponge;
+package net.driedsponge.commands;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;

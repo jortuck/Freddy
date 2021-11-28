@@ -1,9 +1,11 @@
 package net.driedsponge;
 
+import net.driedsponge.commands.JoinLeaveCommand;
+import net.driedsponge.commands.PingCommand;
+import net.driedsponge.commands.PlayCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
