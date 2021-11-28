@@ -8,6 +8,14 @@ version '1.0-SNAPSHOT'
 apply plugin: 'application'
 mainClassName = 'net.driedsponge.Main'
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'net.driedsponge.Main'
+        )
+    }
+}
+
 repositories {
     mavenCentral()
     maven {
