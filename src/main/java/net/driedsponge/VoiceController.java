@@ -89,6 +89,10 @@ public class VoiceController {
         });
     }
 
+    public AudioTrack getNowPlaying() {
+        return nowPlaying;
+    }
+
     public MessageChannel getMsgChannel() {
         return msgChannel;
     }

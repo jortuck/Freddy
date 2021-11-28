@@ -18,13 +18,19 @@ public class Owner extends ListenerAdapter {
         }
     }
     private void initialize(JDA jda){
-        jda.upsertCommand("ping","Check the bots ping.").queue();
-        jda.upsertCommand("join","Tells the bot to join your current voice channel.").queue();
-        jda.upsertCommand("leave","Tells the bot to leave the current voice channel.").queue();
+        jda.upsertCommand("ping","Check the bots ping.").queue(); // Implemented
+        jda.upsertCommand("join","Tells the bot to join your current voice channel.").queue(); // Implemented
+        jda.upsertCommand("leave","Tells the bot to leave the current voice channel.").queue(); // Implemented
+
         jda.upsertCommand("play","Tell the bot to play a song.")
+                .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue(); // Implemented
+        jda.upsertCommand("playskip","Tells the bot to play the song immediately instead of adding it to the queue.")
                 .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue();
 
-        jda.upsertCommand("pause","Pause the current song").queue();
-        jda.upsertCommand("resume","Resume the current song").queue();
+        jda.upsertCommand("pause","Pause the current song").queue(); // Implemented
+        jda.upsertCommand("resume","Resume the current song").queue(); // Implemented
+        jda.upsertCommand("np","Shows the song that is currently playing.").queue(); // Implemented
+        jda.upsertCommand("skip","Skips the current song.").queue();
+        jda.upsertCommand("queue","Returns the songs in the queue.").queue();
     }
 }
