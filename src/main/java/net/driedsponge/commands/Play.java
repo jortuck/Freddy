@@ -35,15 +35,17 @@ public class Play extends ListenerAdapter {
                     event.getHook().sendMessage("You must be in a voice channel to play a song!").queue();
                     return;
                 }else{
-                    if(PLAYERS.get(event.getGuild()) == null){
-                        PLAYERS.put(event.getGuild(),new VoiceController(event.getGuild(),event.getMember().getVoiceState().getChannel()));
-                    }
-                    VoiceController vc = PLAYERS.get(event.getGuild());
+                    VoiceController vc = new VoiceController(event.getGuild(),event.getMember().getVoiceState().getChannel(), event.getChannel());
+                    PLAYERS.putIfAbsent(event.getGuild(), vc);
                     vc.join();
                 }
             }
+            if(PLAYERS.get(event.getGuild()) == null){
+                VoiceController vc = new VoiceController(event.getGuild(),event.getMember().getVoiceState().getChannel(), event.getChannel());
+                PLAYERS.put(vc.getGuild(), vc);
+            }
             VoiceController vc = PLAYERS.get(event.getGuild());
-            vc.play(event.getOptions().get(0).getAsString(),event);
+            vc.play(event.getOptions().get(0).getAsString(),event, false);
 
 
         }

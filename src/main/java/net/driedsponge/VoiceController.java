@@ -9,9 +9,13 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
+
+import javax.annotation.Nullable;
 
 public class VoiceController {
     private Guild guild;
@@ -21,10 +25,11 @@ public class VoiceController {
     private TrackScheduler trackScheduler;
     private AudioPlayer player;
     private AudioTrack nowPlaying;
-
-    public VoiceController(Guild guild, VoiceChannel channel){
+    private MessageChannel msgChannel;
+    public VoiceController(Guild guild, VoiceChannel channel, MessageChannel message){
         this.guild = guild;
         this.channel = channel;
+        this.msgChannel = message;
         this.audioManager = guild.getAudioManager();
 
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
@@ -36,22 +41,33 @@ public class VoiceController {
         AudioPlayer player = playerManager.createPlayer();
         this.player = player;
         audioManager.setSendingHandler(new MusicHandler(player));
-        TrackScheduler trackScheduler = new TrackScheduler();
+        TrackScheduler trackScheduler = new TrackScheduler(this);
         this.trackScheduler = trackScheduler;
         player.addListener(trackScheduler);
 
+    }
+
+    public void setNowPlaying(AudioTrack nowPlaying) {
+        this.nowPlaying = nowPlaying;
     }
 
     public void join(){
         guild.getAudioManager().openAudioConnection(channel);
     }
 
-    public void play(String song, SlashCommandEvent event){
+    public void play(String song, SlashCommandEvent event, boolean now){
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                event.getHook().sendMessage("Now playing **"+track.getInfo().title+"**").queue();
-                player.playTrack(track);
+                if(nowPlaying == null){
+                    event.getHook().sendMessage("Now playing **"+track.getInfo().title+"**").queue();
+                    player.playTrack(track);
+                    nowPlaying=track;
+                }else{
+                    event.getHook().sendMessage("**"+track.getInfo().title+"** added to queue!").queue();
+                    trackScheduler.queue(track, event);
+                }
+
             }
 
             @Override
@@ -71,6 +87,19 @@ public class VoiceController {
                 event.getHook().sendMessage("That song failed to load. I don't know why.").queue();
             }
         });
+    }
+
+    public MessageChannel getMsgChannel() {
+        return msgChannel;
+    }
+
+    public void leave(){
+        guild.getAudioManager().closeAudioConnection();
+        player.destroy();
+    }
+
+    public Guild getGuild() {
+        return guild;
     }
 
     public AudioPlayer getPlayer() {

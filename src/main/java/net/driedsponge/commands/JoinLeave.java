@@ -31,7 +31,7 @@ public class JoinLeave extends ListenerAdapter {
             VoiceChannel channel = audioManager.getConnectedChannel();
             Member member = event.getMember();
             if(member.getVoiceState().inVoiceChannel() && member.getVoiceState().getChannel() == channel || member.hasPermission(Permission.MANAGE_CHANNEL)) {
-                audioManager.closeAudioConnection();
+                Play.PLAYERS.get(event.getGuild()).leave();
                 event.reply("Leaving "+channel.getName()+". Goodbye :wave:").queue();
             }else{
                 event.reply("You must have the **MANAGE_CHANNEL** permission to use this command or you must be currently connect to "+channel.getName()+".");
