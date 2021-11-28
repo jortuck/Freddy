@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'net.driedsponge'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'application'
+mainClassName = 'net.driedsponge.Main'
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation ('com.sedmelluq:lavaplayer:1.3.77')
+    implementation("net.dv8tion:JDA:4.3.0_346")
+}
+
+test {
+    useJUnitPlatform()
+}
