@@ -13,7 +13,7 @@ public class Main {
     public static final String OWNER_ID = "283710670409826304";
 
     public static void main(String[] args) throws LoginException {
-        String token = null;
+        String token = "TOKEN";
         if(args.length > 1){
            token = args[0];
         }else{
