@@ -13,7 +13,7 @@ import javax.security.auth.login.LoginException;
 
 public class Main {
     public static void main(String[] args) throws LoginException {
-        JDABuilder builder = JDABuilder.createDefault("NzIzOTU2Nzg5ODA0MTM4NTM2.Xu5LTQ.pvkyAxAmcRZQl7R9ebbpRhEkOlE");
+        JDABuilder builder = JDABuilder.createDefault(args[0]);
 
         // Disable parts of the cache
         builder.disableCache(CacheFlag.MEMBER_OVERRIDES);
