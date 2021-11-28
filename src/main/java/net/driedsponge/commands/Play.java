@@ -9,17 +9,20 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.driedsponge.MusicHandler;
+import net.driedsponge.VoiceController;
 import net.driedsponge.TrackScheduler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Play extends ListenerAdapter {
-    public static HashMap<Guild, AudioPlayer> PLAYERS = new HashMap<Guild,AudioPlayer>();
+
+    public AudioTrack current = null;
+    public static HashMap<Guild, VoiceController> PLAYERS = new HashMap<Guild,VoiceController>();
+
     @Override
     public void onSlashCommand(SlashCommandEvent event){
         if(event.getName().equals("play")){
@@ -32,46 +35,16 @@ public class Play extends ListenerAdapter {
                     event.getHook().sendMessage("You must be in a voice channel to play a song!").queue();
                     return;
                 }else{
-                    audioManager.openAudioConnection(event.getMember().getVoiceState().getChannel());
+                    if(PLAYERS.get(event.getGuild()) == null){
+                        PLAYERS.put(event.getGuild(),new VoiceController(event.getGuild(),event.getMember().getVoiceState().getChannel()));
+                    }
+                    VoiceController vc = PLAYERS.get(event.getGuild());
+                    vc.join();
                 }
             }
+            VoiceController vc = PLAYERS.get(event.getGuild());
+            vc.play(event.getOptions().get(0).getAsString(),event);
 
-            AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-            AudioSourceManagers.registerRemoteSources(playerManager);
-
-            AudioPlayer player = playerManager.createPlayer();
-
-            PLAYERS.put(event.getGuild(), player);
-
-            audioManager.setSendingHandler(new MusicHandler(player));
-            TrackScheduler trackScheduler = new TrackScheduler();
-            player.addListener(trackScheduler);
-
-            playerManager.loadItem(event.getOptions().get(0).getAsString(), new AudioLoadResultHandler() {
-                @Override
-                public void trackLoaded(AudioTrack track) {
-                    player.playTrack(track);
-                    event.getHook().sendMessage("Now playing **"+track.getInfo().title+"**").queue();
-
-                }
-
-                @Override
-                public void playlistLoaded(AudioPlaylist playlist) {
-                    for (AudioTrack track : playlist.getTracks()) {
-                       trackScheduler.queue(track);
-                    }
-                }
-
-                @Override
-                public void noMatches() {
-                    event.getHook().sendMessage("We could not find that song!").queue();
-                }
-
-                @Override
-                public void loadFailed(FriendlyException throwable) {
-                    event.getHook().sendMessage("That song failed to load. I don't know why.").queue();
-                }
-            });
 
         }
     }

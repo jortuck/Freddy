@@ -1,6 +1,7 @@
 package net.driedsponge.commands;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -17,7 +18,8 @@ public class Pause extends ListenerAdapter {
             GuildVoiceState state = member.getVoiceState();
             if(manager.isConnected()){
                 if(state.inVoiceChannel() && state.getChannel() == manager.getConnectedChannel()){
-                   AudioPlayer player = Play.PLAYERS.get(event.getGuild());
+                    VoiceController vc = Play.PLAYERS.get(event.getGuild());
+                    AudioPlayer player = vc.getPlayer();
                    if(event.getName().equals("resume")){
                        player.setPaused(false);
                        event.getHook().sendMessage("Resuming...").queue();
