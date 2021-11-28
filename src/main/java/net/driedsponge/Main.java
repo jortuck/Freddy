@@ -1,8 +1,9 @@
 package net.driedsponge;
 
-import net.driedsponge.commands.JoinLeaveCommand;
-import net.driedsponge.commands.PingCommand;
-import net.driedsponge.commands.PlayCommand;
+import net.driedsponge.commands.JoinLeave;
+import net.driedsponge.commands.Pause;
+import net.driedsponge.commands.Ping;
+import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -25,11 +26,11 @@ public class Main {
         // Set activity (like "playing Something")
         builder.setActivity(Activity.watching("Fergre"));
 
-        builder.addEventListeners(new PingCommand());
-        builder.addEventListeners(new JoinLeaveCommand());
+        builder.addEventListeners(new Ping());
+        builder.addEventListeners(new JoinLeave());
         builder.addEventListeners(new UserVoiceEvents());
-        builder.addEventListeners(new PlayCommand());
-
+        builder.addEventListeners(new Play());
+        builder.addEventListeners(new Pause());
         JDA jda = builder.build();
 
         /*
@@ -38,9 +39,9 @@ public class Main {
         jda.upsertCommand("leave","Tells the bot to leave the current voice channel.").queue();
         jda.upsertCommand("play","Tell the bot to play a song.")
                 .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue();
+
+        jda.upsertCommand("pause","Pause/play the current song").queue();
         */
-
-
 
     }
 }

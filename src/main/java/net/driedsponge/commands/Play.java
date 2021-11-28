@@ -10,11 +10,16 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.driedsponge.MusicHandler;
 import net.driedsponge.TrackScheduler;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-public class PlayCommand extends ListenerAdapter {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Play extends ListenerAdapter {
+    public static HashMap<Guild, AudioPlayer> PLAYERS = new HashMap<Guild,AudioPlayer>();
     @Override
     public void onSlashCommand(SlashCommandEvent event){
         if(event.getName().equals("play")){
@@ -36,6 +41,8 @@ public class PlayCommand extends ListenerAdapter {
 
             AudioPlayer player = playerManager.createPlayer();
 
+            PLAYERS.put(event.getGuild(), player);
+
             audioManager.setSendingHandler(new MusicHandler(player));
             TrackScheduler trackScheduler = new TrackScheduler();
             player.addListener(trackScheduler);
@@ -44,6 +51,8 @@ public class PlayCommand extends ListenerAdapter {
                 @Override
                 public void trackLoaded(AudioTrack track) {
                     player.playTrack(track);
+                    event.getHook().sendMessage("Now playing **"+track.getInfo().title+"**").queue();
+
                 }
 
                 @Override
@@ -64,7 +73,6 @@ public class PlayCommand extends ListenerAdapter {
                 }
             });
 
-            event.getHook().sendMessage("Playing a song!").queue();
         }
     }
 }

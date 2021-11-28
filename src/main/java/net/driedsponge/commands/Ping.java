@@ -3,7 +3,7 @@ package net.driedsponge.commands;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class PingCommand extends ListenerAdapter {
+public class Ping extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
 
