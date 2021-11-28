@@ -30,7 +30,8 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext) {
-            // Start next track
+            player.playTrack(queue.get(0));
+            queue.remove(0);
         }
 
         // endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).

@@ -1,9 +1,6 @@
 package net.driedsponge;
 
-import net.driedsponge.commands.JoinLeave;
-import net.driedsponge.commands.Pause;
-import net.driedsponge.commands.Ping;
-import net.driedsponge.commands.Play;
+import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -13,6 +10,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 
 public class Main {
+    public static final String OWNER_ID = "283710670409826304";
+
     public static void main(String[] args) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(args[0]);
 
@@ -31,17 +30,9 @@ public class Main {
         builder.addEventListeners(new UserVoiceEvents());
         builder.addEventListeners(new Play());
         builder.addEventListeners(new Pause());
+        builder.addEventListeners(new Owner());
         JDA jda = builder.build();
 
-        /*
-        jda.upsertCommand("ping","Check the bots ping.").queue();
-        jda.upsertCommand("join","Tells the bot to join your current voice channel.").queue();
-        jda.upsertCommand("leave","Tells the bot to leave the current voice channel.").queue();
-        jda.upsertCommand("play","Tell the bot to play a song.")
-                .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue();
-
-        jda.upsertCommand("pause","Pause/play the current song").queue();
-        */
 
     }
 }
