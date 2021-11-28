@@ -13,8 +13,13 @@ public class Main {
     public static final String OWNER_ID = "283710670409826304";
 
     public static void main(String[] args) throws LoginException {
-        JDABuilder builder = JDABuilder.createDefault(args[0]);
-
+        String token = null;
+        if(args.length > 1){
+           token = args[0];
+        }else{
+            token = System.getenv("DISCORD_TOKEN");
+        }
+        JDABuilder builder = JDABuilder.createDefault(token);
         // Disable parts of the cache
         builder.disableCache(CacheFlag.MEMBER_OVERRIDES);
         builder.enableCache(CacheFlag.VOICE_STATE);

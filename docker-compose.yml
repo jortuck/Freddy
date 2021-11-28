@@ -1,0 +1,22 @@
+version: '3.9'
+networks:
+  freddy:
+
+services:
+  java:
+    image: openjdk:8
+    networks:
+        - freddy
+    restart: unless-stopped
+    volumes:
+        - ./start.sh:/start.sh
+        - ./gradle:/gradle
+        - ./gradlew:/gradlew
+        - ./build.gradle:/build.gradle
+        - ./settings.gradle:/settings.gradle
+        - ./src:/src
+    working_dir: /
+    entrypoint: ['./start.sh']
+    container_name: freddy
+    env_file:
+      - settings.env
