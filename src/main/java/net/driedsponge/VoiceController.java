@@ -112,6 +112,10 @@ public class VoiceController {
         player.destroy();
     }
 
+    public TrackScheduler getTrackScheduler() {
+        return trackScheduler;
+    }
+
     public Guild getGuild() {
         return guild;
     }

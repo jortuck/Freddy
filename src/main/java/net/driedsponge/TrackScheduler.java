@@ -74,6 +74,10 @@ public class TrackScheduler extends AudioEventAdapter {
         // Audio track has been unable to provide us any audio, might want to just start a new track
     }
 
+    public ArrayList<Song> getQueue() {
+        return queue;
+    }
+
     public void queue(AudioTrack track, SlashCommandEvent event){
         this.queue.add(new Song(track,event));
     }
