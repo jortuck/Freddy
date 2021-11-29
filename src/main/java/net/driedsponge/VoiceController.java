@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -79,7 +80,10 @@ public class VoiceController {
 
             @Override
             public void noMatches() {
-                event.getHook().sendMessage("We could not find that song!").queue();
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.setTitle("We could not find that song!");
+                embed.setDescription("**At this moment, the bot does not support YouTube searching. If you want to play a song from YouTube, you must manually paste the link.**");
+                event.getHook().sendMessageEmbeds(embed.build()).setEphemeral(true).queue();
             }
 
             @Override
