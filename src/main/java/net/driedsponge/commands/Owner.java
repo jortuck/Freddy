@@ -19,7 +19,6 @@ public class Owner extends ListenerAdapter {
     }
     private void initialize(JDA jda){
         jda.upsertCommand("ping","Check the bots ping.").queue(); // Implemented
-        jda.upsertCommand("join","Tells the bot to join your current voice channel.").queue(); // Implemented
         jda.upsertCommand("leave","Tells the bot to leave the current voice channel.").queue(); // Implemented
 
         jda.upsertCommand("play","Tell the bot to play a song.")
