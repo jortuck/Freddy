@@ -93,6 +93,10 @@ public class VoiceController {
         return nowPlaying;
     }
 
+    public VoiceChannel getChannel() {
+        return channel;
+    }
+
     public MessageChannel getMsgChannel() {
         return msgChannel;
     }
