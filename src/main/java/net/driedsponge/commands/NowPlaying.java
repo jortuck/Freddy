@@ -15,17 +15,18 @@ public class NowPlaying extends ListenerAdapter {
     public void onSlashCommand(SlashCommandEvent event){
         if(!event.getName().equals("np")) return;
         event.deferReply().queue();
-        if(event.getGuild().getAudioManager().isConnected()){
+        if(event.getGuild().getAudioManager().isConnected() && Play.PLAYERS.get(event.getGuild()) != null){
             VoiceController vc = Play.PLAYERS.get(event.getGuild());
             AudioTrackInfo np = vc.getNowPlaying().getInfo();
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle(np.title, np.uri);
             embedBuilder.setColor(Color.CYAN);
             embedBuilder.addField("Author",np.author,true);
-            embedBuilder.setAuthor("Now Playing:",event.getJDA().getSelfUser().getAvatarUrl());
+            embedBuilder.setAuthor("Now Playing",event.getJDA().getSelfUser().getAvatarUrl());
             MessageEmbed embed = embedBuilder.build();
             event.getHook().sendMessageEmbeds(embed).queue();
         }else{
+
             event.getHook().sendMessage("Nothing is playing.").queue();
         }
     }
