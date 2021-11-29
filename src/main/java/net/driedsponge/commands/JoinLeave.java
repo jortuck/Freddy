@@ -11,15 +11,7 @@ public class JoinLeave extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         if (event.getName().equals("join")) {
-            event.deferReply().queue();
-            if(event.getMember().getVoiceState().inVoiceChannel()){
-                VoiceChannel channel = event.getMember().getVoiceState().getChannel();
-                event.getHook().sendMessage("Connecting to "+channel.getName()+"...").queue();
-                AudioManager audioManager = event.getGuild().getAudioManager();
-                audioManager.openAudioConnection(channel);
-            }else{
-                event.getHook().sendMessage("You need to be in a voice channel!").queue();
-            }
+            event.reply("This command is no longer supported. Please use `/play [song]`.").setEphemeral(true).queue();
         }else if(event.getName().equals("leave")){
             leave(event);
         }
@@ -34,7 +26,7 @@ public class JoinLeave extends ListenerAdapter {
                 Play.PLAYERS.get(event.getGuild()).leave();
                 event.reply("Leaving "+channel.getName()+". Goodbye :wave:").queue();
             }else{
-                event.reply("You must have the **MANAGE_CHANNEL** permission to use this command or you must be currently connect to "+channel.getName()+".");
+                event.reply("You must have the **MANAGE_CHANNEL** permission to use this command or you must be currently connected to "+channel.getName()+".").queue();
             }
         }
 

@@ -31,6 +31,6 @@ public class Owner extends ListenerAdapter {
         jda.upsertCommand("resume","Resume the current song").queue(); // Implemented
         jda.upsertCommand("np","Shows the song that is currently playing.").queue(); // Implemented
         jda.upsertCommand("skip","Skips the current song.").queue();
-        jda.upsertCommand("queue","Returns the songs in the queue.").queue();
+        jda.upsertCommand("queue","Returns the songs in the queue.").queue(); // Implemented
     }
 }
