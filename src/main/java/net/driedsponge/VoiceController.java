@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class VoiceController {
     private Guild guild;
@@ -82,6 +83,7 @@ public class VoiceController {
             public void noMatches() {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle("We could not find that song!");
+                embed.setColor(Color.RED);
                 embed.setDescription("**At this moment, the bot does not support YouTube searching. If you want to play a song from YouTube, you must manually paste the link.**");
                 event.getHook().sendMessageEmbeds(embed.build()).setEphemeral(true).queue();
             }
