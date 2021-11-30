@@ -38,6 +38,7 @@ public class Main {
         builder.addEventListeners(new Owner());
         builder.addEventListeners(new NowPlaying());
         builder.addEventListeners(new Queue());
+        builder.addEventListeners(new Skip());
 
         JDA jda = builder.build();
     }

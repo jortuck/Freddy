@@ -29,6 +29,7 @@ public class VoiceController {
     private AudioPlayer player;
     private Song nowPlaying;
     private MessageChannel msgChannel;
+
     public VoiceController(Guild guild, VoiceChannel channel, MessageChannel message){
         this.guild = guild;
         this.channel = channel;
@@ -104,6 +105,10 @@ public class VoiceController {
                 event.getHook().sendMessage("That song failed to load. I don't know why.").queue();
             }
         });
+    }
+
+    public void skip(){
+        this.player.stopTrack();
     }
 
     public Song getNowPlaying() {

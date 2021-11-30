@@ -23,10 +23,12 @@ public class TrackScheduler extends AudioEventAdapter {
     public ArrayList<Song> queue2 = new ArrayList<Song>();
     private final BlockingQueue<Song> queue;
     public VoiceController vc;
-    public TrackScheduler(VoiceController vc){
+
+    public TrackScheduler(VoiceController vc) {
         this.vc = vc;
         this.queue = new LinkedBlockingQueue<>();
     }
+
     @Override
     public void onPlayerPause(AudioPlayer player) {
         // Player was paused
@@ -43,58 +45,51 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if (endReason.mayStartNext) {
-            if(!queue.isEmpty()){
-                Song song = queue.poll();
-                this.vc.setNowPlaying(song);
-                player.playTrack(song.getTrack());
-                vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing",song).build()).queue();
-
-            }else{
-                Guild guild = vc.getGuild();
-                vc.getMsgChannel().sendMessage("No more songs to playing. Leaving now!").queue();
-                vc.leave();
-                Play.PLAYERS.remove(guild);
-            }
-
-        }
-
-        // endReason == FINISHED: A track finished or died by an exception (mayStartNext = true).
-        // endReason == LOAD_FAILED: Loading of a track failed (mayStartNext = true).
-        // endReason == STOPPED: The player was stopped.
-        // endReason == REPLACED: Another track started playing while this had not finished
-        // endReason == CLEANUP: Player hasn't been queried for a while, if you want you can put a
-        //                       clone of this back to your queue
+        startNewTrack();
     }
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        // An already playing track threw an exception (track end event will still be received separately)
+        startNewTrack();
     }
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-        // Audio track has been unable to provide us any audio, might want to just start a new track
+        startNewTrack();
     }
 
     public BlockingQueue<Song> getQueue() {
         return queue;
     }
 
-    public void queue(Song song){
+    public void queue(Song song) {
         if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
             queue.offer(song);
-            song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue",song).build()).queue();
+            song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue", song).build()).queue();
         }
     }
 
-    public static EmbedBuilder songCard(String title, Song song){
+    public static EmbedBuilder songCard(String title, Song song) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(title);
-        embedBuilder.setTitle(song.getInfo().title,song.getInfo().uri);
-        embedBuilder.addField("Artist",song.getInfo().author,true);
+        embedBuilder.setTitle(song.getInfo().title, song.getInfo().uri);
+        embedBuilder.addField("Artist", song.getInfo().author, true);
         embedBuilder.setColor(Color.CYAN);
-        embedBuilder.setFooter("Requested by "+song.getRequester().getUser().getAsTag(),song.getRequester().getEffectiveAvatarUrl());
+        embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
         return embedBuilder;
+    }
+
+    private void startNewTrack() {
+        if (!queue.isEmpty()) {
+            Song song = queue.poll();
+            this.vc.setNowPlaying(song);
+            vc.getPlayer().playTrack(song.getTrack());
+            vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+        } else {
+            Guild guild = vc.getGuild();
+            vc.getMsgChannel().sendMessage("No more songs to playing. Leaving now!").queue();
+            vc.leave();
+            Play.PLAYERS.remove(guild);
+        }
     }
 }
