@@ -14,12 +14,16 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import javax.sound.midi.Track;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    public ArrayList<Song> queue = new ArrayList<Song>();
+    public ArrayList<Song> queue2 = new ArrayList<Song>();
+    private final BlockingQueue<Song> queue;
     public VoiceController vc;
     public TrackScheduler(VoiceController vc){
         this.vc = vc;
+        this.queue = new LinkedBlockingQueue<>();
     }
     @Override
     public void onPlayerPause(AudioPlayer player) {
@@ -39,19 +43,16 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext) {
-            if(queue.size() > 0){
-                Song song = queue.get(0);
+            if(!queue.isEmpty()){
+                Song song = queue.poll();
                 this.vc.setNowPlaying(song.getTrack());
                 player.playTrack(song.getTrack());
                 song.getEvent().getHook().sendMessage("Now playing **"+song.getTrack().getInfo().title+"**").queue();
-                queue.remove(0);
             }else{
                 Guild guild = vc.getGuild();
                 vc.getMsgChannel().sendMessage("No more songs to playing. Leaving now!").queue();
                 vc.leave();
                 Play.PLAYERS.remove(guild);
-
-
             }
 
         }
@@ -74,11 +75,13 @@ public class TrackScheduler extends AudioEventAdapter {
         // Audio track has been unable to provide us any audio, might want to just start a new track
     }
 
-    public ArrayList<Song> getQueue() {
+    public BlockingQueue<Song> getQueue() {
         return queue;
     }
 
     public void queue(AudioTrack track, SlashCommandEvent event){
-        this.queue.add(new Song(track,event));
+        if (!vc.getPlayer().startTrack(track, true)) {
+            queue.offer(new Song(track,event));
+        }
     }
 }

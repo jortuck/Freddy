@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
 
 public class Queue extends ListenerAdapter {
     @Override
@@ -23,7 +24,7 @@ public class Queue extends ListenerAdapter {
             if(event.getGuild().getAudioManager().isConnected() && Play.PLAYERS.get(event.getGuild()) != null){
                 VoiceController vc = Play.PLAYERS.get(event.getGuild());
                 AudioTrackInfo np = vc.getNowPlaying().getInfo();
-                ArrayList<Song> songs = vc.getTrackScheduler().getQueue();
+                BlockingQueue<Song> songs =  vc.getTrackScheduler().getQueue();
                 embedBuilder.setTitle("Queue");
                 StringBuilder queue = new StringBuilder();
                 queue.append("**Now Playing - ").append(np.title).append("**");
@@ -34,7 +35,7 @@ public class Queue extends ListenerAdapter {
                     queue.append(" No songs in the queue!");
                 }else{
                     for(int i = 0; i < songs.size(); i++){
-                        Song song = songs.get(i);
+                        Song song = (Song) songs.toArray()[i];
                         queue.append("\n").append(i + 1)
                                 .append(" - ")
                                 .append(song.getTrack().getInfo().title)

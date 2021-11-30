@@ -27,7 +27,7 @@ public class Main {
         builder.setBulkDeleteSplittingEnabled(false);
         // Disable compression (not recommended)
         builder.setCompression(Compression.NONE);
-        // Set activity (like "playing Something")
+
         builder.setActivity(Activity.watching("Fergre"));
 
         builder.addEventListeners(new Ping());
@@ -40,7 +40,5 @@ public class Main {
         builder.addEventListeners(new Queue());
 
         JDA jda = builder.build();
-
-
     }
 }

@@ -63,7 +63,7 @@ public class VoiceController {
             public void trackLoaded(AudioTrack track) {
                 if(nowPlaying == null){
                     event.getHook().sendMessage("Now playing **"+track.getInfo().title+"**").queue();
-                    player.playTrack(track);
+                    trackScheduler.queue(track, event);
                     nowPlaying=track;
                 }else{
                     event.getHook().sendMessage("**"+track.getInfo().title+"** added to queue!").queue();
