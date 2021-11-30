@@ -77,7 +77,6 @@ public class VoiceController {
                     trackScheduler.queue(song);
                     nowPlaying=song;
                 }else{
-                    event.getHook().sendMessage("**"+track.getInfo().title+"** added to queue!").queue();
                     trackScheduler.queue(song);
                 }
 
