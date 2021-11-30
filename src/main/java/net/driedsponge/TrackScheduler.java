@@ -87,7 +87,7 @@ public class TrackScheduler extends AudioEventAdapter {
             vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
         } else {
             Guild guild = vc.getGuild();
-            vc.getMsgChannel().sendMessage("No more songs to playing. Leaving now!").queue();
+            vc.getMsgChannel().sendMessage("No more songs to play. Leaving now!").queue();
             vc.leave();
             Play.PLAYERS.remove(guild);
         }
