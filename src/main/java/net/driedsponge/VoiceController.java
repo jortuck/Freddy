@@ -26,7 +26,7 @@ public class VoiceController {
     private AudioPlayerManager playerManager;
     private TrackScheduler trackScheduler;
     private AudioPlayer player;
-    private AudioTrack nowPlaying;
+    private Song nowPlaying;
     private MessageChannel msgChannel;
     public VoiceController(Guild guild, VoiceChannel channel, MessageChannel message){
         this.guild = guild;
@@ -49,7 +49,7 @@ public class VoiceController {
 
     }
 
-    public void setNowPlaying(AudioTrack nowPlaying) {
+    public void setNowPlaying(Song nowPlaying) {
         this.nowPlaying = nowPlaying;
     }
 
@@ -61,13 +61,14 @@ public class VoiceController {
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
+                Song song = new Song(track, event);
                 if(nowPlaying == null){
                     event.getHook().sendMessage("Now playing **"+track.getInfo().title+"**").queue();
-                    trackScheduler.queue(track, event);
-                    nowPlaying=track;
+                    trackScheduler.queue(song);
+                    nowPlaying=song;
                 }else{
                     event.getHook().sendMessage("**"+track.getInfo().title+"** added to queue!").queue();
-                    trackScheduler.queue(track, event);
+                    trackScheduler.queue(song);
                 }
 
             }
@@ -75,7 +76,8 @@ public class VoiceController {
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
                 for (AudioTrack track : playlist.getTracks()) {
-                    trackScheduler.queue(track,event);
+                    Song song = new Song(track, event);
+                    trackScheduler.queue(song);
                 }
             }
 
@@ -95,7 +97,7 @@ public class VoiceController {
         });
     }
 
-    public AudioTrack getNowPlaying() {
+    public Song getNowPlaying() {
         return nowPlaying;
     }
 

@@ -6,12 +6,14 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.driedsponge.commands.Play;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 import javax.sound.midi.Track;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
@@ -37,7 +39,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        // A track started playing
+
     }
 
     @Override
@@ -45,7 +47,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (endReason.mayStartNext) {
             if(!queue.isEmpty()){
                 Song song = queue.poll();
-                this.vc.setNowPlaying(song.getTrack());
+                this.vc.setNowPlaying(song);
                 player.playTrack(song.getTrack());
                 song.getEvent().getHook().sendMessage("Now playing **"+song.getTrack().getInfo().title+"**").queue();
             }else{
@@ -79,9 +81,20 @@ public class TrackScheduler extends AudioEventAdapter {
         return queue;
     }
 
-    public void queue(AudioTrack track, SlashCommandEvent event){
-        if (!vc.getPlayer().startTrack(track, true)) {
-            queue.offer(new Song(track,event));
+    public void queue(Song song){
+        if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
+            queue.offer(song);
+            song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue",song).build()).queue();
         }
+    }
+
+    private EmbedBuilder songCard(String title, Song song){
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setAuthor(title);
+        embedBuilder.setTitle(song.getInfo().title,song.getInfo().uri);
+        embedBuilder.addField("Artist",song.getInfo().author,true);
+        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setFooter("Requested by "+song.getRequester().getUser().getAsTag(),song.getRequester().getEffectiveAvatarUrl());
+        return embedBuilder;
     }
 }

@@ -2,6 +2,7 @@ package net.driedsponge;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
@@ -19,6 +20,11 @@ public class Song {
     public Member getRequester(){
         return this.event.getMember();
     }
+
+    public AudioTrackInfo getInfo(){
+        return this.track.getInfo();
+    }
+
     public SlashCommandEvent getEvent() {
         return event;
     }
