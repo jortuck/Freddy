@@ -13,6 +13,8 @@ import java.awt.*;
 public class NowPlaying extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event){
+        if(!event.isFromGuild()) return;
+
         if(!event.getName().equals("np")) return;
         event.deferReply().queue();
         EmbedBuilder embedBuilder = new EmbedBuilder();

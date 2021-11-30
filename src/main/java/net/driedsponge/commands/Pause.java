@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.managers.AudioManager;
 public class Pause extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event){
+        if(!event.isFromGuild()) return;
+
         if(event.getName().equals("pause") || event.getName().equals("resume")){
             event.deferReply().queue();
             AudioManager manager = event.getGuild().getAudioManager();

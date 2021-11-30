@@ -16,6 +16,8 @@ import java.util.concurrent.BlockingQueue;
 public class Queue extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event){
+        if(!event.isFromGuild()) return;
+
         if(event.getName().equals("queue")){
             event.deferReply().queue();
 

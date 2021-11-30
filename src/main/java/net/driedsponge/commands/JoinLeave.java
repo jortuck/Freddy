@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 public class JoinLeave extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
+        if(!event.isFromGuild()) return;
         if (event.getName().equals("join")) {
             event.reply("This command is no longer supported. Please use `/play [song]`.").setEphemeral(true).queue();
         }else if(event.getName().equals("leave")){

@@ -22,6 +22,8 @@ public class Play extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
+        if(!event.isFromGuild()) return;
+
         if (event.getName().equals("play")) {
             event.deferReply().queue();
             AudioManager audioManager = event.getGuild().getAudioManager();
