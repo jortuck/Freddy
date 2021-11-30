@@ -39,7 +39,6 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-
     }
 
     @Override
@@ -49,7 +48,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 Song song = queue.poll();
                 this.vc.setNowPlaying(song);
                 player.playTrack(song.getTrack());
-                song.getEvent().getHook().sendMessage("Now playing **"+song.getTrack().getInfo().title+"**").queue();
+                vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing",song).build()).queue();
+
             }else{
                 Guild guild = vc.getGuild();
                 vc.getMsgChannel().sendMessage("No more songs to playing. Leaving now!").queue();
@@ -88,7 +88,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    private EmbedBuilder songCard(String title, Song song){
+    public static EmbedBuilder songCard(String title, Song song){
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(title);
         embedBuilder.setTitle(song.getInfo().title,song.getInfo().uri);
