@@ -29,7 +29,7 @@ public class Play extends ListenerAdapter {
             // Join if not connected
             if (!audioManager.isConnected()) {
                 if (!event.getMember().getVoiceState().inVoiceChannel()) {
-                    event.getHook().sendMessage("You must be in a voice channel to play a song!").queue();
+                    event.getHook().sendMessage("You must be in a voice channel to play a song!").setEphemeral(true).queue();
                     return;
                 } else {
                     VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel(), event.getChannel());
@@ -60,7 +60,7 @@ public class Play extends ListenerAdapter {
                     url = YouTubeLookup.GetAUrl(arg);
                     vc.play(url, event, false);
                 } catch (IOException | GeneralSecurityException | NoSuchFieldException e) {
-                    event.getHook().sendMessage("We could not find that video on YouTube").setEphemeral(true).queue();
+                    event.getHook().sendMessage("We could not find that video on YouTube.").setEphemeral(true).queue();
                 }
             }
 

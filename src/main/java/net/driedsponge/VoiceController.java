@@ -96,7 +96,7 @@ public class VoiceController {
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.setTitle("We could not find that song!");
                 embed.setColor(Color.RED);
-                embed.setDescription("**At this moment, the bot does not support YouTube searching. If you want to play a song from YouTube, you must manually paste the link.**");
+                embed.setDescription("**If you know the song exists, try putting a direct link to the YouTube video!**");
                 event.getHook().sendMessageEmbeds(embed.build()).setEphemeral(true).queue();
             }
 

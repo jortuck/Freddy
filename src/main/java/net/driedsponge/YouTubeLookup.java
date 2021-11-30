@@ -42,8 +42,7 @@ public class YouTubeLookup {
         Gson json = new Gson();
         VideoObject o = json.fromJson(response.getItems().get(0).toString(), VideoObject.class);
         String videoId = o.getId().videoId;
-        String videoURL = "https://www.youtube.com/watch?v="+videoId;
-        return videoURL;
+        return "https://www.youtube.com/watch?v="+videoId;
     }
     /**
      * Build and return an authorized API client service.
