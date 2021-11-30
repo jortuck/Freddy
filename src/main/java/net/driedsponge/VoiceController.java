@@ -68,6 +68,7 @@ public class VoiceController {
     }
 
     public void play(String song, SlashCommandEvent event, boolean now){
+        if(!event.getGuild().getAudioManager().isConnected()) return;
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
