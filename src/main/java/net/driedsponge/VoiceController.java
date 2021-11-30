@@ -60,7 +60,7 @@ public class VoiceController {
         } catch (PermissionException e){
             EmbedBuilder embed = new EmbedBuilder();
             embed.setTitle("An error occured when trying to join the call!");
-            embed.setDescription("**Missing permission: `"+e.getPermission().getName()+"`");
+            embed.setDescription("**Missing permission: `"+e.getPermission().getName()+"`**");
             embed.setColor(Color.RED);
             this.getMsgChannel().sendMessageEmbeds(embed.build()).queue();
         }
