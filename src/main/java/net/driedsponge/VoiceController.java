@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 import javax.annotation.Nullable;
@@ -54,7 +55,16 @@ public class VoiceController {
     }
 
     public void join(){
-        guild.getAudioManager().openAudioConnection(channel);
+        try {
+            guild.getAudioManager().openAudioConnection(channel);
+        } catch (PermissionException e){
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle("An error occured when trying to join the call!");
+            embed.setDescription("**Missing permission: `"+e.getPermission().getName()+"`");
+            embed.setColor(Color.RED);
+            this.getMsgChannel().sendMessageEmbeds(embed.build()).queue();
+        }
+
     }
 
     public void play(String song, SlashCommandEvent event, boolean now){
