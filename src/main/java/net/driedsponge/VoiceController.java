@@ -111,6 +111,7 @@ public class VoiceController {
 
     public void leave(){
         guild.getAudioManager().closeAudioConnection();
+        this.nowPlaying = null;
         player.destroy();
     }
 
