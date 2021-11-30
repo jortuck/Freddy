@@ -108,7 +108,8 @@ public class VoiceController {
     }
 
     public void skip(){
-        this.player.stopTrack();
+
+        this.trackScheduler.startNewTrack();
     }
 
     public Song getNowPlaying() {

@@ -45,17 +45,19 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        startNewTrack();
+        if(endReason.mayStartNext){
+            startNewTrack();
+        }
     }
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        startNewTrack();
+
     }
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-        startNewTrack();
+
     }
 
     public BlockingQueue<Song> getQueue() {
@@ -79,7 +81,7 @@ public class TrackScheduler extends AudioEventAdapter {
         return embedBuilder;
     }
 
-    private void startNewTrack() {
+    public void startNewTrack() {
         if (!queue.isEmpty()) {
             Song song = queue.poll();
             this.vc.setNowPlaying(song);
