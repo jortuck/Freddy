@@ -21,7 +21,7 @@ public class NowPlaying extends ListenerAdapter {
             VoiceController vc = Play.PLAYERS.get(event.getGuild());
             AudioTrackInfo np = vc.getNowPlaying().getInfo();
             embedBuilder.setTitle(np.title, np.uri);
-            embedBuilder.addField("Author",np.author,true);
+            embedBuilder.addField("Artist",np.author,true);
             embedBuilder.setAuthor("Now Playing in "+vc.getChannel().getName(),event.getJDA().getSelfUser().getAvatarUrl());
             MessageEmbed embed = embedBuilder.build();
             event.getHook().sendMessageEmbeds(embed).queue();
