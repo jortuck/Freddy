@@ -15,10 +15,8 @@ public class Main {
 
     public static void main(String[] args) throws LoginException {
 
-        if(System.getenv("SENTRY_DSN") != null){
-            intializeSentry();
-        }
-        
+        intializeSentry();
+
         String token = System.getenv("DISCORD_TOKEN");
 
         JDABuilder builder = JDABuilder.createDefault(token);
