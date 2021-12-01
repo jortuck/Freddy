@@ -56,6 +56,9 @@ public class VoiceController {
         this.nowPlaying = nowPlaying;
     }
 
+    /**
+     * Tells the bot to join the call.
+     */
     public void join(){
         try {
             guild.getAudioManager().openAudioConnection(channel);
