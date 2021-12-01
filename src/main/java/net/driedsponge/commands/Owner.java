@@ -17,7 +17,7 @@ public class Owner extends ListenerAdapter {
         if(!event.getAuthor().getId().equals(Main.OWNER_ID)) return;
         if(event.getMessage().getContentRaw().startsWith("!initialize")){
             initialize(event.getJDA());
-            event.getMessage().reply("Initializing slash commands. May take up to one hour.").queue();
+            event.getMessage().reply("Initializing slash commands. May take up to one hour to propagate.").queue();
         }else if(event.getMessage().getContentRaw().startsWith("!statistics")){
             statistics(event);
         }else if(event.getMessage().getContentRaw().startsWith("!guildlist")){
@@ -58,9 +58,12 @@ public class Owner extends ListenerAdapter {
                 .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue(); // Implemented
         jda.upsertCommand("playskip","Tells the bot to play the song immediately instead of adding it to the queue.")
                 .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue();
+        jda.upsertCommand("bug","Report a bug to me!")
+                .addOption(OptionType.STRING,"description","The description of the bug that is occurring. Please include details on how to recreate it.",true).queue();
 
-        jda.upsertCommand("pause","Pause the current song").queue(); // Implemented
-        jda.upsertCommand("resume","Resume the current song").queue(); // Implemented
+        jda.upsertCommand("help","Get a list of all the commands.").queue();
+        jda.upsertCommand("pause","Pause the current song.").queue(); // Implemented
+        jda.upsertCommand("resume","Resume the current song.").queue(); // Implemented
         jda.upsertCommand("np","Shows the song that is currently playing.").queue(); // Implemented
         jda.upsertCommand("skip","Skips the current song.").queue();
         jda.upsertCommand("queue","Returns the songs in the queue.").queue(); // Implemented
