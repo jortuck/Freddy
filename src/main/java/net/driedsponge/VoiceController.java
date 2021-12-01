@@ -70,7 +70,6 @@ public class VoiceController {
     }
 
     public void play(String song, SlashCommandEvent event, boolean now){
-        System.out.println(this.getPlayer().getPlayingTrack());
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
