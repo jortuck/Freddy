@@ -1,5 +1,6 @@
 package net.driedsponge;
 
+import io.sentry.Sentry;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -13,12 +14,13 @@ public class Main {
     public static final String OWNER_ID = "283710670409826304";
 
     public static void main(String[] args) throws LoginException {
-        String token = "TOKEN";
-        if(args.length > 1){
-           token = args[0];
-        }else{
-            token = System.getenv("DISCORD_TOKEN");
+
+        if(System.getenv("SENTRY_DSN") != null){
+            intializeSentry();
         }
+        
+        String token = System.getenv("DISCORD_TOKEN");
+
         JDABuilder builder = JDABuilder.createDefault(token);
         // Disable parts of the cache
         builder.disableCache(CacheFlag.MEMBER_OVERRIDES);
@@ -41,5 +43,16 @@ public class Main {
         builder.addEventListeners(new Skip());
 
         JDA jda = builder.build();
+
+    }
+    private static void intializeSentry(){
+        Sentry.init(options -> {
+            options.setDsn(System.getenv("SENTRY_DSN"));
+            // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+            // We recommend adjusting this value in production.
+            options.setTracesSampleRate(1.0);
+            // When first trying Sentry it's good to see what the SDK is doing:
+            options.setDebug(true);
+        });
     }
 }
