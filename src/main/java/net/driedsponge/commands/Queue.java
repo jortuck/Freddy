@@ -44,7 +44,9 @@ public class Queue extends GuildCommand {
                     Song song = (Song) songs.toArray()[i];
                     queue.append("\n").append(i + 1)
                             .append(" - ")
-                            .append(song.getTrack().getInfo().title)
+                            .append("[")
+                            .append(song.getInfo().title)
+                            .append("]("+song.getInfo().uri+")")
                             .append(" `(Requested by: " + song.getRequester().getUser().getAsTag() + ")`");
                 }
 

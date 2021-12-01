@@ -20,13 +20,23 @@ public class Help extends GuildCommand {
         embedBuilder.setColor(Color.ORANGE);
         embedBuilder.setTitle(event.getJDA().getSelfUser().getName()+" Help");
 
+        StringBuilder builder = new StringBuilder();
+
         event.getJDA().retrieveCommands().queue(response ->{
             response.forEach(command -> {
-
-                System.out.println(command.getName());
+                  builder.append("\n").append("`/").append(command.getName());
+                  command.getOptions().forEach(o ->{
+                      builder.append(" ").append("["+o.getName()+"]");
+                  });
+                  builder.append("`");
+                  builder.append(" - ");
+                  builder.append("**").append(command.getDescription()).append("**");
+                builder.append("\n");
             });
+            embedBuilder.setDescription(builder.toString());
+            event.replyEmbeds(embedBuilder.build()).queue();
         });
-        event.reply("Help will work soon").queue();
+
     }
 
 }
