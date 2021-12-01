@@ -4,12 +4,14 @@ import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Skip extends ListenerAdapter {
-    @Override
-    public void onSlashCommand(SlashCommandEvent event) {
-        if(!event.isFromGuild()) return;
+public class Skip extends GuildCommand {
+    public Skip() {
+        super("skip");
+    }
 
-        if (!event.getName().equals("skip")) return;
+    @Override
+    public void execute(SlashCommandEvent event) {
+
         if(!CommonChecks.listeningMusic(event.getMember(),event.getGuild())){
             event.reply("You need to be in a voice channel with the bot to skip.").setEphemeral(true).queue();
             return;

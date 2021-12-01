@@ -15,15 +15,17 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 
-public class Play extends ListenerAdapter {
+public class Play extends GuildCommand {
 
     public AudioTrack current = null;
     public static HashMap<Guild, VoiceController> PLAYERS = new HashMap<Guild, VoiceController>();
 
-    @Override
-    public void onSlashCommand(SlashCommandEvent event) {
-        if(!event.isFromGuild()) return;
+    public Play(){
+        super("play");
+    }
 
+    @Override
+    public void execute(SlashCommandEvent event) {
         if (event.getName().equals("play")) {
             event.deferReply().queue();
             AudioManager audioManager = event.getGuild().getAudioManager();

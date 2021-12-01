@@ -7,10 +7,14 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-public class JoinLeave extends ListenerAdapter {
+public class JoinLeave extends GuildCommand {
+
+    public JoinLeave() {
+        super(new String[]{"join", "leave"});
+    }
+
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
-        if(!event.isFromGuild()) return;
+    public void execute(SlashCommandEvent event) {
         if (event.getName().equals("join")) {
             event.reply("This command is no longer supported. Please use `/play [song]`.").setEphemeral(true).queue();
         }else if(event.getName().equals("leave")){

@@ -10,12 +10,13 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
 
-public class NowPlaying extends ListenerAdapter {
-    @Override
-    public void onSlashCommand(SlashCommandEvent event){
-        if(!event.isFromGuild()) return;
+public class NowPlaying extends GuildCommand {
+    public NowPlaying() {
+        super("np");
+    }
 
-        if(!event.getName().equals("np")) return;
+    @Override
+    public void execute(SlashCommandEvent event){
         event.deferReply().queue();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.CYAN);
