@@ -1,5 +1,7 @@
 package net.driedsponge.commands;
 
+import io.sentry.Sentry;
+import io.sentry.UserFeedback;
 import net.driedsponge.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
@@ -17,7 +19,6 @@ public class Bug extends GuildCommand {
 
     @Override
     public void execute(SlashCommandEvent event){
-        User owner = event.getJDA().getUserById(Main.OWNER_ID);
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.RED);
         embedBuilder.setTitle("New Bug Report");
@@ -25,9 +26,14 @@ public class Bug extends GuildCommand {
         embedBuilder.addField("Guild",event.getGuild().getName()+" ("+event.getGuild().getId()+")", true);
         embedBuilder.setDescription(event.getOptions().get(0).getAsString());
         embedBuilder.setAuthor(event.getUser().getAsTag(),event.getUser().getAvatarUrl());
-        owner.openPrivateChannel().queue(response ->{
-            response.sendMessageEmbeds(embedBuilder.build()).queue();
+
+        event.getJDA().retrieveUserById(Main.OWNER_ID).queue(owner ->{
+            owner.openPrivateChannel().queue(response ->{
+                response.sendMessageEmbeds(embedBuilder.build()).queue();
+            });
         });
+
+
         event.reply("Your bug report has been sent, thank you!").setEphemeral(true).queue();
     }
 }
