@@ -3,6 +3,7 @@ package net.driedsponge;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.driedsponge.commands.Play;
@@ -68,6 +69,31 @@ public class TrackScheduler extends AudioEventAdapter {
         if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
             queue.offer(song);
             song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue", song).build()).queue();
+        }
+    }
+
+    public void queue(AudioPlaylist playlist, SlashCommandEvent event){
+        StringBuilder builder = new StringBuilder();
+        for (AudioTrack track : playlist.getTracks()) {
+            Song song = new Song(track, event);
+            if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
+                queue.offer(song);
+                builder.append("\n")
+                        .append("[")
+                        .append(song.getInfo().title)
+                        .append("]("+song.getInfo().uri+")")
+                        .append("\n");
+            }else{
+                vc.setNowPlaying(song);
+            }
+        }
+        if(!builder.isEmpty()){
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle("The Following Songs Have Been Added to the Queue.");
+            embedBuilder.setDescription(builder.toString());
+            embedBuilder.setColor(Color.CYAN);
+            embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
+            event.getHook().sendMessageEmbeds(embedBuilder.build()).queue();
         }
     }
 

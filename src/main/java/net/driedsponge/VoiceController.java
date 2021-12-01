@@ -8,6 +8,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -69,6 +70,7 @@ public class VoiceController {
     }
 
     public void play(String song, SlashCommandEvent event, boolean now){
+        System.out.println(this.getPlayer().getPlayingTrack());
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
@@ -85,10 +87,8 @@ public class VoiceController {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                for (AudioTrack track : playlist.getTracks()) {
-                    Song song = new Song(track, event);
-                    trackScheduler.queue(song);
-                }
+                trackScheduler.queue(playlist,event);
+
             }
 
             @Override
@@ -125,6 +125,7 @@ public class VoiceController {
     }
 
     public void leave(){
+        this.getTrackScheduler().getQueue().clear();
         guild.getAudioManager().closeAudioConnection();
         this.nowPlaying = null;
         player.destroy();

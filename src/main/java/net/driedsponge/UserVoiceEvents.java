@@ -22,6 +22,7 @@ public class UserVoiceEvents extends ListenerAdapter {
         if(event.getGuild().getAudioManager().isConnected()){
             if(event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1){
                 Play.PLAYERS.get(event.getGuild()).leave();
+                Play.PLAYERS.remove(event.getGuild());
             }
         }
     }
