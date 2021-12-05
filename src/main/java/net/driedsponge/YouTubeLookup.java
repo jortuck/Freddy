@@ -1,10 +1,7 @@
 package net.driedsponge;
 
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -26,7 +23,14 @@ public class YouTubeLookup {
      * Gets a url for a search query
      * @return The url for the video
      */
-    public static String GetAUrl(String query) throws IOException, GeneralSecurityException, NoSuchFieldException {
+    public static String getUrl(String query) throws IOException, GeneralSecurityException, NoSuchFieldException {
+        return "https://www.youtube.com/watch?v="+getId(query);
+    }
+    /**
+     * Gets a video id for a search query
+     * @return The id for the video
+     */
+    public static String getId(String query) throws IOException, GeneralSecurityException, NoSuchFieldException {
         System.out.println("Searching YouTube for "+query);
 
         YouTube yt = getService();
@@ -37,12 +41,12 @@ public class YouTubeLookup {
         SearchListResponse response = request.setKey(DEVELOPER_KEY)
                 .setQ(query)
                 .setType(List.of("video"))
+                .setMaxResults(1L)
                 .execute();
 
         Gson json = new Gson();
         VideoObject o = json.fromJson(response.getItems().get(0).toString(), VideoObject.class);
-        String videoId = o.getId().videoId;
-        return "https://www.youtube.com/watch?v="+videoId;
+        return o.getId().videoId;
     }
     /**
      * Build and return an authorized API client service.
