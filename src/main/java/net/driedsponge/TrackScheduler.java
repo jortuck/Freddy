@@ -87,7 +87,6 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void queue(AudioPlaylist playlist, SlashCommandEvent event) {
-        StringBuilder builder = new StringBuilder();
         int playListSize = playlist.getTracks().size();
 
         int loopLimit = Math.min(playListSize, QUEUE_LIMIT);
@@ -104,7 +103,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + playlist.getTracks().size() + " songs to the Queue from " + playlist.getName() + "!");
-        embedBuilder.setDescription(builder.toString());
+        embedBuilder.setDescription("");
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
 
