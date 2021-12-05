@@ -41,10 +41,11 @@ public class Main {
         builder.addEventListeners(new Skip());
         builder.addEventListeners(new Help());
         builder.addEventListeners(new Bug());
+        builder.addEventListeners(new Shuffle());
         JDA jda = builder.build();
-
     }
-    private static void intializeSentry(){
+
+    private static void intializeSentry() {
         Sentry.init(options -> {
             options.setDsn(System.getenv("SENTRY_DSN"));
             // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.

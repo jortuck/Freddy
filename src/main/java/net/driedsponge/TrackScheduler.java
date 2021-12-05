@@ -17,8 +17,8 @@ import net.dv8tion.jda.api.interactions.components.Button;
 
 import javax.sound.midi.Track;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -67,6 +67,18 @@ public class TrackScheduler extends AudioEventAdapter {
         return queue;
     }
 
+    public boolean shuffle() {
+        if (this.getQueue().size() > 0) {
+            List<Object> songs = Arrays.asList(this.queue.toArray());
+            Collections.shuffle(songs);
+            this.queue.clear();
+            this.queue.addAll((Collection) songs);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void queue(Song song) {
         if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
             queue.offer(song);
@@ -87,10 +99,11 @@ public class TrackScheduler extends AudioEventAdapter {
                 queue.offer(song);
             } else {
                 vc.setNowPlaying(song);
+                vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
             }
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Added "+playlist.getTracks().size()+" songs to the Queue from "+playlist.getName()+"!");
+        embedBuilder.setTitle("Added " + playlist.getTracks().size() + " songs to the Queue from " + playlist.getName() + "!");
         embedBuilder.setDescription(builder.toString());
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
@@ -109,7 +122,6 @@ public class TrackScheduler extends AudioEventAdapter {
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
         return embedBuilder;
     }
-
 
 
     public void startNewTrack() {
