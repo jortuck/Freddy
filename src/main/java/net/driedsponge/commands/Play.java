@@ -56,6 +56,19 @@ public class Play extends GuildCommand {
                 if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")) {
                     url = u.toString();
                     vc.play(url, event, false);
+                } else if(u.getHost().equals("open.spotify.com")){
+                    String[] paths = u.getPath().split("/",3);
+                    System.out.println(paths[0]);
+                    System.out.println(paths[1]);
+                    if(paths[1].equals("playlist")){
+                        if(paths[2] != null){
+                            event.getHook().sendMessage("Good spotify playlist").queue();
+                        }else{
+                            event.getHook().sendMessage("Invalid Spotify playlist!").queue();
+                        }
+                    }else {
+                        event.getHook().sendMessage("Invalid Spotify link!").queue();
+                    }
                 } else {
                     event.getHook().sendMessage("The URL you send must be a valid YouTube link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
                 }
