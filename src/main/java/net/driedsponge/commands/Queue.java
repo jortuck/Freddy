@@ -33,28 +33,35 @@ public class Queue extends GuildCommand {
             BlockingQueue<Song> songs = vc.getTrackScheduler().getQueue();
             embedBuilder.setTitle("Queue");
             StringBuilder queue = new StringBuilder();
+
             queue.append("**Now Playing - ").append(np.title).append("**");
             queue.append("\n");
             queue.append("\n**Up Next:**");
-
+            int loopLimit = Math.min(songs.size(), 10);
             if (songs.size() < 1) {
                 queue.append(" No songs in the queue!");
             } else {
-                for (int i = 0; i < songs.size(); i++) {
+                for (int i = 0; i < loopLimit; i++) {
                     Song song = (Song) songs.toArray()[i];
                     queue.append("\n").append(i + 1)
                             .append(" - ")
                             .append("[")
                             .append(song.getInfo().title)
-                            .append("]("+song.getInfo().uri+")")
+                            .append("](" + song.getInfo().uri + ")")
                             .append(" `(Requested by: " + song.getRequester().getUser().getAsTag() + ")`");
                 }
+                if (songs.size() > 10) {
+                    queue.append("\n");
+                    queue.append("\n**+ " + (songs.size() - 10) + " more songs!**");
+                }
+
 
             }
 
             embedBuilder.setDescription(queue);
             MessageEmbed embed = embedBuilder.build();
-            event.getHook().sendMessageEmbeds(embed).queue();
+            event.getHook().sendMessageEmbeds(embed)
+                    .queue();
         } else {
             embedBuilder.setTitle("Nothing is playing.");
             event.getHook().sendMessageEmbeds(embedBuilder.build()).queue();

@@ -57,7 +57,7 @@ public class UserVoiceEvents extends ListenerAdapter {
             EmbedBuilder embed = new EmbedBuilder();
             embed.setColor(Color.RED);
             embed.setTitle("Please give me permission to deafen!");
-            embed.setDescription("Please give me permission to deafen so I can defean myself." +
+            embed.setDescription("Please give me permission to deafen so I can deafean myself." +
                     " This will help save my resources. **You can also manually sever deafen me.**");
             vc.getMsgChannel().sendMessageEmbeds(embed.build()).queue();
         }

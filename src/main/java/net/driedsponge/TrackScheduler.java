@@ -10,8 +10,10 @@ import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 import javax.sound.midi.Track;
 import java.awt.*;
@@ -74,7 +76,11 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void queue(AudioPlaylist playlist, SlashCommandEvent event){
         StringBuilder builder = new StringBuilder();
-        for (AudioTrack track : playlist.getTracks()) {
+
+        int loopLimit = Math.min(playlist.getTracks().size(), 10);
+
+        for (int i = 0; i <= loopLimit; i++) {
+            AudioTrack track = playlist.getTracks().get(i);
             Song song = new Song(track, event);
             if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
                 queue.offer(song);
@@ -87,13 +93,20 @@ public class TrackScheduler extends AudioEventAdapter {
                 vc.setNowPlaying(song);
             }
         }
+        if (playlist.getTracks().size() > 10) {
+            builder.append("\n");
+            builder.append("\n**+ " + (playlist.getTracks().size() - 10) + " more songs!**");
+        }
+
         if(!builder.isEmpty()){
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle("The Following Songs Have Been Added to the Queue.");
+            embedBuilder.setTitle(playlist.getTracks().size()+" Songs Have Been Added to the Queue!");
             embedBuilder.setDescription(builder.toString());
             embedBuilder.setColor(Color.CYAN);
             embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
-            event.getHook().sendMessageEmbeds(embedBuilder.build()).queue();
+            event.getHook().sendMessageEmbeds(embedBuilder.build())
+                    .addActionRow(Button.link(event.getOptions().get(0).getAsString(),"Playlist"))
+                    .queue();
         }
     }
 

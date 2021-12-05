@@ -57,7 +57,7 @@ public class Owner extends ListenerAdapter {
         jda.upsertCommand("play","Tell the bot to play a song.")
                 .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue(); // Implemented
         jda.upsertCommand("playskip","Tells the bot to play the song immediately instead of adding it to the queue.")
-                .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue();
+                .addOption(OptionType.STRING,"song","You can put song names, YouTube links, and YouTube/Spotify playlist links.",true).queue();
         jda.upsertCommand("bug","Report a bug to me!")
                 .addOption(OptionType.STRING,"description","The description of the bug that is occurring. Please include details on how to recreate it.",true).queue();
 

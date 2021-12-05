@@ -41,7 +41,6 @@ public class Main {
         builder.addEventListeners(new Skip());
         builder.addEventListeners(new Help());
         builder.addEventListeners(new Bug());
-
         JDA jda = builder.build();
 
     }
