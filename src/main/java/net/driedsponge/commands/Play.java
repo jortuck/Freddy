@@ -5,9 +5,7 @@ import net.driedsponge.VoiceController;
 import net.driedsponge.YouTubeLookup;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
-import org.checkerframework.checker.regex.qual.Regex;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -58,8 +56,6 @@ public class Play extends GuildCommand {
                     vc.play(url, event, false);
                 } else if(u.getHost().equals("open.spotify.com")){
                     String[] paths = u.getPath().split("/",3);
-                    System.out.println(paths[0]);
-                    System.out.println(paths[1]);
                     if(paths[1].equals("playlist")){
                         if(paths[2] != null){
                             event.getHook().sendMessage("Good spotify playlist").queue();
@@ -74,7 +70,7 @@ public class Play extends GuildCommand {
                 }
             } catch (MalformedURLException exception) {
                 try {
-                    url = YouTubeLookup.GetAUrl(arg);
+                    url = YouTubeLookup.getUrl(arg);
                     vc.play(url, event, false);
                 } catch (IOException | GeneralSecurityException | NoSuchFieldException e) {
                     event.getHook().sendMessage("We could not find that video on YouTube.").setEphemeral(true).queue();
