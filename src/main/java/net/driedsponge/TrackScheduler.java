@@ -23,9 +23,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    public ArrayList<Song> queue2 = new ArrayList<Song>();
     private final BlockingQueue<Song> queue;
     public VoiceController vc;
+    public static final int QUEUE_LIMIT = 500;
 
     public TrackScheduler(VoiceController vc) {
         this.vc = vc;
@@ -48,7 +48,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        if(endReason.mayStartNext){
+        if (endReason.mayStartNext) {
             startNewTrack();
         }
     }
@@ -74,40 +74,30 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public void queue(AudioPlaylist playlist, SlashCommandEvent event){
+    public void queue(AudioPlaylist playlist, SlashCommandEvent event) {
         StringBuilder builder = new StringBuilder();
+        int playListSize = playlist.getTracks().size();
 
-        int loopLimit = Math.min(playlist.getTracks().size(), 10);
+        int loopLimit = Math.min(playListSize, QUEUE_LIMIT);
 
-        for (int i = 0; i <= loopLimit; i++) {
+        for (int i = 0; i < loopLimit; i++) {
             AudioTrack track = playlist.getTracks().get(i);
             Song song = new Song(track, event);
             if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
                 queue.offer(song);
-                builder.append("\n")
-                        .append("[")
-                        .append(song.getInfo().title)
-                        .append("]("+song.getInfo().uri+")")
-                        .append("\n");
-            }else{
+            } else {
                 vc.setNowPlaying(song);
             }
         }
-        if (playlist.getTracks().size() > 10) {
-            builder.append("\n");
-            builder.append("\n**+ " + (playlist.getTracks().size() - 10) + " more songs!**");
-        }
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Added "+playlist.getTracks().size()+" songs to the Queue from "+playlist.getName()+"!");
+        embedBuilder.setDescription(builder.toString());
+        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
 
-        if(!builder.isEmpty()){
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle(playlist.getTracks().size()+" Songs Have Been Added to the Queue!");
-            embedBuilder.setDescription(builder.toString());
-            embedBuilder.setColor(Color.CYAN);
-            embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
-            event.getHook().sendMessageEmbeds(embedBuilder.build())
-                    .addActionRow(Button.link(event.getOptions().get(0).getAsString(),"Playlist"))
-                    .queue();
-        }
+        event.getHook().sendMessageEmbeds(embedBuilder.build())
+                .addActionRow(Button.link(event.getOptions().get(0).getAsString(), "Playlist"))
+                .queue();
     }
 
     public static EmbedBuilder songCard(String title, Song song) {
@@ -119,6 +109,8 @@ public class TrackScheduler extends AudioEventAdapter {
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
         return embedBuilder;
     }
+
+
 
     public void startNewTrack() {
         if (!queue.isEmpty()) {

@@ -61,11 +61,12 @@ public class Owner extends ListenerAdapter {
         jda.upsertCommand("bug","Report a bug to me!")
                 .addOption(OptionType.STRING,"description","The description of the bug that is occurring. Please include details on how to recreate it.",true).queue();
 
-        jda.upsertCommand("help","Get a list of all the commands.").queue();
+        jda.upsertCommand("help","Get a list of all the commands.").queue(); // Implemented
         jda.upsertCommand("pause","Pause the current song.").queue(); // Implemented
         jda.upsertCommand("resume","Resume the current song.").queue(); // Implemented
         jda.upsertCommand("np","Shows the song that is currently playing.").queue(); // Implemented
-        jda.upsertCommand("skip","Skips the current song.").queue();
+        jda.upsertCommand("skip","Skips the current song.").queue(); // Implemented
         jda.upsertCommand("queue","Returns the songs in the queue.").queue(); // Implemented
+        jda.upsertCommand("shuffle","Shuffles the songs in the queue.").queue(); // Implemented
     }
 }
