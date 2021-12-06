@@ -72,7 +72,7 @@ public class SpotifyLookup {
         ArrayList<AudioTrack> playlistTracks = new ArrayList<AudioTrack>();
 
         for (PlaylistTrack track : tracks.getItems()) {
-            vc.getPlayerManager().loadItem("ytsearch:"+track.getTrack().getName(), new AudioLoadResultHandler() {
+            vc.getPlayerManager().loadItem("ytmsearch:"+track.getTrack().getName(), new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
                     Song song = new Song(track,event);

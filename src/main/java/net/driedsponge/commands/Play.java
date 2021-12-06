@@ -25,7 +25,7 @@ public class Play extends GuildCommand {
 
     @Override
     public void execute(SlashCommandEvent event) {
-        if (event.getName().equals("play")) {
+        if (event.getName().equals("play") || event.getName().equals("playskip")) {
             event.deferReply().queue();
             AudioManager audioManager = event.getGuild().getAudioManager();
 
@@ -54,7 +54,7 @@ public class Play extends GuildCommand {
                 URL u = new URL(arg);
                 if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")) {
                     url = u.toString();
-                    vc.play(url, event, false);
+                    vc.play(url, event, event.getName().equals("playskip"));
                 } else if(u.getHost().equals("open.spotify.com")){
                     String[] paths = u.getPath().split("/",3);
                     if(paths[1].equals("playlist")){
@@ -70,7 +70,7 @@ public class Play extends GuildCommand {
                     event.getHook().sendMessage("The URL you send must be a valid YouTube link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
                 }
             } catch (MalformedURLException exception) {
-                vc.play("ytsearch:"+arg, event, false);
+                vc.play("ytmsearch:"+arg, event,  event.getName().equals("playskip"));
             } catch (IOException | ParseException | SpotifyWebApiException e) {
                 e.printStackTrace();
             }
