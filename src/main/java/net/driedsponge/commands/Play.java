@@ -3,7 +3,6 @@ package net.driedsponge.commands;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
-import net.driedsponge.YouTubeLookup;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -13,7 +12,6 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
 
 public class Play extends GuildCommand {
@@ -49,7 +47,7 @@ public class Play extends GuildCommand {
 
             VoiceController vc = PLAYERS.get(event.getGuild());
             String arg = event.getOptions().get(0).getAsString();
-            String url = "";
+            String url;
 
             // Check for valid YouTube links, if they did not send a url, search the term on YouTube.
             try {
