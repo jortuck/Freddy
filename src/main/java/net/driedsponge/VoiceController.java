@@ -25,7 +25,7 @@ public class VoiceController {
     private AudioPlayerManager playerManager;
     private TrackScheduler trackScheduler;
     private AudioPlayer player;
-    private YouTubeSong nowPlaying;
+    private Song nowPlaying;
     private MessageChannel msgChannel;
 
     public VoiceController(Guild guild, VoiceChannel channel, MessageChannel message){
@@ -49,7 +49,7 @@ public class VoiceController {
 
     }
 
-    public void setNowPlaying(YouTubeSong nowPlaying) {
+    public void setNowPlaying(Song nowPlaying) {
         this.nowPlaying = nowPlaying;
     }
 
@@ -73,13 +73,11 @@ public class VoiceController {
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                YouTubeSong song = new YouTubeSong(track, event);
+                Song song = new Song(track, event);
                 if(nowPlaying == null){
-                    event.getHook().sendMessageEmbeds(TrackScheduler.songCard("Now Playing",song).build()).queue();
-                    trackScheduler.queue(song);
-                    nowPlaying=song;
+                    trackScheduler.queue(song,true);
                 }else{
-                    trackScheduler.queue(song);
+                    trackScheduler.queue(song,true);
                 }
 
             }
@@ -115,7 +113,7 @@ public class VoiceController {
         this.trackScheduler.startNewTrack();
     }
 
-    public YouTubeSong getNowPlaying() {
+    public Song getNowPlaying() {
         return nowPlaying;
     }
 
@@ -144,5 +142,9 @@ public class VoiceController {
 
     public AudioPlayer getPlayer() {
         return player;
+    }
+
+    public AudioPlayerManager getPlayerManager() {
+        return playerManager;
     }
 }

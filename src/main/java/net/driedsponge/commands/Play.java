@@ -1,11 +1,14 @@
 package net.driedsponge.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
 import net.driedsponge.YouTubeLookup;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.apache.hc.core5.http.ParseException;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -58,7 +61,7 @@ public class Play extends GuildCommand {
                     String[] paths = u.getPath().split("/",3);
                     if(paths[1].equals("playlist")){
                         if(paths[2] != null){
-                            event.getHook().sendMessage("Good spotify playlist").queue();
+                            SpotifyLookup.loadPlayList(paths[2],event);
                         }else{
                             event.getHook().sendMessage("Invalid Spotify playlist!").queue();
                         }
@@ -70,8 +73,9 @@ public class Play extends GuildCommand {
                 }
             } catch (MalformedURLException exception) {
                 vc.play("ytsearch:"+arg, event, false);
+            } catch (IOException | ParseException | SpotifyWebApiException e) {
+                e.printStackTrace();
             }
-
 
 
         }

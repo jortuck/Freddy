@@ -1,6 +1,18 @@
 package net.driedsponge;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioTrack;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import net.driedsponge.commands.Play;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.components.Button;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -11,6 +23,7 @@ import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -39,20 +52,44 @@ public class SpotifyLookup {
     }
 
 
-    public static SpotifyPlaylist playList(String playListId, SlashCommandEvent event) throws IOException, ParseException, SpotifyWebApiException {
+    public static void loadPlayList(String playListId, SlashCommandEvent event) throws IOException, ParseException, SpotifyWebApiException {
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();
         Playlist playlist = request.execute();
+        VoiceController vc = Play.PLAYERS.get(event.getGuild());
 
         Paging<PlaylistTrack> tracks = playlist.getTracks();
 
-        SpotifyPlaylist spotifyPlaylist = new SpotifyPlaylist(playlist.getName(),playlist.getUri());
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Added " + tracks.getItems().length + " songs to the Queue from " + playlist.getName() + "!");
+        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
 
-        ArrayList<YouTubeSong> playlistTracks = new ArrayList<YouTubeSong>();
+        event.getHook().sendMessageEmbeds(embedBuilder.build())
+                .addActionRow(Button.link(event.getOptions().get(0).getAsString(), "Playlist"))
+                .queue();
+
+
+        ArrayList<AudioTrack> playlistTracks = new ArrayList<AudioTrack>();
 
         for (PlaylistTrack track : tracks.getItems()) {
+            vc.getPlayerManager().loadItem("ytsearch:"+track.getTrack().getName(), new AudioLoadResultHandler() {
+                @Override
+                public void trackLoaded(AudioTrack track) {
+                    Song song = new Song(track,event);
+                    Play.PLAYERS.get(event.getGuild()).getTrackScheduler().queue(song,false);
+                }
+                @Override
+                public void playlistLoaded(AudioPlaylist playlist) {
+                    Song song = new Song(playlist.getTracks().get(0),event);
+                    Play.PLAYERS.get(event.getGuild()).getTrackScheduler().queue(song,false);
+                }
+                @Override
+                public void noMatches() {}
+                @Override
+                public void loadFailed(FriendlyException exception) {}
 
+            });
         }
-        spotifyPlaylist.setSongs(playlistTracks);
-        return spotifyPlaylist;
+
     }
 }

@@ -2,14 +2,13 @@ package net.driedsponge;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpotifyPlaylist implements AudioPlaylist {
     private String name;
     private String url;
-    private ArrayList<YouTubeSong> songs;
+    private ArrayList<AudioTrack> songs;
     public SpotifyPlaylist(String name,String url){
         this.name = name;
     }
@@ -21,7 +20,7 @@ public class SpotifyPlaylist implements AudioPlaylist {
 
     @Override
     public List<AudioTrack> getTracks() {
-        return null;
+        return this.songs;
     }
 
     @Override
@@ -34,11 +33,8 @@ public class SpotifyPlaylist implements AudioPlaylist {
         return false;
     }
 
-    public ArrayList<YouTubeSong> getSongs() {
-        return songs;
-    }
 
-    public void setSongs(ArrayList<YouTubeSong> songs) {
+    public void setTracks(ArrayList<AudioTrack> songs) {
         this.songs = songs;
     }
 }

@@ -5,16 +5,34 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-public interface Song {
-    public AudioTrack getTrack();
+public class Song {
+    private AudioTrack track;
+    private SlashCommandEvent event;
+    public Song(AudioTrack track, SlashCommandEvent event){
+        this.track = track;
+        this.event = event;
+    }
 
-    public Member getRequester();
+    public AudioTrack getTrack() {
+        return track;
+    }
+    public Member getRequester(){
+        return this.event.getMember();
+    }
 
-    public AudioTrackInfo getInfo();
+    public AudioTrackInfo getInfo(){
+        return this.track.getInfo();
+    }
 
-    public SlashCommandEvent getEvent();
-    public String getYoutubeUrl();
-    public String getRealURL();
+    public SlashCommandEvent getEvent() {
+        return event;
+    }
+
+    public String getYoutubeUrl() {
+        return this.track.getInfo().uri;
+    }
+
+    public String getRealURL() {
+        return this.track.getInfo().uri;
+    }
 }
-
-

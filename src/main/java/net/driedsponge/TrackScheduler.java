@@ -19,7 +19,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    private final BlockingQueue<YouTubeSong> queue;
+    private final BlockingQueue<Song> queue;
     public VoiceController vc;
     public static final int QUEUE_LIMIT = 500;
 
@@ -59,7 +59,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     }
 
-    public BlockingQueue<YouTubeSong> getQueue() {
+    public BlockingQueue<Song> getQueue() {
         return queue;
     }
 
@@ -75,10 +75,15 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public void queue(YouTubeSong song) {
+    public void queue(Song song, boolean notify) {
         if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
             queue.offer(song);
-            song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue", song).build()).queue();
+            if(notify){
+                song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue", song).build()).queue();
+            }
+        }else{
+            song.getEvent().getHook().sendMessageEmbeds(TrackScheduler.songCard("Now Playing",song).build()).queue();
+            vc.setNowPlaying(song);
         }
     }
 
@@ -89,7 +94,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
         for (int i = 0; i < loopLimit; i++) {
             AudioTrack track = playlist.getTracks().get(i);
-            YouTubeSong song = new YouTubeSong(track, event);
+            Song song = new Song(track, event);
             if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
                 queue.offer(song);
             } else {
@@ -99,7 +104,6 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + playlist.getTracks().size() + " songs to the Queue from " + playlist.getName() + "!");
-        embedBuilder.setDescription("");
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
 
@@ -108,7 +112,7 @@ public class TrackScheduler extends AudioEventAdapter {
                 .queue();
     }
 
-    public static EmbedBuilder songCard(String title, YouTubeSong song) {
+    public static EmbedBuilder songCard(String title, Song song) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(title);
         embedBuilder.setTitle(song.getInfo().title, song.getInfo().uri);
@@ -121,7 +125,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void startNewTrack() {
         if (!queue.isEmpty()) {
-            YouTubeSong song = queue.poll();
+            Song song = queue.poll();
             this.vc.setNowPlaying(song);
             vc.getPlayer().playTrack(song.getTrack());
             vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
