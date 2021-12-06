@@ -20,7 +20,7 @@ public class Play extends GuildCommand {
     public static HashMap<Guild, VoiceController> PLAYERS = new HashMap<Guild, VoiceController>();
 
     public Play(){
-        super("play");
+        super(new String[]{"playskip","play"});
     }
 
     @Override
@@ -70,9 +70,11 @@ public class Play extends GuildCommand {
                     event.getHook().sendMessage("The URL you send must be a valid YouTube link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
                 }
             } catch (MalformedURLException exception) {
-                vc.play("ytmsearch:"+arg, event,  event.getName().equals("playskip"));
+                event.getHook().sendMessage(":mag: **Searching for "+arg+"**...").queue();
+                vc.play("ytsearch:"+arg, event,  event.getName().equals("playskip"));
             } catch (IOException | ParseException | SpotifyWebApiException e) {
                 e.printStackTrace();
+                event.getHook().sendMessage("Sorry there was an error playing your song.").queue();
             }
 
 

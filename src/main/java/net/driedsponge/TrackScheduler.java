@@ -166,4 +166,12 @@ public class TrackScheduler extends AudioEventAdapter {
             Play.PLAYERS.remove(guild);
         }
     }
+    /**
+     * Starts a new specified track.
+     */
+    public void startNewTrack(Song song) {
+            this.vc.setNowPlaying(song);
+            vc.getPlayer().playTrack(song.getTrack());
+            vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+    }
 }

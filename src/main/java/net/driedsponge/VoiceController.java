@@ -74,11 +74,16 @@ public class VoiceController {
             @Override
             public void trackLoaded(AudioTrack track) {
                 Song song = new Song(track, event);
-                if(nowPlaying == null){
-                    trackScheduler.queue(song,true);
+                if(now){
+                    trackScheduler.startNewTrack(song);
                 }else{
-                    trackScheduler.queue(song,true);
+                    if(nowPlaying == null){
+                        trackScheduler.queue(song,true);
+                    }else{
+                        trackScheduler.queue(song,true);
+                    }
                 }
+
 
             }
 
