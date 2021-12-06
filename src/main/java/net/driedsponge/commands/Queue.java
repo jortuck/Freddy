@@ -1,16 +1,13 @@
 package net.driedsponge.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import net.driedsponge.Song;
+import net.driedsponge.YouTubeSong;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
 public class Queue extends GuildCommand {
@@ -30,7 +27,7 @@ public class Queue extends GuildCommand {
         if (event.getGuild().getAudioManager().isConnected() && Play.PLAYERS.get(event.getGuild()) != null) {
             VoiceController vc = Play.PLAYERS.get(event.getGuild());
             AudioTrackInfo np = vc.getNowPlaying().getInfo();
-            BlockingQueue<Song> songs = vc.getTrackScheduler().getQueue();
+            BlockingQueue<YouTubeSong> songs = vc.getTrackScheduler().getQueue();
             embedBuilder.setTitle("Queue");
             StringBuilder queue = new StringBuilder();
 
@@ -42,7 +39,7 @@ public class Queue extends GuildCommand {
                 queue.append(" No songs in the queue!");
             } else {
                 for (int i = 0; i < loopLimit; i++) {
-                    Song song = (Song) songs.toArray()[i];
+                    YouTubeSong song = (YouTubeSong) songs.toArray()[i];
                     queue.append("\n").append(i + 1)
                             .append(" - ")
                             .append("[")

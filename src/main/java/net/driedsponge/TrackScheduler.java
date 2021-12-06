@@ -9,13 +9,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
 
-import javax.sound.midi.Track;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -23,7 +19,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    private final BlockingQueue<Song> queue;
+    private final BlockingQueue<YouTubeSong> queue;
     public VoiceController vc;
     public static final int QUEUE_LIMIT = 500;
 
@@ -63,7 +59,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     }
 
-    public BlockingQueue<Song> getQueue() {
+    public BlockingQueue<YouTubeSong> getQueue() {
         return queue;
     }
 
@@ -79,7 +75,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    public void queue(Song song) {
+    public void queue(YouTubeSong song) {
         if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
             queue.offer(song);
             song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue", song).build()).queue();
@@ -93,7 +89,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
         for (int i = 0; i < loopLimit; i++) {
             AudioTrack track = playlist.getTracks().get(i);
-            Song song = new Song(track, event);
+            YouTubeSong song = new YouTubeSong(track, event);
             if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
                 queue.offer(song);
             } else {
@@ -112,7 +108,7 @@ public class TrackScheduler extends AudioEventAdapter {
                 .queue();
     }
 
-    public static EmbedBuilder songCard(String title, Song song) {
+    public static EmbedBuilder songCard(String title, YouTubeSong song) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(title);
         embedBuilder.setTitle(song.getInfo().title, song.getInfo().uri);
@@ -125,7 +121,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void startNewTrack() {
         if (!queue.isEmpty()) {
-            Song song = queue.poll();
+            YouTubeSong song = queue.poll();
             this.vc.setNowPlaying(song);
             vc.getPlayer().playTrack(song.getTrack());
             vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();

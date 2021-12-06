@@ -1,0 +1,40 @@
+package net.driedsponge;
+
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+
+public class YouTubeSong implements Song{
+    private AudioTrack track;
+    private SlashCommandEvent event;
+    public YouTubeSong(AudioTrack track, SlashCommandEvent event){
+        this.track = track;
+        this.event = event;
+    }
+
+    public AudioTrack getTrack() {
+        return track;
+    }
+    public Member getRequester(){
+        return this.event.getMember();
+    }
+
+    public AudioTrackInfo getInfo(){
+        return this.track.getInfo();
+    }
+
+    public SlashCommandEvent getEvent() {
+        return event;
+    }
+
+    @Override
+    public String getYoutubeUrl() {
+        return this.track.getInfo().uri;
+    }
+
+    @Override
+    public String getRealURL() {
+        return this.track.getInfo().uri;
+    }
+}

@@ -1,31 +1,20 @@
 package net.driedsponge;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-public class Song {
-    private AudioTrack track;
-    private SlashCommandEvent event;
-    public Song(AudioTrack track, SlashCommandEvent event){
-        this.track = track;
-        this.event = event;
-    }
+public interface Song {
+    public AudioTrack getTrack();
 
-    public AudioTrack getTrack() {
-        return track;
-    }
-    public Member getRequester(){
-        return this.event.getMember();
-    }
+    public Member getRequester();
 
-    public AudioTrackInfo getInfo(){
-        return this.track.getInfo();
-    }
+    public AudioTrackInfo getInfo();
 
-    public SlashCommandEvent getEvent() {
-        return event;
-    }
+    public SlashCommandEvent getEvent();
+    public String getYoutubeUrl();
+    public String getRealURL();
 }
+
+

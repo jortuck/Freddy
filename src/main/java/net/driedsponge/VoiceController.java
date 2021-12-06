@@ -8,17 +8,14 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 
 public class VoiceController {
@@ -28,7 +25,7 @@ public class VoiceController {
     private AudioPlayerManager playerManager;
     private TrackScheduler trackScheduler;
     private AudioPlayer player;
-    private Song nowPlaying;
+    private YouTubeSong nowPlaying;
     private MessageChannel msgChannel;
 
     public VoiceController(Guild guild, VoiceChannel channel, MessageChannel message){
@@ -52,7 +49,7 @@ public class VoiceController {
 
     }
 
-    public void setNowPlaying(Song nowPlaying) {
+    public void setNowPlaying(YouTubeSong nowPlaying) {
         this.nowPlaying = nowPlaying;
     }
 
@@ -76,7 +73,7 @@ public class VoiceController {
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                Song song = new Song(track, event);
+                YouTubeSong song = new YouTubeSong(track, event);
                 if(nowPlaying == null){
                     event.getHook().sendMessageEmbeds(TrackScheduler.songCard("Now Playing",song).build()).queue();
                     trackScheduler.queue(song);
@@ -89,7 +86,11 @@ public class VoiceController {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                trackScheduler.queue(playlist,event);
+                if(!playlist.isSearchResult()){
+                    trackScheduler.queue(playlist,event);
+                }else{
+                    trackLoaded(playlist.getTracks().get(0));
+                }
 
             }
 
@@ -114,7 +115,7 @@ public class VoiceController {
         this.trackScheduler.startNewTrack();
     }
 
-    public Song getNowPlaying() {
+    public YouTubeSong getNowPlaying() {
         return nowPlaying;
     }
 

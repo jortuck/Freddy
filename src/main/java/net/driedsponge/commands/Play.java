@@ -69,12 +69,7 @@ public class Play extends GuildCommand {
                     event.getHook().sendMessage("The URL you send must be a valid YouTube link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
                 }
             } catch (MalformedURLException exception) {
-                try {
-                    url = YouTubeLookup.getUrl(arg);
-                    vc.play(url, event, false);
-                } catch (IOException | GeneralSecurityException | NoSuchFieldException e) {
-                    event.getHook().sendMessage("We could not find that video on YouTube.").setEphemeral(true).queue();
-                }
+                vc.play("ytsearch:"+arg, event, false);
             }
 
 
