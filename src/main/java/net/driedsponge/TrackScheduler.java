@@ -23,6 +23,10 @@ public class TrackScheduler extends AudioEventAdapter {
     public VoiceController vc;
     public static final int QUEUE_LIMIT = 500;
 
+    /**
+     * Creates a new instance of a TrackSchdeuler.
+     * @param vc The voice controller in control.
+     */
     public TrackScheduler(VoiceController vc) {
         this.vc = vc;
         this.queue = new LinkedBlockingQueue<>();
@@ -59,10 +63,18 @@ public class TrackScheduler extends AudioEventAdapter {
 
     }
 
+    /**
+     * Get the current queue.
+     * @return The queue
+     */
     public BlockingQueue<Song> getQueue() {
         return queue;
     }
 
+    /**
+     * Shuffle the queue.
+     * @return Whether the queue was successfully shuffled or not.
+     */
     public boolean shuffle() {
         if (this.getQueue().size() > 0) {
             List<Object> songs = Arrays.asList(this.queue.toArray());
@@ -75,6 +87,11 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
+    /**
+     * Queue a song.
+     * @param song The song to queue,
+     * @param notify Whether to notify that the song was queued.
+     */
     public void queue(Song song, boolean notify) {
         if (!vc.getPlayer().startTrack(song.getTrack(), true)) {
             queue.offer(song);
@@ -87,6 +104,11 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
+    /**
+     * Queue a playlist.
+     * @param playlist The AudioPlaylist to add.
+     * @param event The event associated with the playlist.
+     */
     public void queue(AudioPlaylist playlist, SlashCommandEvent event) {
         int playListSize = playlist.getTracks().size();
 
@@ -112,6 +134,12 @@ public class TrackScheduler extends AudioEventAdapter {
                 .queue();
     }
 
+    /**
+     * Generates an embed perfect for sharing songs.
+     * @param title The title of the card.
+     * @param song The song.
+     * @return A build for the song embed.
+     */
     public static EmbedBuilder songCard(String title, Song song) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(title);
@@ -122,7 +150,9 @@ public class TrackScheduler extends AudioEventAdapter {
         return embedBuilder;
     }
 
-
+    /**
+     * Starts a new track taken from the queue.
+     */
     public void startNewTrack() {
         if (!queue.isEmpty()) {
             Song song = queue.poll();
