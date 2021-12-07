@@ -20,8 +20,11 @@ import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
+import se.michaelthelin.spotify.model_objects.specification.Track;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
+import se.michaelthelin.spotify.requests.data.tracks.GetSeveralTracksRequest;
+import se.michaelthelin.spotify.requests.data.tracks.GetTrackRequest;
 
 import java.awt.*;
 import java.io.IOException;
@@ -62,21 +65,21 @@ public class SpotifyLookup {
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();
         Playlist playlist = request.execute();
         VoiceController vc = Play.PLAYERS.get(event.getGuild());
-
         Paging<PlaylistTrack> tracks = playlist.getTracks();
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + tracks.getItems().length + " songs to the Queue from " + playlist.getName() + "!");
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
-
+        embedBuilder.setThumbnail(playlist.getImages()[0].getUrl());
         event.getHook().sendMessageEmbeds(embedBuilder.build())
                 .addActionRow(Button.link(event.getOptions().get(0).getAsString(), "Playlist"))
                 .queue();
 
 
-        for (PlaylistTrack track : tracks.getItems()) {
-            vc.getPlayerManager().loadItem("ytmsearch:"+track.getTrack().getName(), new AudioLoadResultHandler() {
+        for (PlaylistTrack spotifyTrack : tracks.getItems()) {
+            String searchTerm = spotifyTrack.getTrack().getName();
+            vc.getPlayerManager().loadItem("ytmsearch:"+searchTerm, new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
                     Song song = new Song(track,event);

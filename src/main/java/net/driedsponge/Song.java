@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 public class Song {
     private AudioTrack track;
     private SlashCommandEvent event;
+    private String thumbnail = null;
     public Song(AudioTrack track, SlashCommandEvent event){
         this.track = track;
         this.event = event;
@@ -34,5 +35,13 @@ public class Song {
 
     public String getRealURL() {
         return this.track.getInfo().uri;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

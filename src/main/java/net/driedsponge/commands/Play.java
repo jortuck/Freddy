@@ -72,9 +72,10 @@ public class Play extends GuildCommand {
             } catch (MalformedURLException exception) {
                 event.getHook().sendMessage(":mag: **Searching for "+arg+"**...").queue();
                 vc.play("ytsearch:"+arg, event,  event.getName().equals("playskip"));
-            } catch (IOException | ParseException | SpotifyWebApiException e) {
-                e.printStackTrace();
-                event.getHook().sendMessage("Sorry there was an error playing your song.").queue();
+            } catch (IOException | ParseException e) {
+                event.getHook().sendMessage("Sorry, there was an error playing your song.").queue();
+            } catch (SpotifyWebApiException e){
+                event.getHook().sendMessage("That spotify playlist could not be found. Make sure it's a valid public playlist.").queue();
             }
 
 

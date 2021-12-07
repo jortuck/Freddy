@@ -147,6 +147,10 @@ public class TrackScheduler extends AudioEventAdapter {
         embedBuilder.addField("Artist", song.getInfo().author, true);
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
+        if(song.getThumbnail() != null){
+            embedBuilder.setThumbnail(song.getThumbnail());
+            System.out.println(song.getThumbnail());
+        }
         return embedBuilder;
     }
 
@@ -168,6 +172,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
     /**
      * Starts a new specified track.
+     * @param song The song to start.
      */
     public void startNewTrack(Song song) {
             this.vc.setNowPlaying(song);
