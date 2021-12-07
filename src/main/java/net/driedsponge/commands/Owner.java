@@ -3,13 +3,19 @@ package net.driedsponge.commands;
 import net.driedsponge.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import java.awt.*;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 public class Owner extends ListenerAdapter {
     @Override
@@ -22,6 +28,8 @@ public class Owner extends ListenerAdapter {
             statistics(event);
         }else if(event.getMessage().getContentRaw().startsWith("!guildlist")){
             guildList(event);
+        }else if(event.getMessage().getContentRaw().startsWith("!deletecommand")){
+            deleteCommand(event);
         }
     }
 
@@ -68,5 +76,44 @@ public class Owner extends ListenerAdapter {
         jda.upsertCommand("skip","Skips the current song.").queue(); // Implemented
         jda.upsertCommand("queue","Returns the songs in the queue.").queue(); // Implemented
         jda.upsertCommand("shuffle","Shuffles the songs in the queue.").queue(); // Implemented
+    }
+
+    private void deleteCommand(MessageReceivedEvent event){
+        Scanner scanner = new Scanner(event.getMessage().getContentRaw());
+        scanner.next();
+        if(scanner.hasNext()){
+            String commandName = scanner.next();
+            scanner.close();
+            List<Command> commands = event.getJDA().retrieveCommands().complete();
+            for (int i = 0; i< commands.size(); i++){
+                Command cmd = commands.get(i);
+                if(cmd.getName().equals(commandName)){
+                    cmd.delete().queue();
+                    Message response = event.getMessage().reply("Deleted the `"+commandName+"` command!").complete();
+                    try{
+                        response.getPrivateChannel();
+                    }catch (IllegalStateException e){
+                        response.getReferencedMessage().delete().queueAfter(5L, TimeUnit.SECONDS);
+                        response.delete().queueAfter(5L, TimeUnit.SECONDS);
+                    }
+                    return;
+                }
+            }
+            Message response = event.getMessage().reply("Could not find the command named `"+commandName+"`.").complete();
+            try{
+                response.getPrivateChannel();
+            }catch (IllegalStateException e){
+                response.getReferencedMessage().delete().queueAfter(5L, TimeUnit.SECONDS);
+                response.delete().queueAfter(5L, TimeUnit.SECONDS);
+            }
+        }else{
+            Message response = event.getMessage().reply("Please follow the correct command format `/deletecommand <command>`").complete();
+            try{
+                response.getPrivateChannel();
+            }catch (IllegalStateException e){
+                response.getReferencedMessage().delete().queueAfter(5L, TimeUnit.SECONDS);
+                response.delete().queueAfter(5L, TimeUnit.SECONDS);
+            }
+        }
     }
 }
