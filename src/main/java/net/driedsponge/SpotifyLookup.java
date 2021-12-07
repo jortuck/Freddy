@@ -25,9 +25,13 @@ import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
 
 public class SpotifyLookup {
+    private static final Timestamp RESET_STAMP = new Timestamp(new Date().getTime());
     private static final String clientId = System.getenv("SPOTIFY_CLIENT_ID");
     private static final String clientSecret = System.getenv("SPOTIFY_CLIENT_SECRET");
 
@@ -69,9 +73,8 @@ public class SpotifyLookup {
                 .queue();
 
 
-        ArrayList<AudioTrack> playlistTracks = new ArrayList<AudioTrack>();
-
         for (PlaylistTrack track : tracks.getItems()) {
+            clientCredentials_Sync();
             vc.getPlayerManager().loadItem("ytmsearch:"+track.getTrack().getName(), new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
