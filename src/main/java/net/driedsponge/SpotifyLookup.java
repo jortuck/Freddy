@@ -57,6 +57,8 @@ public class SpotifyLookup {
 
 
     public static void loadPlayList(String playListId, SlashCommandEvent event) throws IOException, ParseException, SpotifyWebApiException {
+        clientCredentials_Sync();
+
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();
         Playlist playlist = request.execute();
         VoiceController vc = Play.PLAYERS.get(event.getGuild());
@@ -74,7 +76,6 @@ public class SpotifyLookup {
 
 
         for (PlaylistTrack track : tracks.getItems()) {
-            clientCredentials_Sync();
             vc.getPlayerManager().loadItem("ytmsearch:"+track.getTrack().getName(), new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
