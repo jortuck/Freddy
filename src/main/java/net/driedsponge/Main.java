@@ -46,6 +46,7 @@ public class Main {
         builder.addEventListeners(new Help());
         builder.addEventListeners(new Bug());
         builder.addEventListeners(new Shuffle());
+        builder.addEventListeners(new MessageListener());
         JDA jda = builder.build();
     }
 
