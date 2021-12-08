@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import io.sentry.Sentry;
 import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -55,10 +56,18 @@ public class SpotifyLookup {
             System.out.println("Expires in: " + clientCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
+            Sentry.captureException(e);
         }
     }
 
 
+    /**
+     * Fetches tracks for the specified playlist from the Spotify API.
+     * Each track will be added to the queue.
+     * @param playListId The ID of the Spotify playlist.
+     * @param event The {@link SlashCommandEvent} that is associated with the playlist.
+     * @throws SpotifyWebApiException Spotify web API error
+     */
     public static void loadPlayList(String playListId, SlashCommandEvent event) throws IOException, ParseException, SpotifyWebApiException {
         clientCredentials_Sync();
 
