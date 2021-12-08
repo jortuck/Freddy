@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -19,20 +20,27 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import java.awt.*;
 
 public class VoiceController {
-    private Guild guild;
-    private VoiceChannel channel;
-    private AudioManager audioManager;
+    private final String guildId;
+    private final JDA jda;
+    private String channel;
     private AudioPlayerManager playerManager;
     private TrackScheduler trackScheduler;
     private AudioPlayer player;
     private Song nowPlaying;
-    private MessageChannel msgChannel;
+    private String msgChannel;
 
-    public VoiceController(Guild guild, VoiceChannel channel, MessageChannel message){
-        this.guild = guild;
-        this.channel = channel;
-        this.msgChannel = message;
-        this.audioManager = guild.getAudioManager();
+    /**
+     * Constructor for new voice controller.
+     * @param guild The guild in which the voice controller is for.
+     * @param voiceChannel The voice channel the bot is bound to.
+     * @param textChannel The text channel the bot is bound to.
+     */
+    public VoiceController(Guild guild, VoiceChannel voiceChannel, MessageChannel textChannel){
+        this.guildId = guild.getId();
+        this.jda = voiceChannel.getJDA();
+        this.channel = voiceChannel.getId();
+        this.msgChannel = textChannel.getId();
+        AudioManager audioManager = guild.getAudioManager();
 
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
@@ -58,13 +66,13 @@ public class VoiceController {
      */
     public void join(){
         try {
-            guild.getAudioManager().openAudioConnection(channel);
+            this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
         } catch (PermissionException e){
             EmbedBuilder embed = new EmbedBuilder();
             embed.setTitle("An error occurred when trying to join the call!");
             embed.setDescription("**Missing permission: `"+e.getPermission().getName()+"`**");
             embed.setColor(Color.RED);
-            this.getMsgChannel().sendMessageEmbeds(embed.build()).queue();
+            this.getTextChannel().sendMessageEmbeds(embed.build()).queue();
         }
 
     }
@@ -122,17 +130,17 @@ public class VoiceController {
         return nowPlaying;
     }
 
-    public VoiceChannel getChannel() {
-        return channel;
+    public VoiceChannel getVoiceChannel() {
+        return this.jda.getVoiceChannelById(this.channel);
     }
 
-    public MessageChannel getMsgChannel() {
-        return msgChannel;
+    public MessageChannel getTextChannel() {
+        return this.jda.getTextChannelById(this.msgChannel);
     }
 
     public void leave(){
         this.getTrackScheduler().getQueue().clear();
-        guild.getAudioManager().closeAudioConnection();
+        this.getGuild().getAudioManager().closeAudioConnection();
         this.nowPlaying = null;
         player.destroy();
     }
@@ -142,7 +150,7 @@ public class VoiceController {
     }
 
     public Guild getGuild() {
-        return guild;
+        return jda.getGuildById(this.guildId);
     }
 
     public AudioPlayer getPlayer() {
@@ -152,4 +160,6 @@ public class VoiceController {
     public AudioPlayerManager getPlayerManager() {
         return playerManager;
     }
+
+
 }

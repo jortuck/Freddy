@@ -24,7 +24,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public static final int QUEUE_LIMIT = 500;
 
     /**
-     * Creates a new instance of a TrackSchdeuler.
+     * Creates a new instance of a TrackScheduler.
      * @param vc The voice controller in control.
      */
     public TrackScheduler(VoiceController vc) {
@@ -121,7 +121,7 @@ public class TrackScheduler extends AudioEventAdapter {
                 queue.offer(song);
             } else {
                 vc.setNowPlaying(song);
-                vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+                vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
             }
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -162,10 +162,10 @@ public class TrackScheduler extends AudioEventAdapter {
             Song song = queue.poll();
             this.vc.setNowPlaying(song);
             vc.getPlayer().playTrack(song.getTrack());
-            vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
         } else {
             Guild guild = vc.getGuild();
-            vc.getMsgChannel().sendMessage("No more songs to play. Leaving now!").queue();
+            vc.getTextChannel().sendMessage("No more songs to play. Leaving now!").queue();
             vc.leave();
             Play.PLAYERS.remove(guild);
         }
@@ -177,6 +177,6 @@ public class TrackScheduler extends AudioEventAdapter {
     public void startNewTrack(Song song) {
             this.vc.setNowPlaying(song);
             vc.getPlayer().playTrack(song.getTrack());
-            vc.getMsgChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
     }
 }

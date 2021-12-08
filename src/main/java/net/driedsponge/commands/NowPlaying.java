@@ -1,12 +1,10 @@
 package net.driedsponge.commands;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
 
@@ -25,7 +23,7 @@ public class NowPlaying extends GuildCommand {
             AudioTrackInfo np = vc.getNowPlaying().getInfo();
             embedBuilder.setTitle(np.title, np.uri);
             embedBuilder.addField("Artist",np.author,true);
-            embedBuilder.setAuthor("Now Playing in "+vc.getChannel().getName(),event.getJDA().getSelfUser().getAvatarUrl());
+            embedBuilder.setAuthor("Now Playing in "+vc.getVoiceChannel().getName(),event.getJDA().getSelfUser().getAvatarUrl());
             MessageEmbed embed = embedBuilder.build();
             event.getHook().sendMessageEmbeds(embed).queue();
         }else{

@@ -1,17 +1,10 @@
 package net.driedsponge;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.events.DisconnectEvent;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.voice.*;
-import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -59,7 +52,7 @@ public class UserVoiceEvents extends ListenerAdapter {
             embed.setTitle("Please give me permission to deafen!");
             embed.setDescription("Please give me permission to deafen so I can deafean myself." +
                     " This will help save my resources. **You can also manually sever deafen me.**");
-            vc.getMsgChannel().sendMessageEmbeds(embed.build()).queue();
+            vc.getTextChannel().sendMessageEmbeds(embed.build()).queue();
         }
     }
 }
