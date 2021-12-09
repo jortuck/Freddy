@@ -52,7 +52,7 @@ public class Play extends GuildCommand {
             // Check for valid YouTube links, if they did not send a url, search the term on YouTube.
             try {
                 URL u = new URL(arg);
-                if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")) {
+                if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")|| u.getHost().equals("music.youtube.com")) {
                     url = u.toString();
                     vc.play(url, event, event.getName().equals("playskip"));
                 } else if(u.getHost().equals("open.spotify.com")){
