@@ -62,10 +62,11 @@ public class Owner extends ListenerAdapter {
         jda.upsertCommand("ping","Check the bots ping.").queue(); // Implemented
         jda.upsertCommand("leave","Tells the bot to leave the current voice channel.").queue(); // Implemented
 
-        jda.upsertCommand("play","Tell the bot to play a song.")
-                .addOption(OptionType.STRING,"song","The name of the song to play.",true).queue(); // Implemented
+        jda.upsertCommand("play","Tells the bot to play a song. If a song is already playing, it will be added to the queue.")
+                .addOption(OptionType.STRING,"song","The song to play. This can be a song name, a YouTube link, or YouTube/Spotify playlist link.",true).queue(); // Implemented
         jda.upsertCommand("playskip","Tells the bot to play the song immediately instead of adding it to the queue.")
-                .addOption(OptionType.STRING,"song","You can put song names, YouTube links, and YouTube/Spotify playlist links.",true).queue();
+                .addOption(OptionType.STRING,"song","The song to play. This can be a song name, a YouTube link, or YouTube/Spotify playlist link.",true).queue();
+
         jda.upsertCommand("bug","Report a bug to me!")
                 .addOption(OptionType.STRING,"description","The description of the bug that is occurring. Please include details on how to recreate it.",true).queue();
 
