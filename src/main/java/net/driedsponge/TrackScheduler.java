@@ -164,7 +164,11 @@ public class TrackScheduler extends AudioEventAdapter {
             vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
         } else {
             Guild guild = vc.getGuild();
-            vc.getTextChannel().sendMessage("No more songs to play. Leaving now!").queue();
+            EmbedBuilder embedBuilder = new EmbedBuilder()
+                    .setColor(Color.CYAN)
+                    .setTitle(String.format(":wave: No more songs to play. Leaving %s!",vc.getVoiceChannel().getName()));
+            vc.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+
             vc.leave();
             PlayerStore.remove(guild);
         }
