@@ -33,6 +33,7 @@ dependencies {
     implementation("net.dv8tion:JDA:4.3.0_346")
     implementation ('io.sentry:sentry:5.4.3');
     implementation ('se.michaelthelin.spotify:spotify-web-api-java:7.0.0');
+    implementation ('ch.qos.logback:logback-classic:1.2.3');
 
 }
 
