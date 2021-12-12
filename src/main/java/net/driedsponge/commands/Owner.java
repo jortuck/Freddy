@@ -18,6 +18,8 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Owner extends ListenerAdapter {
+    public static final Button CALL_LIST_BUTTON = Button.primary("entertaining","Current Calls");
+
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
         if(!event.getAuthor().getId().equals(Main.OWNER_ID)) return;
@@ -28,7 +30,9 @@ public class Owner extends ListenerAdapter {
             statistics(event);
         }else if(event.getMessage().getContentRaw().startsWith("!guildlist")){
             EmbedBuilder embedBuilder = guildList(event.getJDA());
-            event.getMessage().replyEmbeds(embedBuilder.build()).queue();
+            event.getMessage().replyEmbeds(embedBuilder.build())
+                    .setActionRow(CALL_LIST_BUTTON)
+                    .queue();
         }else if(event.getMessage().getContentRaw().startsWith("!deletecommand")){
             deleteCommand(event);
         }else if(event.getMessage().getContentRaw().startsWith("!entertaining")){
@@ -78,7 +82,7 @@ public class Owner extends ListenerAdapter {
         embedBuilder.addField("Guilds",String.valueOf(jda.getGuilds().size()),true);
         embedBuilder.addField("Currently Entertaining",String.valueOf(PlayerStore.size()),true);
         event.getMessage().replyEmbeds(embedBuilder.build())
-                .setActionRow(Button.primary("guildlist","Guild List"),Button.primary("entertaining","Current Calls"))
+                .setActionRow(Button.primary("guildlist","Guild List"),CALL_LIST_BUTTON)
                 .queue();
     }
 
