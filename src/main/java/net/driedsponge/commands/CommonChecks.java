@@ -1,9 +1,8 @@
 package net.driedsponge.commands;
 
+import net.driedsponge.PlayerStore;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.Event;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class CommonChecks {
     /**
@@ -12,7 +11,7 @@ public class CommonChecks {
      * @return Whether the bot is playing music in the guild or not
      */
     public static boolean playingMusic(Guild guild){
-        return guild.getAudioManager().isConnected() && Play.PLAYERS.get(guild) != null;
+        return guild.getAudioManager().isConnected() && PlayerStore.get(guild) != null;
     }
 
     /**

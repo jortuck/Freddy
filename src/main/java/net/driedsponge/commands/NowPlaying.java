@@ -1,6 +1,7 @@
 package net.driedsponge.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -18,8 +19,8 @@ public class NowPlaying extends GuildCommand {
         event.deferReply().queue();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.CYAN);
-        if(event.getGuild().getAudioManager().isConnected() && Play.PLAYERS.get(event.getGuild()) != null){
-            VoiceController vc = Play.PLAYERS.get(event.getGuild());
+        if(event.getGuild().getAudioManager().isConnected() &&  PlayerStore.get(event.getGuild().getIdLong()) != null){
+            VoiceController vc =  PlayerStore.get(event.getGuild().getIdLong());
             AudioTrackInfo np = vc.getNowPlaying().getInfo();
             embedBuilder.setTitle(np.title, np.uri);
             embedBuilder.addField("Artist",np.author,true);

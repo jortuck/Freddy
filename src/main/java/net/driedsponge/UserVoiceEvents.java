@@ -1,6 +1,5 @@
 package net.driedsponge;
 
-import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.guild.voice.*;
@@ -14,8 +13,8 @@ public class UserVoiceEvents extends ListenerAdapter {
         // Automatically disconnect if no one else is in the call
         if(event.getGuild().getAudioManager().isConnected()){
             if(event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1){
-                Play.PLAYERS.get(event.getGuild()).leave();
-                Play.PLAYERS.remove(event.getGuild());
+                PlayerStore.get(event.getGuild()).leave();
+                PlayerStore.remove(event.getGuild());
             }
         }
     }
@@ -46,7 +45,7 @@ public class UserVoiceEvents extends ListenerAdapter {
         if(event.getMember().hasPermission(Permission.VOICE_DEAF_OTHERS)){
             event.getMember().deafen(true).queue();
         }else{
-            VoiceController vc = Play.PLAYERS.get(event.getGuild());
+            VoiceController vc = PlayerStore.get(event.getGuild());
             EmbedBuilder embed = new EmbedBuilder();
             embed.setColor(Color.RED);
             embed.setTitle("Please give me permission to deafen!");

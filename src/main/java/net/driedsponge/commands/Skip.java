@@ -1,8 +1,8 @@
 package net.driedsponge.commands;
 
+import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class Skip extends GuildCommand {
     public Skip() {
@@ -17,7 +17,7 @@ public class Skip extends GuildCommand {
             return;
         }
         if(CommonChecks.playingMusic(event.getGuild())){
-            VoiceController vc = Play.PLAYERS.get(event.getGuild());
+            VoiceController vc = PlayerStore.get(event.getGuild());
             event.reply(":fast_forward: Skipping **"+vc.getNowPlaying().getInfo().title+"**").complete();
             vc.skip();
         }else{

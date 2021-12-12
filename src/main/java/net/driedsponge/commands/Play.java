@@ -1,9 +1,9 @@
 package net.driedsponge.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.driedsponge.PlayerStore;
 import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.hc.core5.http.ParseException;
@@ -12,12 +12,10 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
 public class Play extends GuildCommand {
 
     public AudioTrack current = null;
-    public static HashMap<Guild, VoiceController> PLAYERS = new HashMap<Guild, VoiceController>();
 
     public Play(){
         super(new String[]{"playskip","play"});
@@ -36,16 +34,16 @@ public class Play extends GuildCommand {
                     return;
                 } else {
                     VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel(), event.getChannel());
-                    PLAYERS.putIfAbsent(event.getGuild(), vc);
+                    PlayerStore.store(event.getGuild(), vc);
                     vc.join();
                 }
             }
-            if (PLAYERS.get(event.getGuild()) == null) {
+            if (PlayerStore.get(event.getGuild().getIdLong()) == null) {
                 VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel(), event.getChannel());
-                PLAYERS.put(vc.getGuild(), vc);
+                PlayerStore.store(vc.getGuild(), vc);
             }
 
-            VoiceController vc = PLAYERS.get(event.getGuild());
+            VoiceController vc = PlayerStore.get(event.getGuild().getIdLong());
             String arg = event.getOptions().get(0).getAsString();
             String url;
 

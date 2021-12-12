@@ -1,6 +1,7 @@
 package net.driedsponge.commands;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import net.driedsponge.PlayerStore;
 import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -24,8 +25,8 @@ public class Queue extends GuildCommand {
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.CYAN);
-        if (event.getGuild().getAudioManager().isConnected() && Play.PLAYERS.get(event.getGuild()) != null) {
-            VoiceController vc = Play.PLAYERS.get(event.getGuild());
+        if (event.getGuild().getAudioManager().isConnected() && PlayerStore.get(event.getGuild()) != null) {
+            VoiceController vc = PlayerStore.get(event.getGuild());
             AudioTrackInfo np = vc.getNowPlaying().getInfo();
             BlockingQueue<Song> songs = vc.getTrackScheduler().getQueue();
             embedBuilder.setTitle("Queue");

@@ -6,7 +6,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import net.driedsponge.commands.Play;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -167,7 +166,7 @@ public class TrackScheduler extends AudioEventAdapter {
             Guild guild = vc.getGuild();
             vc.getTextChannel().sendMessage("No more songs to play. Leaving now!").queue();
             vc.leave();
-            Play.PLAYERS.remove(guild);
+            PlayerStore.remove(guild);
         }
     }
     /**

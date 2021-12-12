@@ -1,12 +1,11 @@
 package net.driedsponge.commands;
 
 import net.driedsponge.Main;
+import net.driedsponge.PlayerStore;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -15,7 +14,6 @@ import java.awt.*;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BooleanSupplier;
 
 public class Owner extends ListenerAdapter {
     @Override
@@ -54,7 +52,7 @@ public class Owner extends ListenerAdapter {
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setTitle(jda.getSelfUser().getName() + " Statistics");
         embedBuilder.addField("Guilds",String.valueOf(jda.getGuilds().size()),true);
-        embedBuilder.addField("Currently Entertaining",String.valueOf(Play.PLAYERS.size()),true);
+        embedBuilder.addField("Currently Entertaining",String.valueOf(PlayerStore.size()),true);
         event.getMessage().replyEmbeds(embedBuilder.build()).queue();
     }
 
