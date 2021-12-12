@@ -72,4 +72,8 @@ public class PlayerStore {
     public static int size(){
         return controllers.size();
     }
+
+    public static HashMap<Long, VoiceController> getControllers() {
+        return controllers;
+    }
 }

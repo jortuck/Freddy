@@ -51,4 +51,5 @@ These are a set of utility commands to help the bot owner. All owner commands us
 - `!initialize` - Instructs the bot to register the slash commands with discord.
 - `!statistics` - Shows how many guilds the bot is in and how many guilds it's entertaining.
 - `!guildlist` - Shows a list of all guilds of which the bot is a member of.
+- `!entertaining` - Shows a list of all guilds where music is playing.
 - `!deletecommand <command name>` - Deletes the specified slash command. Useful for removing deprecated commands.

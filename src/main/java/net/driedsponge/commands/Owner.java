@@ -4,11 +4,13 @@ import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 import java.awt.*;
 import java.util.List;
@@ -25,14 +27,36 @@ public class Owner extends ListenerAdapter {
         }else if(event.getMessage().getContentRaw().startsWith("!statistics")){
             statistics(event);
         }else if(event.getMessage().getContentRaw().startsWith("!guildlist")){
-            guildList(event);
+            EmbedBuilder embedBuilder = guildList(event.getJDA());
+            event.getMessage().replyEmbeds(embedBuilder.build()).queue();
         }else if(event.getMessage().getContentRaw().startsWith("!deletecommand")){
             deleteCommand(event);
+        }else if(event.getMessage().getContentRaw().startsWith("!entertaining")){
+            EmbedBuilder embedBuilder = callList(event.getJDA());
+            event.getMessage().replyEmbeds(embedBuilder.build()).queue();
         }
     }
 
-    private void guildList(MessageReceivedEvent event){
-        JDA jda = event.getJDA();
+    public static EmbedBuilder callList(JDA jda){
+        if(PlayerStore.size() == 0){
+            return new EmbedBuilder().setColor(Color.RED).setTitle("Not playing any music anywhere!");
+        }
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setTitle(jda.getSelfUser().getName() + " Listeners");
+        StringBuilder builder = new StringBuilder();
+        builder.append("```");
+        PlayerStore.getControllers().values().forEach(vc -> {
+            builder.append("\n ").append(vc.getGuild().getName()).append(" (").append(vc.getGuild().getId()).append(")")
+                    .append(" - ").append(vc.getNowPlaying().getInfo().title)
+            ;
+        });
+        builder.append("\n```");
+        embedBuilder.setDescription(builder.toString());
+        return embedBuilder;
+    }
+
+    public static EmbedBuilder guildList(JDA jda){
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setTitle(jda.getSelfUser().getName() + " Guilds");
@@ -43,7 +67,7 @@ public class Owner extends ListenerAdapter {
         });
         builder.append("\n```");
         embedBuilder.setDescription(builder.toString());
-        event.getMessage().replyEmbeds(embedBuilder.build()).queue();
+        return embedBuilder;
     }
 
     private void statistics(MessageReceivedEvent event){
@@ -53,7 +77,9 @@ public class Owner extends ListenerAdapter {
         embedBuilder.setTitle(jda.getSelfUser().getName() + " Statistics");
         embedBuilder.addField("Guilds",String.valueOf(jda.getGuilds().size()),true);
         embedBuilder.addField("Currently Entertaining",String.valueOf(PlayerStore.size()),true);
-        event.getMessage().replyEmbeds(embedBuilder.build()).queue();
+        event.getMessage().replyEmbeds(embedBuilder.build())
+                .setActionRow(Button.primary("guildlist","Guild List"),Button.primary("entertaining","Current Calls"))
+                .queue();
     }
 
     private void initialize(JDA jda){
