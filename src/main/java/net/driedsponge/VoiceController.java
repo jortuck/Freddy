@@ -143,6 +143,7 @@ public class VoiceController {
         this.getGuild().getAudioManager().closeAudioConnection();
         this.nowPlaying = null;
         player.destroy();
+        PlayerStore.remove(this.getGuild());
     }
 
     public TrackScheduler getTrackScheduler() {
