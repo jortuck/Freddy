@@ -32,7 +32,7 @@ public class Main {
         // Disable compression (not recommended)
         builder.setCompression(Compression.NONE);
 
-        builder.setActivity(Activity.watching("Fergre"));
+        builder.setActivity(Activity.watching("for /help"));
 
         builder.addEventListeners(new Ping());
         builder.addEventListeners(new JoinLeave());
