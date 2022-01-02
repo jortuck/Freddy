@@ -17,10 +17,7 @@ public class Help extends GuildCommand {
 
     @Override
     public void execute(SlashCommandEvent event){
-        event.deferReply().queue();
-
         event.replyEmbeds(helpEmbed(event.getJDA()).build()).queue();
-
     }
 
     /**
