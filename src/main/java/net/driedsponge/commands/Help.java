@@ -31,7 +31,8 @@ public class Help extends GuildCommand {
         embedBuilder.setTitle(jda.getSelfUser().getName()+" Help");
         StringBuilder builder = new StringBuilder();
         List<Command> response = jda.retrieveCommands().complete();
-
+        builder.append("Fun fact: If you want to restrict commands to certain roles or channels, go to `Server Settings` > `Integrations` > `").append(jda.getSelfUser().getName()).append("` > `Manage`!")
+                .append("" + "\n");
         response.forEach(command -> {
             builder.append("\n").append("`/").append(command.getName());
             command.getOptions().forEach(o ->{
