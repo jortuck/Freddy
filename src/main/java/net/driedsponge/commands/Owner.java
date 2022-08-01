@@ -104,7 +104,9 @@ public class Owner extends ListenerAdapter {
         jda.upsertCommand("np","Shows the song that is currently playing.").queue(); // Implemented
         jda.upsertCommand("skip","Skips the current song.").queue(); // Implemented
         jda.upsertCommand("queue","Returns the songs in the queue.").queue(); // Implemented
-        jda.upsertCommand("shuffle","Shuffles the songs in the queue.").queue(); // Implemented
+        jda.upsertCommand("shuffle","Shuffles the songs in the queue.").queue(); // Implemented        jda.upsertCommand("shuffle","Shuffles the songs in the queue.").queue(); // Implemented
+        jda.upsertCommand("clear","Clears the songs from the queue.").queue(); // Implemented
+
     }
 
     private void deleteCommand(MessageReceivedEvent event){
