@@ -106,6 +106,7 @@ public class Owner extends ListenerAdapter {
         jda.upsertCommand("queue","Returns the songs in the queue.").queue(); // Implemented
         jda.upsertCommand("shuffle","Shuffles the songs in the queue.").queue(); // Implemented        jda.upsertCommand("shuffle","Shuffles the songs in the queue.").queue(); // Implemented
         jda.upsertCommand("clear","Clears the songs from the queue.").queue(); // Implemented
+        jda.upsertCommand("restart","Restarts the song that is currently playing.").queue(); // Implemented
 
     }
 
