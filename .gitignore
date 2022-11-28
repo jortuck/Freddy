@@ -1,0 +1,4 @@
+/bot/build
+/.idea
+/bot/.gradle
+/bot/settings.env
