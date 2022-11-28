@@ -9,14 +9,27 @@ services:
         - freddy
     restart: unless-stopped
     volumes:
-        - ./start.sh:/start.sh
-        - ./gradle:/gradle
-        - ./gradlew:/gradlew
-        - ./build.gradle:/build.gradle
-        - ./settings.gradle:/settings.gradle
-        - ./src:/src
+        - ./bot/start.sh:/start.sh
+        - ./bot/gradle:/gradle
+        - ./bot/gradlew:/gradlew
+        - ./bot/build.gradle:/build.gradle
+        - ./bot/settings.gradle:/settings.gradle
+        - ./bot/src:/src
     working_dir: /
     entrypoint: ['./start.sh']
-    container_name: freddy
+    container_name: freddy_dev
+    profiles:
+      - dev
     env_file:
-      - settings.env
+      - ./bot/settings.env
+  freddy:
+    image: freddy
+    networks:
+      - freddy
+    restart: unless-stopped
+    container_name: freddy_prod
+    profiles:
+      - prod
+    env_file:
+      - ./bot/settings.env
+
