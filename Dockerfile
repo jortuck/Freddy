@@ -5,4 +5,4 @@ COPY /bot   /
 RUN sh gradlew shadowJar;
 
 #Entrypoint runs when container actually starts!!!
-ENTRYPOINT ["/start.sh"]
+ENTRYPOINT ["java", "-jar", "/build/libs/GradleBot-1.0-SNAPSHOT-all.jar"]
