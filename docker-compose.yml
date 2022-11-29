@@ -23,7 +23,7 @@ services:
     env_file:
       - ./bot/settings.env
   freddy:
-    image: freddy
+    image: ghcr.io/driedsponge/freddy:latest
     networks:
       - freddy
     restart: unless-stopped
