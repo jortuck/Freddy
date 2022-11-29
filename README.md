@@ -3,8 +3,8 @@
 An open source Discord bot I made to play music for my friends since all the other ones got taken down by google.
 
 - To access the bots help menu, use `/help` or mention the bot in a text channel.
-- (Invite The Bot) [https://discord.com/api/oauth2/authorize?client_id=914454054808211476&permissions=414476271168&scope=bot%20applications.commands]
-- (Trello Board) [https://trello.com/b/Wo2BMjwA/freddybot]
+- [Invite The Bot](https://discord.com/api/oauth2/authorize?client_id=914454054808211476&permissions=414476271168&scope=bot%20applications.commands)
+- [Trello Board](https://trello.com/b/Wo2BMjwA/freddybot)
 
 ## Features:
 - Plays any song of your choice, as long as it's on YouTube!
@@ -34,9 +34,9 @@ The cool thing about an open source bot is that you can easily self-host it on y
 
 ### Using Docker:
 1. Make sure the system you intend the bot to run on has Docker installed and properly configured. **If you're not sure, what docker is or if it's setup properly on your system, don't use it.**
-2. Clone `settings.example.env` and rename the clone to `settings.env`.
+2. Clone `/bot/settings.example.env` and rename the clone to `/bot/settings.env`.
 3. Open your new `settings.env` file and set all the environment variables. If you're confused on how to do this, take a look at the example in `settings.example.env`.
-4. Once you've set the environment variables, run `docker-compose up -d --build`. This should build & run the bot. If you encounter any errors when trying to start the bot, (open an issue on GitHub)[https://github.com/DriedSponge/Freddy/issues].
+4. Once you've set the environment variables, run `docker compose --profile prod up -d --build`. This should build & run the bot. If you encounter any errors when trying to start the bot, [open an issue on GitHub](https://github.com/DriedSponge/Freddy/issues).
     
 ## Post Setup
 
