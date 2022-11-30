@@ -19,12 +19,14 @@ The cool thing about an open source bot is that you can easily self-host it on y
 
 ### Getting Your Discord Bot Token:
 
-### Getting Your Spotify Api Credentials:
-
+### Getting Your Spotify API Credentials:
+1. Visit the [Spotify developer dashboard](https://developer.spotify.com/dashboard/) to learn how to get a token.
+2. One logged in, head to https://developer.spotify.com/dashboard/applications and click the green `CREATE AN APP` button.
+3. One your app has been created, you should see Client ID and `SHOW CLIENT SECRET` directly below your app name and description. This will be your spotify api credentials.
 ### Installation & Configuration:
-1. Clone the project from github.
-    - `git clone git@github.com:DriedSponge/Freddy.git`
-2. In order for the bot to work, the following environment variables will need to be set. If you're using docker, they will bet set in the settings.env file (See Using Docker):
+1. Clone the project from GitHub.
+    - `git clone https://github.com/DriedSponge/Freddy.git`
+2. In order for the bot to work, the following environment variables will need to be set. If you're using docker, they will bet set in the `settings.env` file (See Using Docker):
     - `DISCORD_TOKEN`
     - `SPOTIFY_CLIENT_ID`
     - `SPOTIFY_CLIENT_SECRET`
@@ -34,22 +36,16 @@ The cool thing about an open source bot is that you can easily self-host it on y
 
 ### Using Docker:
 1. Make sure the system you intend the bot to run on has Docker installed and properly configured. **If you're not sure, what docker is or if it's setup properly on your system, don't use it.**
-2. Clone `/bot/settings.example.env` and rename the clone to `/bot/settings.env`.
+2. Clone `settings.example.env` and rename the clone to `settings.env`.
 3. Open your new `settings.env` file and set all the environment variables. If you're confused on how to do this, take a look at the example in `settings.example.env`.
 4. Once you've set the environment variables, run `docker compose --profile prod up -d --build`. This should build & run the bot. If you encounter any errors when trying to start the bot, [open an issue on GitHub](https://github.com/DriedSponge/Freddy/issues).
     
-## Post Setup
-
-Once you have the bot up and running for the first time, run the command `!initialize` in any channel the bot can view.
-This will instruct the bot to register the slash commands with Discord. The slash commands can take up to one hour to propagate,
-but the bot will be usable once it's finished.
+.
 
 ### Owner Commands
 
 These are a set of utility commands to help the bot owner. All owner commands use `!` has their prefix, so they can be used without having slash commands registered.
 
-- `!initialize` - Instructs the bot to register the slash commands with discord.
 - `!statistics` - Shows how many guilds the bot is in and how many guilds it's entertaining.
 - `!guildlist` - Shows a list of all guilds of which the bot is a member of.
 - `!entertaining` - Shows a list of all guilds where music is playing.
-- `!deletecommand <command name>` - Deletes the specified slash command. Useful for removing deprecated commands.
