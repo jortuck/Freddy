@@ -1,6 +1,5 @@
 package net.driedsponge;
 
-import io.sentry.Sentry;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -18,7 +17,6 @@ public class Main {
 
     public static void main(String[] args) throws LoginException, IOException, ParseException, SpotifyWebApiException {
 
-        intializeSentry();
         SpotifyLookup.clientCredentials_Sync();
 
         String token = System.getenv("DISCORD_TOKEN");
@@ -56,14 +54,4 @@ public class Main {
         Interactions.initialize(jda.updateCommands());
     }
 
-    private static void intializeSentry() {
-        Sentry.init(options -> {
-            options.setDsn(System.getenv("SENTRY_DSN"));
-            // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-            // We recommend adjusting this value in production.
-            options.setTracesSampleRate(1.0);
-
-        });
-
-    }
 }

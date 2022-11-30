@@ -1,7 +1,5 @@
 package net.driedsponge.commands;
 
-import io.sentry.Sentry;
-import io.sentry.UserFeedback;
 import net.driedsponge.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
