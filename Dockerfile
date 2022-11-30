@@ -1,6 +1,6 @@
 FROM openjdk:16
 
-COPY .   .
+COPY .  .
 
 RUN sh gradlew shadowJar;
 
