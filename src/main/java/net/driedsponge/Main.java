@@ -50,8 +50,10 @@ public class Main {
         builder.addEventListeners(new Restart());
         builder.addEventListeners(new MessageListener());
         builder.addEventListeners(new ButtonListener());
+
         JDA jda = builder.build();
-        
+
+        Interactions.initialize(jda.updateCommands());
     }
 
     private static void intializeSentry() {

@@ -88,6 +88,9 @@ public class Owner extends ListenerAdapter {
                 .queue();
     }
 
+    /**
+    Initializes slash commands, not sure why it's here :).
+     */
     private void initialize(JDA jda){
         jda.upsertCommand("ping","Check the bots ping.").queue(); // Implemented
         jda.upsertCommand("leave","Tells the bot to leave the current voice channel.").queue(); // Implemented

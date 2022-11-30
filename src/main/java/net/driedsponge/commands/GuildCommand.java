@@ -17,7 +17,7 @@ public class GuildCommand extends ListenerAdapter {
     public GuildCommand(String[] strings){
         this.alias = strings;
     }
-    public void onSlashCommand(SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if(event.getName().equals(this.name) || Arrays.asList(this.alias).contains(event.getName())){
             if(event.isFromGuild()){
                 execute(event);
