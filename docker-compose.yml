@@ -9,21 +9,21 @@ services:
         - freddy
     restart: unless-stopped
     volumes:
-        - ./bot/start.sh:/start.sh
-        - ./bot/gradle:/gradle
-        - ./bot/gradlew:/gradlew
-        - ./bot/build.gradle:/build.gradle
-        - ./bot/settings.gradle:/settings.gradle
-        - ./bot/src:/src
+        - ./start.sh:/start.sh
+        - ./gradle:/gradle
+        - ./gradlew:/gradlew
+        - ./build.gradle:/build.gradle
+        - ./settings.gradle:/settings.gradle
+        - ./src:/src
     working_dir: /
     entrypoint: ['./start.sh']
     container_name: freddy_dev
     profiles:
       - dev
     env_file:
-      - ./bot/settings.env
+      - ./settings.env
   freddy:
-    image: ghcr.io/driedsponge/freddy:latest
+    image: freds
     networks:
       - freddy
     restart: unless-stopped
@@ -31,5 +31,5 @@ services:
     profiles:
       - prod
     env_file:
-      - ./bot/settings.env
+      - ./settings.env
 
