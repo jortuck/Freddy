@@ -2,7 +2,7 @@ package net.driedsponge.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -16,7 +16,7 @@ public class Help extends GuildCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event){
+    public void execute(SlashCommandInteractionEvent event){
         event.replyEmbeds(helpEmbed(event.getJDA()).build()).queue();
     }
 

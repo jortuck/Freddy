@@ -4,13 +4,15 @@ import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.util.List;
@@ -123,7 +125,7 @@ public class Owner extends ListenerAdapter {
                     cmd.delete().queue();
                     Message response = event.getMessage().reply("Deleted the `"+commandName+"` command!").complete();
                     try{
-                        response.getPrivateChannel();
+                        event.getMessage().getAuthor().hasPrivateChannel();
                     }catch (IllegalStateException e){
                         response.getReferencedMessage().delete().queueAfter(5L, TimeUnit.SECONDS);
                         response.delete().queueAfter(5L, TimeUnit.SECONDS);
@@ -132,17 +134,13 @@ public class Owner extends ListenerAdapter {
                 }
             }
             Message response = event.getMessage().reply("Could not find the command named `"+commandName+"`.").complete();
-            try{
-                response.getPrivateChannel();
-            }catch (IllegalStateException e){
+            if(!response.isFromType(ChannelType.PRIVATE)){
                 response.getReferencedMessage().delete().queueAfter(5L, TimeUnit.SECONDS);
                 response.delete().queueAfter(5L, TimeUnit.SECONDS);
             }
         }else{
             Message response = event.getMessage().reply("Please follow the correct command format `/deletecommand <command>`").complete();
-            try{
-                response.getPrivateChannel();
-            }catch (IllegalStateException e){
+            if(!response.isFromType(ChannelType.PRIVATE)){
                 response.getReferencedMessage().delete().queueAfter(5L, TimeUnit.SECONDS);
                 response.delete().queueAfter(5L, TimeUnit.SECONDS);
             }

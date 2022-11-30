@@ -3,13 +3,12 @@ package net.driedsponge;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 public class Song {
     private AudioTrack track;
-    private SlashCommandEvent event;
+    private SlashCommandInteractionEvent event;
     private String thumbnail = null;
-    public Song(AudioTrack track, SlashCommandEvent event){
+    public Song(AudioTrack track, SlashCommandInteractionEvent event){
         this.track = track;
         this.event = event;
     }
@@ -25,7 +24,7 @@ public class Song {
         return this.track.getInfo();
     }
 
-    public SlashCommandEvent getEvent() {
+    public SlashCommandInteractionEvent getEvent() {
         return event;
     }
 

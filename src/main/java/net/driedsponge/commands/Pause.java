@@ -5,8 +5,7 @@ import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 
 public class Pause extends GuildCommand {
     public Pause() {
@@ -14,13 +13,13 @@ public class Pause extends GuildCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event) {
+    public void execute(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
         AudioManager manager = event.getGuild().getAudioManager();
         Member member = event.getMember();
         GuildVoiceState state = member.getVoiceState();
         if (manager.isConnected()) {
-            if (state.inVoiceChannel() && state.getChannel() == manager.getConnectedChannel()) {
+            if (state.inAudioChannel() && state.getChannel() == manager.getConnectedChannel()) {
                 VoiceController vc = PlayerStore.get(event.getGuild().getIdLong());
                 AudioPlayer player = vc.getPlayer();
                 if (event.getName().equals("resume")) {

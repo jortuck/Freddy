@@ -4,8 +4,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
@@ -22,24 +21,24 @@ public class Play extends GuildCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event) {
+    public void execute(SlashCommandInteractionEvent event) {
         if (event.getName().equals("play") || event.getName().equals("playskip")) {
             event.deferReply().queue();
             AudioManager audioManager = event.getGuild().getAudioManager();
 
             // Join if not connected
             if (!audioManager.isConnected()) {
-                if (!event.getMember().getVoiceState().inVoiceChannel()) {
+                if (!event.getMember().getVoiceState().inAudioChannel()) {
                     event.getHook().sendMessage("You must be in a voice channel to play a song!").setEphemeral(true).queue();
                     return;
                 } else {
-                    VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel(), event.getChannel());
+                    VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel().asVoiceChannel(), event.getChannel().asTextChannel());
                     PlayerStore.store(event.getGuild(), vc);
                     vc.join();
                 }
             }
             if (PlayerStore.get(event.getGuild().getIdLong()) == null) {
-                VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel(), event.getChannel());
+                VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel().asVoiceChannel(), event.getChannel().asTextChannel());
                 PlayerStore.store(vc.getGuild(), vc);
             }
 

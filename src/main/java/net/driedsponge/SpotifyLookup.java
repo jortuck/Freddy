@@ -6,8 +6,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import io.sentry.Sentry;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -54,10 +54,10 @@ public class SpotifyLookup {
      * Fetches tracks for the specified playlist from the Spotify API.
      * Each track will be added to the queue.
      * @param playListId The ID of the Spotify playlist.
-     * @param event The {@link SlashCommandEvent} that is associated with the playlist.
+     * @param event The {@link SlashCommandInteractionEvent} that is associated with the playlist.
      * @throws SpotifyWebApiException Spotify web API error
      */
-    public static void loadPlayList(String playListId, SlashCommandEvent event) throws IOException, ParseException, SpotifyWebApiException {
+    public static void loadPlayList(String playListId, SlashCommandInteractionEvent event) throws IOException, ParseException, SpotifyWebApiException {
         clientCredentials_Sync();
 
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();

@@ -5,9 +5,8 @@ import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 
 import java.awt.*;
 
@@ -18,7 +17,7 @@ public class JoinLeave extends GuildCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event) {
+    public void execute(SlashCommandInteractionEvent event) {
         if (event.getName().equals("join")) {
             event.reply("This command is no longer supported. Please use `/play [song]`.").setEphemeral(true).queue();
         }else if(event.getName().equals("leave")){
@@ -26,12 +25,12 @@ public class JoinLeave extends GuildCommand {
         }
     }
 
-    private void leave(SlashCommandEvent event){
+    private void leave(SlashCommandInteractionEvent event){
         AudioManager audioManager = event.getGuild().getAudioManager();
         if(audioManager.isConnected()){
-            VoiceChannel channel = audioManager.getConnectedChannel();
+            VoiceChannel channel = audioManager.getConnectedChannel().asVoiceChannel();
             Member member = event.getMember();
-            if(member.getVoiceState().inVoiceChannel() && member.getVoiceState().getChannel() == channel || member.hasPermission(Permission.MANAGE_CHANNEL)) {
+            if(member.getVoiceState().inAudioChannel() && member.getVoiceState().getChannel() == channel || member.hasPermission(Permission.MANAGE_CHANNEL)) {
                 VoiceController vc = PlayerStore.get(event.getGuild());
                 EmbedBuilder embedBuilder = new EmbedBuilder()
                         .setColor(Color.CYAN)

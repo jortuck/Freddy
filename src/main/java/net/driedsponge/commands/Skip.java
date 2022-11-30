@@ -2,15 +2,14 @@ package net.driedsponge.commands;
 
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 public class Skip extends GuildCommand {
     public Skip() {
         super("skip");
     }
 
     @Override
-    public void execute(SlashCommandEvent event) {
+    public void execute(SlashCommandInteractionEvent event) {
 
         if(!CommonChecks.listeningMusic(event.getMember(),event.getGuild())){
             event.reply("You need to be in a voice channel with the bot to skip.").setEphemeral(true).queue();

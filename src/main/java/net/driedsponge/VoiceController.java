@@ -11,9 +11,10 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
 
@@ -35,7 +36,7 @@ public class VoiceController {
      * @param voiceChannel The voice channel the bot is bound to.
      * @param textChannel The text channel the bot is bound to.
      */
-    public VoiceController(Guild guild, VoiceChannel voiceChannel, MessageChannel textChannel){
+    public VoiceController(Guild guild, VoiceChannel voiceChannel, TextChannel textChannel){
         this.guildId = guild.getId();
         this.jda = voiceChannel.getJDA();
         this.channel = voiceChannel.getId();
@@ -77,7 +78,7 @@ public class VoiceController {
 
     }
 
-    public void play(String song, SlashCommandEvent event, boolean now){
+    public void play(String song, SlashCommandInteractionEvent event, boolean now){
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
@@ -134,7 +135,7 @@ public class VoiceController {
         return this.jda.getVoiceChannelById(this.channel);
     }
 
-    public MessageChannel getTextChannel() {
+    public TextChannel getTextChannel() {
         return this.jda.getTextChannelById(this.msgChannel);
     }
 

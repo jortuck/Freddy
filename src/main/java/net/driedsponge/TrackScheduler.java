@@ -8,8 +8,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.util.*;
@@ -108,7 +108,7 @@ public class TrackScheduler extends AudioEventAdapter {
      * @param playlist The AudioPlaylist to add.
      * @param event The event associated with the playlist.
      */
-    public void queue(AudioPlaylist playlist, SlashCommandEvent event) {
+    public void queue(AudioPlaylist playlist, SlashCommandInteractionEvent event) {
         int playListSize = playlist.getTracks().size();
 
         int loopLimit = Math.min(playListSize, QUEUE_LIMIT);

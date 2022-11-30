@@ -3,15 +3,14 @@ package net.driedsponge.commands;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 public class Restart extends GuildCommand {
     public Restart() {
         super("restart");
     }
 
     @Override
-    public void execute(SlashCommandEvent event) {
+    public void execute(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
         if (CommonChecks.listeningMusic(event.getMember(), event.getGuild()) && CommonChecks.listeningMusic(event.getMember(), event.getGuild())) {
             VoiceController vc = PlayerStore.get(event.getGuild());

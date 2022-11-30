@@ -21,6 +21,6 @@ public class CommonChecks {
      * @return Whether the member is listening to music or not
      */
     public static boolean listeningMusic(Member member, Guild guild){
-        return (member.getVoiceState().inVoiceChannel() && member.getVoiceState().getChannel() == guild.getAudioManager().getConnectedChannel());
+        return (member.getVoiceState().inAudioChannel() && member.getVoiceState().getChannel() == guild.getAudioManager().getConnectedChannel());
     }
 }

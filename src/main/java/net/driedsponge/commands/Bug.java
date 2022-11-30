@@ -5,8 +5,7 @@ import io.sentry.UserFeedback;
 import net.driedsponge.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
 import java.time.temporal.TemporalAccessor;
@@ -18,7 +17,7 @@ public class Bug extends GuildCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event){
+    public void execute(SlashCommandInteractionEvent event){
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.RED);
         embedBuilder.setTitle("New Bug Report");

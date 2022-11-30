@@ -1,6 +1,6 @@
 package net.driedsponge.commands;
 
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.lang.reflect.Array;
@@ -17,7 +17,7 @@ public class GuildCommand extends ListenerAdapter {
     public GuildCommand(String[] strings){
         this.alias = strings;
     }
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommand(SlashCommandInteractionEvent event) {
         if(event.getName().equals(this.name) || Arrays.asList(this.alias).contains(event.getName())){
             if(event.isFromGuild()){
                 execute(event);
@@ -28,5 +28,5 @@ public class GuildCommand extends ListenerAdapter {
 
     }
 
-    public void execute(SlashCommandEvent event){}
+    public void execute(SlashCommandInteractionEvent event){}
 }

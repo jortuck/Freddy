@@ -6,8 +6,7 @@ import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import java.awt.*;
 import java.util.concurrent.BlockingQueue;
 
@@ -19,7 +18,7 @@ public class Queue extends GuildCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event) {
+    public void execute(SlashCommandInteractionEvent event) {
 
         event.deferReply().queue();
 

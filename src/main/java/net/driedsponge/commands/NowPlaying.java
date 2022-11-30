@@ -6,8 +6,7 @@ import net.driedsponge.TrackScheduler;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import java.awt.*;
 
 public class NowPlaying extends GuildCommand {
@@ -16,7 +15,7 @@ public class NowPlaying extends GuildCommand {
     }
 
     @Override
-    public void execute(SlashCommandEvent event){
+    public void execute(SlashCommandInteractionEvent event){
         event.deferReply().queue();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.CYAN);

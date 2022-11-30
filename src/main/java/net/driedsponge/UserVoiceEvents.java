@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class UserVoiceEvents extends ListenerAdapter {
     @Override
-    public void onGuildVoiceLeave(GuildVoiceLeaveEvent event){
+    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event){
         // Automatically disconnect if no one else is in the call
         if(event.getGuild().getAudioManager().isConnected()){
             if(event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1){
@@ -17,16 +17,14 @@ public class UserVoiceEvents extends ListenerAdapter {
                 PlayerStore.remove(event.getGuild());
             }
         }
-    }
-    @Override
-    public void onGuildVoiceJoin(GuildVoiceJoinEvent event){
-        // Deafen self when joining call.
+        // Self deafen
         if(event.getMember().getUser() == event.getJDA().getSelfUser()){
-           if(!event.getMember().getVoiceState().isGuildDeafened()){
-               selfDeafen(event);
-           }
+            if(!event.getMember().getVoiceState().isGuildDeafened()){
+                selfDeafen(event);
+            }
         }
     }
+
 
     @Override
     public void onGuildVoiceGuildDeafen(GuildVoiceGuildDeafenEvent event){
