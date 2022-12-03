@@ -32,6 +32,7 @@ public class Main {
 
         builder.setActivity(Activity.watching("for /help"));
 
+        //Commands
         builder.addEventListeners(new Ping());
         builder.addEventListeners(new JoinLeave());
         builder.addEventListeners(new UserVoiceEvents());
@@ -46,7 +47,11 @@ public class Main {
         builder.addEventListeners(new Shuffle());
         builder.addEventListeners(new Clear());
         builder.addEventListeners(new Restart());
+
+        // Messages
         builder.addEventListeners(new MessageListener());
+
+        // Buttons
         builder.addEventListeners(new ButtonListener());
 
         JDA jda = builder.build();
