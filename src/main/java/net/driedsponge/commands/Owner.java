@@ -2,25 +2,16 @@ package net.driedsponge.commands;
 
 import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
+import net.driedsponge.buttons.Entertaining;
+import net.driedsponge.buttons.GuildList;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class Owner extends ListenerAdapter {
-    public static final Button CALL_LIST_BUTTON = Button.primary("entertaining","Current Calls");
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
@@ -30,7 +21,7 @@ public class Owner extends ListenerAdapter {
         }else if(event.getMessage().getContentRaw().startsWith("!guildlist")){
             EmbedBuilder embedBuilder = guildList(event.getJDA());
             event.getMessage().replyEmbeds(embedBuilder.build())
-                    .setActionRow(CALL_LIST_BUTTON)
+                    .setActionRow(GuildList.GUILD_LIST_BUTTON)
                     .queue();
         }else if(event.getMessage().getContentRaw().startsWith("!entertaining")){
             EmbedBuilder embedBuilder = callList(event.getJDA());
@@ -79,7 +70,7 @@ public class Owner extends ListenerAdapter {
         embedBuilder.addField("Guilds",String.valueOf(jda.getGuilds().size()),true);
         embedBuilder.addField("Currently Entertaining",String.valueOf(PlayerStore.size()),true);
         event.getMessage().replyEmbeds(embedBuilder.build())
-                .setActionRow(Button.primary("guildlist","Guild List"),CALL_LIST_BUTTON)
+                .setActionRow(Entertaining.ENTERTAINING_BUTTON,GuildList.GUILD_LIST_BUTTON)
                 .queue();
     }
 

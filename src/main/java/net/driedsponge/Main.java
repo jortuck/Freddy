@@ -1,5 +1,7 @@
 package net.driedsponge;
 
+import net.driedsponge.buttons.Entertaining;
+import net.driedsponge.buttons.GuildList;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -52,7 +54,8 @@ public class Main {
         builder.addEventListeners(new MessageListener());
 
         // Buttons
-        builder.addEventListeners(new ButtonListener());
+        builder.addEventListeners(new GuildList());
+        builder.addEventListeners(new Entertaining());
 
         JDA jda = builder.build();
 
