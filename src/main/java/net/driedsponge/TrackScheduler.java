@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.driedsponge.buttons.SkipButton;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -98,7 +99,9 @@ public class TrackScheduler extends AudioEventAdapter {
                 song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue", song).build()).queue();
             }
         }else{
-            song.getEvent().getHook().sendMessageEmbeds(TrackScheduler.songCard("Now Playing",song).build()).queue();
+            song.getEvent().getHook().sendMessageEmbeds(TrackScheduler.songCard("Now Playing",song).build())
+                    .addActionRow(SkipButton.SKIP_BUTTON)
+                    .queue();
             vc.setNowPlaying(song);
         }
     }
@@ -120,7 +123,9 @@ public class TrackScheduler extends AudioEventAdapter {
                 queue.offer(song);
             } else {
                 vc.setNowPlaying(song);
-                vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+                vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
+                        .addActionRow(SkipButton.SKIP_BUTTON)
+                        .queue();
             }
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -161,7 +166,9 @@ public class TrackScheduler extends AudioEventAdapter {
             Song song = queue.poll();
             this.vc.setNowPlaying(song);
             vc.getPlayer().playTrack(song.getTrack());
-            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
+                    .addActionRow(SkipButton.SKIP_BUTTON)
+                    .queue();
         } else {
             Guild guild = vc.getGuild();
             EmbedBuilder embedBuilder = new EmbedBuilder()
@@ -180,6 +187,8 @@ public class TrackScheduler extends AudioEventAdapter {
     public void startNewTrack(Song song) {
             this.vc.setNowPlaying(song);
             vc.getPlayer().playTrack(song.getTrack());
-            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
+                    .addActionRow(SkipButton.SKIP_BUTTON)
+                    .queue();
     }
 }
