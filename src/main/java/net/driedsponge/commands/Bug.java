@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.awt.*;
 import java.time.temporal.TemporalAccessor;
 
-public class Bug extends GuildCommand {
+public class Bug extends SlashCommand {
 
     public Bug() {
         super("bug");

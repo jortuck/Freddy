@@ -4,7 +4,7 @@ import net.driedsponge.PlayerStore;
 import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-public class Restart extends GuildCommand {
+public class Restart extends SlashCommand {
     public Restart() {
         super("restart");
     }

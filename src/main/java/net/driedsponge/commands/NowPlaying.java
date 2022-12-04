@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import java.awt.*;
 
-public class NowPlaying extends GuildCommand {
+public class NowPlaying extends SlashCommand {
     public NowPlaying() {
         super("np");
     }

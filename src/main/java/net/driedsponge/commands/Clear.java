@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 
-public class Clear extends GuildCommand{
+public class Clear extends SlashCommand{
     public Clear(){
         super("clear");
     }

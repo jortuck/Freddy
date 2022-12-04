@@ -36,21 +36,12 @@ public class Main {
 
         builder.setActivity(Activity.watching("for /help"));
 
-        //Commands
-        builder.addEventListeners(new Ping());
-        builder.addEventListeners(new JoinLeave());
+        //Voice
         builder.addEventListeners(new UserVoiceEvents());
-        builder.addEventListeners(new Play());
-        builder.addEventListeners(new Pause());
+
+        //Commands
         builder.addEventListeners(new Owner());
-        builder.addEventListeners(new NowPlaying());
-        builder.addEventListeners(new Queue());
-        builder.addEventListeners(new Skip());
-        builder.addEventListeners(new Help());
-        builder.addEventListeners(new Bug());
-        builder.addEventListeners(new Shuffle());
-        builder.addEventListeners(new Clear());
-        builder.addEventListeners(new Restart());
+        builder.addEventListeners(new CommandListener());
 
         // Messages
         builder.addEventListeners(new MessageListener());

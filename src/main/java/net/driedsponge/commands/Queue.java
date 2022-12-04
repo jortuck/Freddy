@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.awt.*;
 import java.util.concurrent.BlockingQueue;
 
-public class Queue extends GuildCommand {
+public class Queue extends SlashCommand {
 
 
     public Queue() {

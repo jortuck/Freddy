@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Play extends GuildCommand {
+public class Play extends SlashCommand {
 
     public AudioTrack current = null;
 

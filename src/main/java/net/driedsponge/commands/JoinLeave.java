@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.awt.*;
 
-public class JoinLeave extends GuildCommand {
+public class JoinLeave extends SlashCommand {
 
     public JoinLeave() {
         super(new String[]{"join", "leave"});

@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.requests.RestAction;
 import java.awt.*;
 import java.util.List;
 
-public class Help extends GuildCommand {
+public class Help extends SlashCommand {
     public Help() {
         super("help");
     }

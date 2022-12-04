@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionE
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
-public class Skip extends GuildCommand {
+public class Skip extends SlashCommand {
     public Skip() {
         super("skip");
     }
