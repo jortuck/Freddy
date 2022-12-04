@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.TrackScheduler;
 import net.driedsponge.VoiceController;
+import net.driedsponge.buttons.SkipButton;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -23,7 +24,9 @@ public class NowPlaying extends GuildCommand {
             VoiceController vc =  PlayerStore.get(event.getGuild().getIdLong());
 
             String title = String.format("Now Playing in %s",vc.getVoiceChannel().getName());
-            event.getHook().sendMessageEmbeds(TrackScheduler.songCard(title,vc.getNowPlaying()).build()).queue();
+            event.getHook().sendMessageEmbeds(TrackScheduler.songCard(title,vc.getNowPlaying()).build())
+                    .addActionRow(SkipButton.SKIP_BUTTON)
+                    .queue();
         }else{
             embedBuilder.setTitle("Nothing is playing.");
             event.getHook().sendMessageEmbeds(embedBuilder.build()).queue();

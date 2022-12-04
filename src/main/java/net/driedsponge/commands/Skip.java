@@ -2,7 +2,12 @@ package net.driedsponge.commands;
 
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+
 public class Skip extends GuildCommand {
     public Skip() {
         super("skip");
@@ -10,17 +15,21 @@ public class Skip extends GuildCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+        skip(event.getMember(),event.getGuild(),event.getHook());
+    }
 
-        if(!CommonChecks.listeningMusic(event.getMember(),event.getGuild())){
-            event.reply("You need to be in a voice channel with the bot to skip.").setEphemeral(true).queue();
+    public static void skip(Member member, Guild guild, InteractionHook hook){
+        if(!CommonChecks.listeningMusic(member,guild)){
+            hook.sendMessage("You need to be in a voice channel with the bot to skip.").setEphemeral(true).queue();
             return;
         }
-        if(CommonChecks.playingMusic(event.getGuild())){
-            VoiceController vc = PlayerStore.get(event.getGuild());
-            event.reply(":fast_forward: Skipping **"+vc.getNowPlaying().getInfo().title+"**").complete();
+        if(CommonChecks.playingMusic(guild)){
+            VoiceController vc = PlayerStore.get(guild);
+            hook.sendMessage(":fast_forward: Skipping **"+vc.getNowPlaying().getInfo().title+"**").complete();
             vc.skip();
         }else{
-            event.reply("Nothing to skip.").setEphemeral(true).queue();
+            hook.sendMessage("Nothing to skip.").setEphemeral(true).queue();
         }
     }
 }
