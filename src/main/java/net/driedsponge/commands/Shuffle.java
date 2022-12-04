@@ -15,6 +15,7 @@ public class Shuffle extends GuildCommand {
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         event.deferReply().queue();
+        shuffle(event.getMember(),event.getGuild(),event.getHook());
     }
 
     public static void shuffle(Member member, Guild guild, InteractionHook hook){
