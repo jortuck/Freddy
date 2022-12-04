@@ -1,7 +1,6 @@
 package net.driedsponge.buttons;
 
-import net.driedsponge.commands.Skip;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.driedsponge.commands.music.Skip;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 

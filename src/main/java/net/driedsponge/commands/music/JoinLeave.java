@@ -1,7 +1,8 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.music;
 
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;

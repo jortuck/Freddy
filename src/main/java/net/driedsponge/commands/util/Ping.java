@@ -1,5 +1,6 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.util;
 
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class Ping extends SlashCommand {

@@ -1,9 +1,10 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;

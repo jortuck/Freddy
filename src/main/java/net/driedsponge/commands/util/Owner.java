@@ -1,4 +1,4 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.util;
 
 import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;

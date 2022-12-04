@@ -1,8 +1,8 @@
 package net.driedsponge;
 
 import net.driedsponge.buttons.GuildList;
-import net.driedsponge.commands.Help;
-import net.driedsponge.commands.Owner;
+import net.driedsponge.commands.util.Help;
+import net.driedsponge.commands.util.Owner;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

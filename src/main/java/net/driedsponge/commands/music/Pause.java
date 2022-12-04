@@ -1,8 +1,9 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;

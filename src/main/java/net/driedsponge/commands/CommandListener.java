@@ -1,5 +1,9 @@
 package net.driedsponge.commands;
 
+import net.driedsponge.commands.music.*;
+import net.driedsponge.commands.util.Bug;
+import net.driedsponge.commands.util.Help;
+import net.driedsponge.commands.util.Ping;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 

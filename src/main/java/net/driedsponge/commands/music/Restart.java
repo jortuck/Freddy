@@ -1,8 +1,10 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.music;
 
 import net.driedsponge.PlayerStore;
 import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
+import net.driedsponge.commands.CommonChecks;
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 public class Restart extends SlashCommand {
     public Restart() {

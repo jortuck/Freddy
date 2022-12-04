@@ -1,6 +1,6 @@
 package net.driedsponge.buttons;
 
-import net.driedsponge.commands.Owner;
+import net.driedsponge.commands.util.Owner;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 

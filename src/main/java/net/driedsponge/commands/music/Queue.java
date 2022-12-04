@@ -1,10 +1,11 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
 import net.driedsponge.buttons.ShuffleButton;
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
