@@ -26,7 +26,7 @@ public class Skip extends GuildCommand {
         }
         if(CommonChecks.playingMusic(guild)){
             VoiceController vc = PlayerStore.get(guild);
-            hook.sendMessage(":fast_forward: Skipping **"+vc.getNowPlaying().getInfo().title+"**").complete();
+            hook.sendMessage(":fast_forward: "+member.getAsMention()+" skipped **"+vc.getNowPlaying().getInfo().title+"**").complete();
             vc.skip();
         }else{
             hook.sendMessage("Nothing to skip.").setEphemeral(true).queue();

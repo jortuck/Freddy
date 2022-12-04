@@ -22,7 +22,7 @@ public class Shuffle extends GuildCommand {
         if (CommonChecks.listeningMusic(member, guild) && CommonChecks.listeningMusic(member, guild)) {
             VoiceController vc = PlayerStore.get(guild);
             if (vc.getTrackScheduler().shuffle()) {
-                hook.sendMessage("The queue has been shuffled!").queue();
+                hook.sendMessage(member.getAsMention()+" shuffled the queue!").queue();
             } else {
                 hook.sendMessage("There are no songs in the queue to shuffle.").queue();
             }
