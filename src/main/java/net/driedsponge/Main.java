@@ -2,6 +2,7 @@ package net.driedsponge;
 
 import net.driedsponge.buttons.Entertaining;
 import net.driedsponge.buttons.GuildList;
+import net.driedsponge.buttons.ShuffleButton;
 import net.driedsponge.buttons.SkipButton;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
@@ -58,6 +59,7 @@ public class Main {
         builder.addEventListeners(new GuildList());
         builder.addEventListeners(new Entertaining());
         builder.addEventListeners(new SkipButton());
+        builder.addEventListeners(new ShuffleButton());
 
         JDA jda = builder.build();
 
