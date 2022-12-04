@@ -11,23 +11,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
 
-public class Owner extends ListenerAdapter {
+public class Owner {
 
-    @Override
-    public void onMessageReceived(MessageReceivedEvent event){
-        if(!event.getAuthor().getId().equals(Main.OWNER_ID)) return;
-        if(event.getMessage().getContentRaw().startsWith("!statistics")){
-            statistics(event);
-        }else if(event.getMessage().getContentRaw().startsWith("!guildlist")){
-            EmbedBuilder embedBuilder = guildList(event.getJDA());
-            event.getMessage().replyEmbeds(embedBuilder.build())
-                    .setActionRow(GuildList.GUILD_LIST_BUTTON)
-                    .queue();
-        }else if(event.getMessage().getContentRaw().startsWith("!entertaining")){
-            EmbedBuilder embedBuilder = callList(event.getJDA());
-            event.getMessage().replyEmbeds(embedBuilder.build()).queue();
-        }
-    }
 
     public static EmbedBuilder callList(JDA jda){
         if(PlayerStore.size() == 0){
@@ -62,7 +47,7 @@ public class Owner extends ListenerAdapter {
         return embedBuilder;
     }
 
-    private void statistics(MessageReceivedEvent event){
+    public static EmbedBuilder statistics(MessageReceivedEvent event){
         JDA jda = event.getJDA();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.CYAN);
@@ -72,6 +57,7 @@ public class Owner extends ListenerAdapter {
         event.getMessage().replyEmbeds(embedBuilder.build())
                 .setActionRow(Entertaining.ENTERTAINING_BUTTON,GuildList.GUILD_LIST_BUTTON)
                 .queue();
+        return embedBuilder;
     }
 
 

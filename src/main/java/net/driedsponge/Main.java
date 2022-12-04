@@ -40,7 +40,6 @@ public class Main {
         builder.addEventListeners(new UserVoiceEvents());
 
         //Commands
-        builder.addEventListeners(new Owner());
         builder.addEventListeners(new CommandListener());
 
         // Messages
