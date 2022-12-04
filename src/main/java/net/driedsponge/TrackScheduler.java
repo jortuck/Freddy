@@ -78,7 +78,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public boolean shuffle() {
         if (this.getQueue().size() > 0) {
             List<Object> songs = Arrays.asList(this.queue.toArray());
-            Collections.shuffle(songs);
+            Collections.shuffle(songs,new Random());
             this.queue.clear();
             this.queue.addAll((Collection) songs);
             return true;
