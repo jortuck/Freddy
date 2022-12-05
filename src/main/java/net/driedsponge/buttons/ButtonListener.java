@@ -3,20 +3,35 @@ package net.driedsponge.buttons;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-// import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
 
 public class ButtonListener extends ListenerAdapter {
-    public String name;
 
-    public ButtonListener(String name){
-        this.name = name;
-    }
-    @Override
-    public void onButtonInteraction(ButtonInteractionEvent event) {
-        if(event.getComponent().getId().equals(this.name)) {
-            this.execute(event);
+    private static final HashMap<String, ButtonCommand> commands = new HashMap<>();
+
+    public ButtonListener(){
+        ButtonCommand[] cmds = new ButtonCommand[]{
+                new GuildList(),
+                new Entertaining(),
+                new ShuffleButton(),
+                new SkipButton()
+
+        };
+        ArrayList<ButtonCommand> botCommands = new ArrayList<>(Arrays.asList(cmds));
+        for (ButtonCommand command : botCommands) {
+            System.out.println(command.getName().toLowerCase());
+            commands.put(command.getName().toLowerCase(), command);
         }
     }
 
-    public void execute(ButtonInteractionEvent event){}
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        System.out.println(event.getComponent().getId());
+        ButtonCommand command = commands.get(event.getComponent().getId().toLowerCase());
+        command.execute(event);
+    }
+
 }

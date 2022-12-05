@@ -4,11 +4,11 @@ import net.driedsponge.commands.util.Owner;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-public class GuildList extends  ButtonListener{
-    public static final Button GUILD_LIST_BUTTON = Button.primary("GuildList","Servers");
+public class GuildList extends  ButtonCommand{
+    public static final Button GUILD_LIST_BUTTON = Button.primary("guildlist","Servers");
 
     public GuildList(){
-        super("GuildList");
+        super("guildlist");
     }
 
     @Override

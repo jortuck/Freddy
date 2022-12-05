@@ -4,7 +4,7 @@ import net.driedsponge.commands.music.Shuffle;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-public class ShuffleButton extends ButtonListener {
+public class ShuffleButton extends ButtonCommand {
     public static final Button SHUFFLE_BUTTON = Button.success("shuffle","Shuffle");
     public ShuffleButton() {
         super("shuffle");

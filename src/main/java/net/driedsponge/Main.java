@@ -1,9 +1,6 @@
 package net.driedsponge;
 
-import net.driedsponge.buttons.Entertaining;
-import net.driedsponge.buttons.GuildList;
-import net.driedsponge.buttons.ShuffleButton;
-import net.driedsponge.buttons.SkipButton;
+import net.driedsponge.buttons.*;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -14,6 +11,7 @@ import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
 import java.io.IOException;
 
 public class Main {
@@ -46,10 +44,7 @@ public class Main {
         builder.addEventListeners(new MessageListener());
 
         // Buttons
-        builder.addEventListeners(new GuildList());
-        builder.addEventListeners(new Entertaining());
-        builder.addEventListeners(new SkipButton());
-        builder.addEventListeners(new ShuffleButton());
+        builder.addEventListeners(new ButtonListener());
 
         JDA jda = builder.build();
 

@@ -1,5 +1,6 @@
 package net.driedsponge;
 
+import net.driedsponge.buttons.Entertaining;
 import net.driedsponge.buttons.GuildList;
 import net.driedsponge.commands.util.Help;
 import net.driedsponge.commands.util.Owner;
@@ -21,7 +22,7 @@ public class MessageListener extends ListenerAdapter {
             }else if(event.getMessage().getContentRaw().startsWith("!guildlist")){
                 EmbedBuilder embedBuilder = Owner.guildList(event.getJDA());
                 event.getMessage().replyEmbeds(embedBuilder.build())
-                        .setActionRow(GuildList.GUILD_LIST_BUTTON)
+                        .setActionRow(Entertaining.ENTERTAINING_BUTTON)
                         .queue();
             }else if(event.getMessage().getContentRaw().startsWith("!entertaining")){
                 EmbedBuilder embedBuilder = Owner.statistics(event);
