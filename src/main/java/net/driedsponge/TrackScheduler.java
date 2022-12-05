@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -148,6 +149,7 @@ public class TrackScheduler extends AudioEventAdapter {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(title);
         embedBuilder.setTitle(song.getInfo().title, song.getInfo().uri);
+        embedBuilder.setThumbnail(song.getThumbnail());
         embedBuilder.addField("Artist", song.getInfo().author, true);
         embedBuilder.setColor(Color.CYAN);
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
