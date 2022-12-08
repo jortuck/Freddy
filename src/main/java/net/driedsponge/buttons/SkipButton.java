@@ -1,6 +1,7 @@
 package net.driedsponge.buttons;
 
 import net.driedsponge.commands.music.Skip;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -14,6 +15,10 @@ public class SkipButton extends  ButtonCommand{
         public void execute(ButtonInteractionEvent event){
                 event.deferReply().queue();
                 Skip.skip(event.getMember(),event.getGuild(),event.getHook());
+                MessageEmbed original = event.getMessage().getEmbeds().get(0);
+
+                // Set skip button as disabled when clicked. Maybe remove it entirely? idk.
+                event.editButton(SKIP_BUTTON.asDisabled()).queue();
         }
 
 }

@@ -15,21 +15,33 @@ public class Shuffle extends SlashCommand {
     }
 
     @Override
-    public void execute(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
-        shuffle(event.getMember(),event.getGuild(),event.getHook());
+    public void execute(SlashCommandInteractionEvent event)  {
+
+        try {
+            shuffle(event.getMember(),event.getGuild());
+            event.reply("The queue has been shuffled!").queue();
+        } catch (Exception e) {
+            event.reply(e.getMessage()).setEphemeral(true).queue();
+        }
     }
 
-    public static void shuffle(Member member, Guild guild, InteractionHook hook){
+    /**
+     * Shuffle the queue
+     * @param member
+     * @param guild
+     */
+    public static void shuffle(Member member, Guild guild) throws Exception{
         if (CommonChecks.listeningMusic(member, guild) && CommonChecks.listeningMusic(member, guild)) {
             VoiceController vc = PlayerStore.get(guild);
-            if (vc.getTrackScheduler().shuffle()) {
-                hook.sendMessage(member.getAsMention()+" shuffled the queue!").queue();
-            } else {
-                hook.sendMessage("There are no songs in the queue to shuffle.").queue();
+            if (!vc.getTrackScheduler().shuffle()) {
+                throw new Exception("There are no songs in the queue to shuffle.");
             }
         } else {
-            hook.sendMessage("You need to be in a call listening to music to use this command!").queue();
+            throw new Exception("You need to be in a call listening to music to use this command!");
         }
+    }
+
+    public static String replyMessage(Member member){
+        return  member.getAsMention()+" shuffled the queue!";
     }
 }
