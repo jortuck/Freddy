@@ -29,7 +29,6 @@ public class ButtonListener extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        System.out.println(event.getComponent().getId());
         ButtonCommand command = commands.get(event.getComponent().getId().toLowerCase());
         command.execute(event);
     }
