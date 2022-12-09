@@ -55,12 +55,11 @@ public class SpotifyLookup {
      * @param event The {@link SlashCommandInteractionEvent} that is associated with the playlist.
      * @throws SpotifyWebApiException Spotify web API error
      */
-    public static void loadPlayList(String playListId, SlashCommandInteractionEvent event) throws IOException, ParseException, SpotifyWebApiException {
+    public static void loadPlayList(String playListId, SlashCommandInteractionEvent event, VoiceController vc) throws IOException, ParseException, SpotifyWebApiException {
         clientCredentials_Sync();
 
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();
         Playlist playlist = request.execute();
-        VoiceController vc = PlayerStore.get(event.getGuild());
         Paging<PlaylistTrack> tracks = playlist.getTracks();
 
         EmbedBuilder embedBuilder = new EmbedBuilder();

@@ -6,6 +6,7 @@ import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
@@ -46,58 +47,57 @@ public class Play extends SlashCommand {
             String arg = event.getOptions().get(0).getAsString();
             String url;
 
-            // Check for valid YouTube links, if they did not send a url, search the term on YouTube.
+
+            // Check for valid YouTube links, if they did not send an url, search the term on YouTube.
             try {
-                URL u = new URL(arg);
-                if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")|| u.getHost().equals("music.youtube.com")) {
-                    event.deferReply().queue();
-                    url = u.toString();
-                    try {
-                        VoiceController vc = getOrCreateVc(event.getGuild(),voiceChannel,event.getChannel().asTextChannel());
-                        vc.play(url, event, event.getName().equals("playskip"));
-                    }catch (Exception e){
-                        EmbedBuilder embed = new EmbedBuilder();
-                        embed.setTitle("Error: Insufficient Permissions");
-                        embed.setDescription(e.getMessage());
-                        embed.setColor(Color.RED);
-                        event.getHook().sendMessageEmbeds(embed.build()).queue();
-                    }
-                } else if(u.getHost().equals("open.spotify.com")){
-                    String[] paths = u.getPath().split("/",3);
-                    if(paths[1].equals("playlist")){
-                        if(paths[2] != null){
-                            SpotifyLookup.loadPlayList(paths[2],event);
-                        }else{
-                            event.reply("Invalid Spotify playlist!").setEphemeral(true).queue();
-                        }
-                    }else {
-                        event.reply("Invalid Spotify link!").setEphemeral(true).queue();
-                    }
-                } else {
-                    event.reply("The URL you send must be a valid YouTube or Spotify link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
-                }
-            } catch (MalformedURLException exception) {
-                event.deferReply().queue();
-                event.getHook().sendMessage(":mag: Searching for **"+arg+"**...").queue();
+                VoiceController vc = getOrCreateVc(event.getGuild(),voiceChannel,event.getChannel().asTextChannel());
                 try {
-                    VoiceController vc = getOrCreateVc(event.getGuild(),voiceChannel,event.getChannel().asTextChannel());
+                    URL u = new URL(arg);
+                    if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")|| u.getHost().equals("music.youtube.com")) {
+                        event.deferReply().queue();
+                        url = u.toString();
+                        vc.join();
+                        vc.play(url, event, event.getName().equals("playskip"));
+                    } else if(u.getHost().equals("open.spotify.com")){
+                        String[] paths = u.getPath().split("/",3);
+                        if(paths[1].equals("playlist")){
+                            if(paths[2] != null){
+                                event.deferReply().queue();
+                                vc.join();
+                                SpotifyLookup.loadPlayList(paths[2],event, vc);
+                            }else{
+                                event.reply("Invalid Spotify playlist!").setEphemeral(true).queue();
+                            }
+                        }else {
+                            event.reply("Invalid Spotify link!").setEphemeral(true).queue();
+                        }
+                    } else {
+                        event.reply("The URL you send must be a valid YouTube or Spotify link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
+                    }
+                } catch (MalformedURLException exception) {
+                    event.deferReply().queue();
+                    event.getHook().sendMessage(":mag: Searching for **"+arg+"**...").queue();
+                    vc.join();
                     vc.play("ytsearch:"+arg, event,  event.getName().equals("playskip"));
-                }catch (Exception e){
-                    EmbedBuilder embed = new EmbedBuilder();
-                    embed.setTitle("Error: Insufficient Permissions");
-                    embed.setDescription(e.getMessage());
-                    embed.setColor(Color.RED);
-                    event.getHook().sendMessageEmbeds(embed.build()).queue();
+                } catch (IOException | ParseException e) {
+                    event.reply("Sorry, there was an error playing your song. Please try again later.").setEphemeral(true).queue();
+                } catch (SpotifyWebApiException e){
+                    event.reply("That spotify playlist could not be found. Make sure it's a valid **public** playlist.").setEphemeral(true).queue();
                 }
-            } catch (IOException | ParseException e) {
-                event.reply("Sorry, there was an error playing your song. Please try again later.").setEphemeral(true).queue();
-            } catch (SpotifyWebApiException e){
-                event.reply("That spotify playlist could not be found. Make sure it's a valid **public** playlist.").setEphemeral(true).queue();
+            } catch (Exception e){
+                event.replyEmbeds(badPermissions(e.getMessage()).build()).queue();
             }
-
-
         }
     }
+
+    private EmbedBuilder badPermissions(String msg){
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setTitle("Error: Insufficient Permissions");
+        embed.setDescription(msg);
+        embed.setColor(Color.RED);
+        return embed;
+    }
+
 
     /**
      * Check for existing voice controller, if none then create
@@ -108,17 +108,17 @@ public class Play extends SlashCommand {
      * @throws Exception
      */
     private VoiceController getOrCreateVc(Guild guild, VoiceChannel voiceChannel, TextChannel textChannel) throws Exception{
-        // If already exist
-        if (PlayerStore.get(guild.getIdLong()) != null) {
-            return PlayerStore.get(guild.getIdLong());
-        }
-        try {
-            VoiceController vc = new VoiceController(guild, voiceChannel, textChannel);
-            vc.join();
-            PlayerStore.store(guild, vc);
+        if(guild.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL)){
+            if (PlayerStore.get(guild.getIdLong()) != null) {
+                return PlayerStore.get(guild.getIdLong());
+            }
+            VoiceController vc = new VoiceController(guild,voiceChannel,textChannel);
+            PlayerStore.store(guild,vc);
             return vc;
-        }   catch (PermissionException e) {
-            throw new Exception("It looks like I don't have enough permissions to enter the call. I would love to play music for you, but please make sure I can join! I am missing the `"+e.getPermission().getName()+"` permission.");
+        }else{
+            throw new Exception("It looks like I don't have enough permissions to enter the call. I would love to play music for you, but please make sure I can join! I am missing the `VOICE_CONNECT` permission.");
         }
+
     }
+
 }

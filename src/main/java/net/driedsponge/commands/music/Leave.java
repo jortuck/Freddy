@@ -11,24 +11,20 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.awt.*;
 
-public class JoinLeave extends SlashCommand {
+public class Leave extends SlashCommand {
 
-    public JoinLeave() {
-        super(new String[]{"join", "leave"});
+    public Leave() {
+        super("leave");
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        if (event.getName().equals("join")) {
-            event.reply("This command is no longer supported. Please use `/play [song]`.").setEphemeral(true).queue();
-        }else if(event.getName().equals("leave")){
             leave(event);
-        }
     }
 
     private void leave(SlashCommandInteractionEvent event){
         AudioManager audioManager = event.getGuild().getAudioManager();
-        if(audioManager.isConnected()){
+        if(audioManager.isConnected() && event.getGuild().getAudioManager().isConnected()){
             VoiceChannel channel = audioManager.getConnectedChannel().asVoiceChannel();
             Member member = event.getMember();
             if(member.getVoiceState().inAudioChannel() && member.getVoiceState().getChannel() == channel || member.hasPermission(Permission.MANAGE_CHANNEL)) {
