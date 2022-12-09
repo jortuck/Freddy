@@ -10,12 +10,19 @@ import java.awt.*;
 public class UserVoiceEvents extends ListenerAdapter {
     @Override
     public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event){
+        if(event.getChannelLeft() !=null && event.getMember().getUser() == event.getJDA().getSelfUser()){
+            PlayerStore.get(event.getGuild()).leave();
+            return;
+        }
         // Automatically disconnect if no one else is in the call
         if(event.getGuild().getAudioManager().isConnected()){
             if(event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1){
                 PlayerStore.get(event.getGuild()).leave();
+                return;
             }
         }
+
+
         // Self deafen
         if(event.getMember().getUser() == event.getJDA().getSelfUser()){
             if(!event.getMember().getVoiceState().isGuildDeafened()){

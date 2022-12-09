@@ -46,6 +46,10 @@ public class CommandListener extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         SlashCommand command = commands.get(event.getName());
         command.execute(event);
-
+//        if(event.getGuild().getSelfMember().hasPermission(event.getChannel().asGuildMessageChannel(), Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)){
+//            command.execute(event);
+//        }else{
+//            event.reply("I need to have permission to send messages to this channel.").queue();
+//        };
     }
 }
