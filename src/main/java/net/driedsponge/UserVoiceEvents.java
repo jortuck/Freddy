@@ -10,7 +10,7 @@ import java.awt.*;
 public class UserVoiceEvents extends ListenerAdapter {
     @Override
     public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event){
-        if(event.getChannelLeft() !=null && event.getMember().getUser() == event.getJDA().getSelfUser()){
+        if(event.getChannelLeft() !=null && event.getMember().getUser() == event.getJDA().getSelfUser() && event.getGuild().getAudioManager().isConnected()){
             PlayerStore.get(event.getGuild()).leave();
             return;
         }
