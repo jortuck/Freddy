@@ -5,10 +5,14 @@ import net.driedsponge.PlayerStore;
 import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
 import net.driedsponge.commands.SlashCommand;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,10 +38,20 @@ public class Play extends SlashCommand {
                     return;
                 } else {
                     VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel().asVoiceChannel(), event.getChannel().asTextChannel());
-                    PlayerStore.store(event.getGuild(), vc);
-                    vc.join();
+                    try {
+                        vc.join();
+                        PlayerStore.store(event.getGuild(), vc);
+                    }   catch (PermissionException e) {
+                        EmbedBuilder embed = new EmbedBuilder();
+                        embed.setTitle("Error: Insufficient Permissions");
+                        embed.setDescription("It looks like I don't have enough permissions to enter the call. I would love to play music for you, but please make sure I can join! I am missing the `"+e.getPermission().getName()+"` permission.");
+                        embed.setColor(Color.RED);
+                        event.getHook().sendMessageEmbeds(embed.build()).queue();
+                        return;
+                    }
                 }
             }
+            // After join
             if (PlayerStore.get(event.getGuild().getIdLong()) == null) {
                 VoiceController vc = new VoiceController(event.getGuild(), event.getMember().getVoiceState().getChannel().asVoiceChannel(), event.getChannel().asTextChannel());
                 PlayerStore.store(vc.getGuild(), vc);

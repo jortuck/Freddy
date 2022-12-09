@@ -65,17 +65,8 @@ public class VoiceController {
     /**
      * Tells the bot to join the call.
      */
-    public void join(){
-        try {
+    public void join() throws PermissionException{
             this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
-        } catch (PermissionException e){
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setTitle("An error occurred when trying to join the call!");
-            embed.setDescription("**Missing permission: `"+e.getPermission().getName()+"`**");
-            embed.setColor(Color.RED);
-            this.getTextChannel().sendMessageEmbeds(embed.build()).queue();
-        }
-
     }
 
     public void play(String song, SlashCommandInteractionEvent event, boolean now){
