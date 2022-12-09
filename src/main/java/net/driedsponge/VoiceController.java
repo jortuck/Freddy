@@ -130,6 +130,9 @@ public class VoiceController {
         return this.jda.getTextChannelById(this.msgChannel);
     }
 
+    /**
+     * Tells the bot to leave, you do not need to manually destroy the VoiceController.
+     */
     public void leave(){
         this.getTrackScheduler().getQueue().clear();
         this.getGuild().getAudioManager().closeAudioConnection();

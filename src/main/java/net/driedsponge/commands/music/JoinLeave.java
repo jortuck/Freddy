@@ -37,7 +37,6 @@ public class JoinLeave extends SlashCommand {
                         .setColor(Color.CYAN)
                         .setTitle(String.format(":wave: Leaving %s! Goodbye!",vc.getVoiceChannel().getName()));
                 vc.leave();
-                PlayerStore.remove(event.getGuild());
                 event.replyEmbeds(embedBuilder.build()).queue();
             }else{
                 event.reply("You must have the **MANAGE_CHANNEL** permission to use this command or you must be currently connected to "+channel.getName()+".").queue();

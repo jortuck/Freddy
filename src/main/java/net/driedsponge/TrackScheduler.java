@@ -164,14 +164,7 @@ public class TrackScheduler extends AudioEventAdapter {
      * Starts a new track taken from the queue.
      */
     public void startNewTrack() {
-        if (!queue.isEmpty()) {
-            Song song = queue.poll();
-            this.vc.setNowPlaying(song);
-            vc.getPlayer().playTrack(song.getTrack());
-            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
-                    .addActionRow(SkipButton.SKIP_BUTTON)
-                    .queue();
-        } else {
+        if (queue.isEmpty()) {
             Guild guild = vc.getGuild();
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setColor(Color.CYAN)
@@ -180,7 +173,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
             vc.leave();
             PlayerStore.remove(guild);
+            return;
         }
+        Song song = queue.poll();
+        this.vc.setNowPlaying(song);
+        vc.getPlayer().playTrack(song.getTrack());
+        vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
+                .addActionRow(SkipButton.SKIP_BUTTON)
+                .queue();
     }
     /**
      * Starts a new specified track.

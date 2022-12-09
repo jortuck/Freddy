@@ -28,6 +28,7 @@ public class Play extends SlashCommand {
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         if (event.getName().equals("play") || event.getName().equals("playskip")) {
+
             event.deferReply().queue();
             AudioManager audioManager = event.getGuild().getAudioManager();
 

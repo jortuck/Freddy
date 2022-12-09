@@ -4,6 +4,7 @@ import net.driedsponge.commands.music.*;
 import net.driedsponge.commands.util.Bug;
 import net.driedsponge.commands.util.Help;
 import net.driedsponge.commands.util.Ping;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -45,5 +46,6 @@ public class CommandListener extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         SlashCommand command = commands.get(event.getName());
         command.execute(event);
+
     }
 }

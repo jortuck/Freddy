@@ -14,7 +14,6 @@ public class UserVoiceEvents extends ListenerAdapter {
         if(event.getGuild().getAudioManager().isConnected()){
             if(event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1){
                 PlayerStore.get(event.getGuild()).leave();
-                PlayerStore.remove(event.getGuild());
             }
         }
         // Self deafen
