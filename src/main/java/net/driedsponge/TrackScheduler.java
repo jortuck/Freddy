@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.net.URL;
+import java.time.Duration;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -154,12 +155,22 @@ public class TrackScheduler extends AudioEventAdapter {
         embedBuilder.setTitle(song.getInfo().title, song.getInfo().uri);
         embedBuilder.setThumbnail(song.getThumbnail());
         embedBuilder.addField("Artist", song.getInfo().author, true);
+        embedBuilder.addField("Length", duration(song.getTrack().getDuration()), true);
         embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
         if(song.getThumbnail() != null){
             embedBuilder.setThumbnail(song.getThumbnail());
         }
         return embedBuilder;
+    }
+
+    private static String duration(long milliseconds){
+        // Define the number of milliseconds
+        Duration duration = Duration.ofMillis(milliseconds);
+        long minutes = duration.toMinutes();
+        long seconds = duration.getSeconds() % 60;
+        String timeString = String.format("%02d:%02d", minutes, seconds);
+        return timeString;
     }
 
     /**

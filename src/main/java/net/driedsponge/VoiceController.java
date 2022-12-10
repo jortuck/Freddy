@@ -70,6 +70,7 @@ public class VoiceController {
             this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
     }
 
+
     public void play(String song, SlashCommandInteractionEvent event, boolean now){
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override

@@ -52,6 +52,9 @@ public class Interactions {
                 Commands.slash("clear","Clears the songs from the queue.")
                         .setGuildOnly(true),
                 Commands.slash("restart","Restarts the song that is currently playing.")
+                        .setGuildOnly(true),
+                Commands.slash("seek","Jump to any time in the song.")
+                        .addOption(OptionType.STRING,"time","The time in the audio to skip to. The format should be MM:SS",true)
                         .setGuildOnly(true)
         };
         commands.addCommands(cmds);

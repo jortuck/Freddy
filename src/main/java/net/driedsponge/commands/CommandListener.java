@@ -27,7 +27,8 @@ public class CommandListener extends ListenerAdapter {
                 new Pause(),
                 new Queue(),
                 new Shuffle(),
-                new Restart()
+                new Restart(),
+                new Seek()
 
         };
         ArrayList<SlashCommand> botCommands = new ArrayList<>(Arrays.asList(cmds));
