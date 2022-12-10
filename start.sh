@@ -1,2 +1,2 @@
 #!/bin/bash
-java -jar /build/libs/GradleBot-1.0-SNAPSHOT-all.jar
+java -jar /build/libs/Freddy-1.0-SNAPSHOT-all.jar
