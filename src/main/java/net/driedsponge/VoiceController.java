@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -65,18 +66,10 @@ public class VoiceController {
     /**
      * Tells the bot to join the call.
      */
-    public void join(){
-        try {
+    public void join() throws PermissionException{
             this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
-        } catch (PermissionException e){
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setTitle("An error occurred when trying to join the call!");
-            embed.setDescription("**Missing permission: `"+e.getPermission().getName()+"`**");
-            embed.setColor(Color.RED);
-            this.getTextChannel().sendMessageEmbeds(embed.build()).queue();
-        }
-
     }
+
 
     public void play(String song, SlashCommandInteractionEvent event, boolean now){
         playerManager.loadItem(song, new AudioLoadResultHandler() {
@@ -122,9 +115,8 @@ public class VoiceController {
         });
     }
 
-    public void skip(){
-
-        this.trackScheduler.startNewTrack();
+    public void skip(Member member){
+        this.trackScheduler.startNewTrack(member);
     }
 
     public Song getNowPlaying() {
@@ -139,6 +131,9 @@ public class VoiceController {
         return this.jda.getTextChannelById(this.msgChannel);
     }
 
+    /**
+     * Tells the bot to leave, you do not need to manually destroy the VoiceController.
+     */
     public void leave(){
         this.getTrackScheduler().getQueue().clear();
         this.getGuild().getAudioManager().closeAudioConnection();

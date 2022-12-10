@@ -55,17 +55,16 @@ public class SpotifyLookup {
      * @param event The {@link SlashCommandInteractionEvent} that is associated with the playlist.
      * @throws SpotifyWebApiException Spotify web API error
      */
-    public static void loadPlayList(String playListId, SlashCommandInteractionEvent event) throws IOException, ParseException, SpotifyWebApiException {
+    public static void loadPlayList(String playListId, SlashCommandInteractionEvent event, VoiceController vc) throws IOException, ParseException, SpotifyWebApiException {
         clientCredentials_Sync();
 
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();
         Playlist playlist = request.execute();
-        VoiceController vc = PlayerStore.get(event.getGuild());
         Paging<PlaylistTrack> tracks = playlist.getTracks();
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + tracks.getItems().length + " songs to the Queue from " + playlist.getName() + "!");
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
         embedBuilder.setThumbnail(playlist.getImages()[0].getUrl());
         event.getHook().sendMessageEmbeds(embedBuilder.build())

@@ -1,7 +1,9 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.music;
 
+import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -10,37 +12,34 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.awt.*;
 
-public class JoinLeave extends GuildCommand {
+public class Leave extends SlashCommand {
 
-    public JoinLeave() {
-        super(new String[]{"join", "leave"});
+    public Leave() {
+        super("leave");
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        if (event.getName().equals("join")) {
-            event.reply("This command is no longer supported. Please use `/play [song]`.").setEphemeral(true).queue();
-        }else if(event.getName().equals("leave")){
             leave(event);
-        }
     }
 
     private void leave(SlashCommandInteractionEvent event){
         AudioManager audioManager = event.getGuild().getAudioManager();
-        if(audioManager.isConnected()){
+        if(audioManager.isConnected() && event.getGuild().getAudioManager().isConnected()){
             VoiceChannel channel = audioManager.getConnectedChannel().asVoiceChannel();
             Member member = event.getMember();
             if(member.getVoiceState().inAudioChannel() && member.getVoiceState().getChannel() == channel || member.hasPermission(Permission.MANAGE_CHANNEL)) {
                 VoiceController vc = PlayerStore.get(event.getGuild());
                 EmbedBuilder embedBuilder = new EmbedBuilder()
-                        .setColor(Color.CYAN)
+                        .setColor(Main.PRIMARY_COLOR)
                         .setTitle(String.format(":wave: Leaving %s! Goodbye!",vc.getVoiceChannel().getName()));
                 vc.leave();
-                PlayerStore.remove(event.getGuild());
                 event.replyEmbeds(embedBuilder.build()).queue();
             }else{
                 event.reply("You must have the **MANAGE_CHANNEL** permission to use this command or you must be currently connected to "+channel.getName()+".").queue();
             }
+        }else{
+            event.reply("I am not in any call.").setEphemeral(true).queue();
         }
 
     }

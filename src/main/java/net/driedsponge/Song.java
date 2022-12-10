@@ -4,6 +4,17 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 public class Song {
     private AudioTrack track;
     private SlashCommandInteractionEvent event;
@@ -11,6 +22,13 @@ public class Song {
     public Song(AudioTrack track, SlashCommandInteractionEvent event){
         this.track = track;
         this.event = event;
+        try {
+            List<NameValuePair> query = URLEncodedUtils.parse(new URI(track.getInfo().uri), StandardCharsets.UTF_8);
+            this.thumbnail = "https://img.youtube.com/vi/"+query.get(0).getValue()+"/hqdefault.jpg";
+
+        } catch ( URISyntaxException e) {
+                this.thumbnail = "https://img.youtube.com/vi/8PbZjHyKiyo/hqdefault.jpg";
+        }
     }
 
     public AudioTrack getTrack() {

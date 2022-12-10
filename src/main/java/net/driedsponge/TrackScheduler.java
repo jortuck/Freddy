@@ -6,12 +6,18 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.driedsponge.buttons.SkipButton;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.net.URL;
+import java.time.Duration;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -48,7 +54,7 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext) {
-            startNewTrack();
+            startNewTrack((Member) null);
         }
     }
 
@@ -77,7 +83,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public boolean shuffle() {
         if (this.getQueue().size() > 0) {
             List<Object> songs = Arrays.asList(this.queue.toArray());
-            Collections.shuffle(songs);
+            Collections.shuffle(songs,new Random());
             this.queue.clear();
             this.queue.addAll((Collection) songs);
             return true;
@@ -98,7 +104,9 @@ public class TrackScheduler extends AudioEventAdapter {
                 song.getEvent().getHook().sendMessageEmbeds(songCard("Song Added to Queue", song).build()).queue();
             }
         }else{
-            song.getEvent().getHook().sendMessageEmbeds(TrackScheduler.songCard("Now Playing",song).build()).queue();
+            song.getEvent().getHook().sendMessageEmbeds(TrackScheduler.songCard("Now Playing",song).build())
+                    .addActionRow(SkipButton.SKIP_BUTTON)
+                    .queue();
             vc.setNowPlaying(song);
         }
     }
@@ -120,12 +128,14 @@ public class TrackScheduler extends AudioEventAdapter {
                 queue.offer(song);
             } else {
                 vc.setNowPlaying(song);
-                vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+                vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
+                        .addActionRow(SkipButton.SKIP_BUTTON)
+                        .queue();
             }
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + playlist.getTracks().size() + " songs to the Queue from " + playlist.getName() + "!");
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
 
         event.getHook().sendMessageEmbeds(embedBuilder.build())
@@ -143,35 +153,64 @@ public class TrackScheduler extends AudioEventAdapter {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setAuthor(title);
         embedBuilder.setTitle(song.getInfo().title, song.getInfo().uri);
+        embedBuilder.setThumbnail(song.getThumbnail());
         embedBuilder.addField("Artist", song.getInfo().author, true);
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.addField("Length", duration(song.getTrack().getDuration()), true);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
         if(song.getThumbnail() != null){
             embedBuilder.setThumbnail(song.getThumbnail());
-            System.out.println(song.getThumbnail());
         }
         return embedBuilder;
     }
 
     /**
-     * Starts a new track taken from the queue.
+     * Convert milliseconds to MM:SS/np
+     * @param milliseconds
+     * @return
      */
-    public void startNewTrack() {
-        if (!queue.isEmpty()) {
-            Song song = queue.poll();
-            this.vc.setNowPlaying(song);
-            vc.getPlayer().playTrack(song.getTrack());
-            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
-        } else {
+    public static String duration(long milliseconds){
+        // Define the number of milliseconds
+        Duration duration = Duration.ofMillis(milliseconds);
+        long minutes = duration.toMinutes();
+        long seconds = duration.getSeconds() % 60;
+        String timeString = String.format("%02d:%02d", minutes, seconds);
+        return timeString;
+    }
+
+    /**
+     * Starts a new track taken from the queue.
+     * @param member Option Param for who skipped the last track
+     */
+    public void startNewTrack(@Nullable Member member) {
+        String lastSong = vc.getNowPlaying().getInfo().title;
+        if (queue.isEmpty()) {
             Guild guild = vc.getGuild();
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setColor(Color.CYAN)
+                    .setColor(Main.PRIMARY_COLOR)
                     .setTitle(String.format(":wave: No more songs to play. Leaving %s!",vc.getVoiceChannel().getName()));
-            vc.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
 
+            if(member != null){
+                vc.getTextChannel().sendMessage(":fast_forward: "+member.getAsMention()+" skipped **"+lastSong+"**")
+                        .addEmbeds(embedBuilder.build()).queue();
+            }else{
+                vc.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+            }
             vc.leave();
             PlayerStore.remove(guild);
+            return;
         }
+        Song song = queue.poll();
+        this.vc.setNowPlaying(song);
+        vc.getPlayer().playTrack(song.getTrack());
+        MessageCreateAction msg = vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build());
+        if(member != null){
+            msg = vc.getTextChannel()
+                    .sendMessage(":fast_forward: "+member.getAsMention()+" skipped **"+lastSong+"**")
+                    .addEmbeds(songCard("Now Playing", song).build());
+        }
+        msg.addActionRow(SkipButton.SKIP_BUTTON);
+        msg.queue();
     }
     /**
      * Starts a new specified track.
@@ -180,6 +219,8 @@ public class TrackScheduler extends AudioEventAdapter {
     public void startNewTrack(Song song) {
             this.vc.setNowPlaying(song);
             vc.getPlayer().playTrack(song.getTrack());
-            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build()).queue();
+            vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
+                    .addActionRow(SkipButton.SKIP_BUTTON)
+                    .queue();
     }
 }

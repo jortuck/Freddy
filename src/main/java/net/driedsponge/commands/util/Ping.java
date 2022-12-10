@@ -1,15 +1,17 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.util;
 
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Ping extends ListenerAdapter {
-    @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+public class Ping extends SlashCommand {
 
-        if (event.getName().equals("ping")) {
+    public Ping(){
+        super("ping");
+    }
+    @Override
+    public void execute(SlashCommandInteractionEvent event) {
             event.reply("Pong!").queue(response ->{
                 response.editOriginal("Pong! "+String.valueOf(event.getJDA().getGatewayPing())).queue();
             }); // reply immediately
-        }
     }
 }

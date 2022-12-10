@@ -1,5 +1,6 @@
 package net.driedsponge;
 
+import net.driedsponge.buttons.*;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -10,11 +11,13 @@ import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
 import java.io.IOException;
 
 public class Main {
     public static final String OWNER_ID = System.getenv("OWNER_ID");
 
+    public static final Color PRIMARY_COLOR = Color.MAGENTA;
     public static void main(String[] args) throws LoginException, IOException, ParseException, SpotifyWebApiException {
 
         SpotifyLookup.clientCredentials_Sync();
@@ -32,21 +35,16 @@ public class Main {
 
         builder.setActivity(Activity.watching("for /help"));
 
-        builder.addEventListeners(new Ping());
-        builder.addEventListeners(new JoinLeave());
+        //Voice
         builder.addEventListeners(new UserVoiceEvents());
-        builder.addEventListeners(new Play());
-        builder.addEventListeners(new Pause());
-        builder.addEventListeners(new Owner());
-        builder.addEventListeners(new NowPlaying());
-        builder.addEventListeners(new Queue());
-        builder.addEventListeners(new Skip());
-        builder.addEventListeners(new Help());
-        builder.addEventListeners(new Bug());
-        builder.addEventListeners(new Shuffle());
-        builder.addEventListeners(new Clear());
-        builder.addEventListeners(new Restart());
+
+        //Commands
+        builder.addEventListeners(new CommandListener());
+
+        // Messages
         builder.addEventListeners(new MessageListener());
+
+        // Buttons
         builder.addEventListeners(new ButtonListener());
 
         JDA jda = builder.build();

@@ -1,5 +1,6 @@
-package net.driedsponge.commands;
+package net.driedsponge.commands.util;
 
+import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -10,14 +11,14 @@ import net.dv8tion.jda.api.requests.RestAction;
 import java.awt.*;
 import java.util.List;
 
-public class Help extends GuildCommand {
+public class Help extends SlashCommand {
     public Help() {
         super("help");
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent event){
-        event.replyEmbeds(helpEmbed(event.getJDA()).build()).queue();
+        event.replyEmbeds(helpEmbed(event.getJDA()).build()).setEphemeral(true).queue();
     }
 
     /**
