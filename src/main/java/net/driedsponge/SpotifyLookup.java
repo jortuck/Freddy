@@ -64,7 +64,7 @@ public class SpotifyLookup {
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + tracks.getItems().length + " songs to the Queue from " + playlist.getName() + "!");
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
         embedBuilder.setThumbnail(playlist.getImages()[0].getUrl());
         event.getHook().sendMessageEmbeds(embedBuilder.build())

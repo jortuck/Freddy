@@ -131,7 +131,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + playlist.getTracks().size() + " songs to the Queue from " + playlist.getName() + "!");
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
 
         event.getHook().sendMessageEmbeds(embedBuilder.build())
@@ -151,7 +151,7 @@ public class TrackScheduler extends AudioEventAdapter {
         embedBuilder.setTitle(song.getInfo().title, song.getInfo().uri);
         embedBuilder.setThumbnail(song.getThumbnail());
         embedBuilder.addField("Artist", song.getInfo().author, true);
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
         if(song.getThumbnail() != null){
             embedBuilder.setThumbnail(song.getThumbnail());
@@ -167,7 +167,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (queue.isEmpty()) {
             Guild guild = vc.getGuild();
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setColor(Color.CYAN)
+                    .setColor(Main.PRIMARY_COLOR)
                     .setTitle(String.format(":wave: No more songs to play. Leaving %s!",vc.getVoiceChannel().getName()));
             vc.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
 

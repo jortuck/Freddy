@@ -19,7 +19,7 @@ public class Owner {
             return new EmbedBuilder().setColor(Color.RED).setTitle("Not playing any music anywhere!");
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setTitle(jda.getSelfUser().getName() + " Listeners");
         StringBuilder builder = new StringBuilder();
         builder.append("```");
@@ -35,7 +35,7 @@ public class Owner {
 
     public static EmbedBuilder guildList(JDA jda){
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setTitle(jda.getSelfUser().getName() + " Guilds");
         StringBuilder builder = new StringBuilder();
         builder.append("```");
@@ -50,7 +50,7 @@ public class Owner {
     public static EmbedBuilder statistics(MessageReceivedEvent event){
         JDA jda = event.getJDA();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setTitle(jda.getSelfUser().getName() + " Statistics");
         embedBuilder.addField("Guilds",String.valueOf(jda.getGuilds().size()),true);
         embedBuilder.addField("Currently Entertaining",String.valueOf(PlayerStore.size()),true);

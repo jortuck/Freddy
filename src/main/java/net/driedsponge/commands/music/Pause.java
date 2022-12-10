@@ -15,7 +15,6 @@ public class Pause extends SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
         AudioManager manager = event.getGuild().getAudioManager();
         Member member = event.getMember();
         GuildVoiceState state = member.getVoiceState();
@@ -25,16 +24,16 @@ public class Pause extends SlashCommand {
                 AudioPlayer player = vc.getPlayer();
                 if (event.getName().equals("resume")) {
                     player.setPaused(false);
-                    event.getHook().sendMessage("Resuming...").queue();
+                    event.reply("Resuming...").queue();
                 } else {
-                    event.getHook().sendMessage("Pausing...").queue();
+                    event.reply("Pausing...").queue();
                     player.setPaused(true);
                 }
             } else {
-                event.getHook().sendMessage("You must be in the same channel as me to pause/resume.").queue();
+                event.reply("You must be in the same channel as me to pause/resume.").setEphemeral(true).queue();
             }
         } else {
-            event.getHook().sendMessage("I am not connected to any voice channel").queue();
+            event.reply("I am not connected to any voice channel").setEphemeral(true).queue();
         }
     }
 }

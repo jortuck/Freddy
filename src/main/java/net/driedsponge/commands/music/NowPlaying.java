@@ -1,6 +1,7 @@
 package net.driedsponge.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.TrackScheduler;
 import net.driedsponge.VoiceController;
@@ -20,7 +21,7 @@ public class NowPlaying extends SlashCommand {
     public void execute(SlashCommandInteractionEvent event){
         event.deferReply().queue();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.CYAN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
         if(event.getGuild().getAudioManager().isConnected() &&  PlayerStore.get(event.getGuild().getIdLong()) != null){
             VoiceController vc =  PlayerStore.get(event.getGuild().getIdLong());
 

@@ -1,5 +1,6 @@
 package net.driedsponge.commands.music;
 
+import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
 import net.driedsponge.commands.SlashCommand;
@@ -30,7 +31,7 @@ public class Leave extends SlashCommand {
             if(member.getVoiceState().inAudioChannel() && member.getVoiceState().getChannel() == channel || member.hasPermission(Permission.MANAGE_CHANNEL)) {
                 VoiceController vc = PlayerStore.get(event.getGuild());
                 EmbedBuilder embedBuilder = new EmbedBuilder()
-                        .setColor(Color.CYAN)
+                        .setColor(Main.PRIMARY_COLOR)
                         .setTitle(String.format(":wave: Leaving %s! Goodbye!",vc.getVoiceChannel().getName()));
                 vc.leave();
                 event.replyEmbeds(embedBuilder.build()).queue();

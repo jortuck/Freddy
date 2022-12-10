@@ -1,6 +1,7 @@
 package net.driedsponge.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
@@ -33,7 +34,7 @@ public class Queue extends SlashCommand {
                     .queue();
         } else {
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setColor(Color.GREEN);
+            embedBuilder.setColor(Main.PRIMARY_COLOR);
             embedBuilder.setTitle("Nothing is playing.");
             event.getHook().sendMessageEmbeds(embedBuilder.build()).setEphemeral(true).queue();
         }
@@ -42,7 +43,7 @@ public class Queue extends SlashCommand {
     public static MessageEmbed qEmbed(Guild guild) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Queue");
-        embedBuilder.setColor(Color.GREEN);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
 
         VoiceController vc = PlayerStore.get(guild);
         AudioTrackInfo np = vc.getNowPlaying().getInfo();

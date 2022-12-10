@@ -17,6 +17,7 @@ import java.io.IOException;
 public class Main {
     public static final String OWNER_ID = System.getenv("OWNER_ID");
 
+    public static final Color PRIMARY_COLOR = Color.MAGENTA;
     public static void main(String[] args) throws LoginException, IOException, ParseException, SpotifyWebApiException {
 
         SpotifyLookup.clientCredentials_Sync();
