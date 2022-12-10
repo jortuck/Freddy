@@ -164,7 +164,12 @@ public class TrackScheduler extends AudioEventAdapter {
         return embedBuilder;
     }
 
-    private static String duration(long milliseconds){
+    /**
+     * Convert milliseconds to MM:SS/np
+     * @param milliseconds
+     * @return
+     */
+    public static String duration(long milliseconds){
         // Define the number of milliseconds
         Duration duration = Duration.ofMillis(milliseconds);
         long minutes = duration.toMinutes();
