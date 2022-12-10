@@ -19,7 +19,7 @@ public class Skip extends SlashCommand {
     public void execute(SlashCommandInteractionEvent event) {
         try {
             String skip = skip(event.getMember(),event.getGuild());
-            event.reply(skip).queue();
+            event.reply(skip).setEphemeral(true).queue();
         }catch (Exception e){
             event.reply(e.getMessage()).setEphemeral(true).queue();
         }
@@ -32,10 +32,10 @@ public class Skip extends SlashCommand {
         if(CommonChecks.playingMusic(guild)){
             VoiceController vc = PlayerStore.get(guild);
             if(vc.getTrackScheduler().getQueue().size() > 0){
-                vc.skip();
-                return ":fast_forward: "+member.getAsMention()+" skipped **"+vc.getNowPlaying().getInfo().title+"**";
+                vc.skip(member);
+                return "Skipping...";
             }else{
-                vc.skip();
+                vc.skip(member);
                 return "No more songs left in the queue!";
             }
         }else{

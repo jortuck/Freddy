@@ -9,8 +9,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.driedsponge.buttons.SkipButton;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.net.URL;
@@ -50,7 +53,7 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason.mayStartNext) {
-            startNewTrack();
+            startNewTrack((Member) null);
         }
     }
 
@@ -155,22 +158,28 @@ public class TrackScheduler extends AudioEventAdapter {
         embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
         if(song.getThumbnail() != null){
             embedBuilder.setThumbnail(song.getThumbnail());
-            System.out.println(song.getThumbnail());
         }
         return embedBuilder;
     }
 
     /**
      * Starts a new track taken from the queue.
+     * @param member Option Param for who skipped the last track
      */
-    public void startNewTrack() {
+    public void startNewTrack(@Nullable Member member) {
+        String lastSong = vc.getNowPlaying().getInfo().title;
         if (queue.isEmpty()) {
             Guild guild = vc.getGuild();
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setColor(Main.PRIMARY_COLOR)
                     .setTitle(String.format(":wave: No more songs to play. Leaving %s!",vc.getVoiceChannel().getName()));
-            vc.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
 
+            if(member != null){
+                vc.getTextChannel().sendMessage(":fast_forward: "+member.getAsMention()+" skipped **"+lastSong+"**")
+                        .addEmbeds(embedBuilder.build()).queue();
+            }else{
+                vc.getTextChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+            }
             vc.leave();
             PlayerStore.remove(guild);
             return;
@@ -178,9 +187,14 @@ public class TrackScheduler extends AudioEventAdapter {
         Song song = queue.poll();
         this.vc.setNowPlaying(song);
         vc.getPlayer().playTrack(song.getTrack());
-        vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build())
-                .addActionRow(SkipButton.SKIP_BUTTON)
-                .queue();
+        MessageCreateAction msg = vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build());
+        if(member != null){
+            msg = vc.getTextChannel()
+                    .sendMessage(":fast_forward: "+member.getAsMention()+" skipped **"+lastSong+"**")
+                    .addEmbeds(songCard("Now Playing", song).build());
+        }
+        msg.addActionRow(SkipButton.SKIP_BUTTON);
+        msg.queue();
     }
     /**
      * Starts a new specified track.
