@@ -18,7 +18,7 @@ public class Help extends SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event){
-        event.replyEmbeds(helpEmbed(event.getJDA()).build()).queue();
+        event.replyEmbeds(helpEmbed(event.getJDA()).build()).setEphemeral(true).queue();
     }
 
     /**
