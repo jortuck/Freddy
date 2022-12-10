@@ -14,7 +14,6 @@ public class Clear extends SlashCommand {
     }
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
         AudioManager manager = event.getGuild().getAudioManager();
         Member member = event.getMember();
         GuildVoiceState state = member.getVoiceState();
@@ -22,12 +21,12 @@ public class Clear extends SlashCommand {
             if (state.inAudioChannel() && state.getChannel() == manager.getConnectedChannel()) {
                 VoiceController vc = PlayerStore.get(event.getGuild().getIdLong());
                 vc.getTrackScheduler().getQueue().clear();
-                event.getHook().sendMessage("The queue has been cleared!").queue();
+                event.reply("The queue has been cleared!").queue();
             } else {
-                event.getHook().sendMessage("You must be in the same channel as me to clear the queue.").queue();
+                event.reply("You must be in the same channel as me to clear the queue.").setEphemeral(true).queue();
             }
         } else {
-            event.getHook().sendMessage("I am not connected to any voice channel").queue();
+            event.reply("I am not connected to any voice channel").setEphemeral(true).queue();
         }
     }
 }

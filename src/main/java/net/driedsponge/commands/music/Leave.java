@@ -38,6 +38,8 @@ public class Leave extends SlashCommand {
             }else{
                 event.reply("You must have the **MANAGE_CHANNEL** permission to use this command or you must be currently connected to "+channel.getName()+".").queue();
             }
+        }else{
+            event.reply("I am not in any call.").setEphemeral(true).queue();
         }
 
     }

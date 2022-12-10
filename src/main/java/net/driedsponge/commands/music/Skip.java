@@ -17,21 +17,30 @@ public class Skip extends SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        event.deferReply().queue();
-        skip(event.getMember(),event.getGuild(),event.getHook());
+        try {
+            String skip = skip(event.getMember(),event.getGuild());
+            event.reply(skip).queue();
+        }catch (Exception e){
+            event.reply(e.getMessage()).setEphemeral(true).queue();
+        }
     }
 
-    public static void skip(Member member, Guild guild, InteractionHook hook){
+    public static String skip(Member member, Guild guild) throws Exception{
         if(!CommonChecks.listeningMusic(member,guild)){
-            hook.sendMessage("You need to be in a voice channel with the bot to skip.").setEphemeral(true).queue();
-            return;
+            throw new Exception("You need to be in a voice channel with the bot to skip.");
         }
         if(CommonChecks.playingMusic(guild)){
             VoiceController vc = PlayerStore.get(guild);
-            hook.sendMessage(":fast_forward: "+member.getAsMention()+" skipped **"+vc.getNowPlaying().getInfo().title+"**").complete();
-            vc.skip();
+            if(vc.getTrackScheduler().getQueue().size() > 0){
+                vc.skip();
+                return ":fast_forward: "+member.getAsMention()+" skipped **"+vc.getNowPlaying().getInfo().title+"**";
+            }else{
+                vc.skip();
+                return "No more songs left in the queue!";
+            }
         }else{
-            hook.sendMessage("Nothing to skip.").setEphemeral(true).queue();
+            throw new Exception("Nothing to skip.");
         }
+
     }
 }

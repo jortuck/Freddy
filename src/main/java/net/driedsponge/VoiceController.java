@@ -114,7 +114,6 @@ public class VoiceController {
     }
 
     public void skip(){
-
         this.trackScheduler.startNewTrack();
     }
 

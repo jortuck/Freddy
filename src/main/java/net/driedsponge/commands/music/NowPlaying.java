@@ -19,19 +19,18 @@ public class NowPlaying extends SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event){
-        event.deferReply().queue();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Main.PRIMARY_COLOR);
         if(event.getGuild().getAudioManager().isConnected() &&  PlayerStore.get(event.getGuild().getIdLong()) != null){
             VoiceController vc =  PlayerStore.get(event.getGuild().getIdLong());
 
             String title = String.format("Now Playing in %s",vc.getVoiceChannel().getName());
-            event.getHook().sendMessageEmbeds(TrackScheduler.songCard(title,vc.getNowPlaying()).build())
+            event.replyEmbeds(TrackScheduler.songCard(title,vc.getNowPlaying()).build())
                     .addActionRow(SkipButton.SKIP_BUTTON)
                     .queue();
         }else{
             embedBuilder.setTitle("Nothing is playing.");
-            event.getHook().sendMessageEmbeds(embedBuilder.build()).queue();
+            event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
         }
     }
 }
