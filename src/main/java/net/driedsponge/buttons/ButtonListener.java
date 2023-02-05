@@ -22,7 +22,6 @@ public class ButtonListener extends ListenerAdapter {
         };
         ArrayList<ButtonCommand> botCommands = new ArrayList<>(Arrays.asList(cmds));
         for (ButtonCommand command : botCommands) {
-            System.out.println(command.getName().toLowerCase());
             commands.put(command.getName().toLowerCase(), command);
         }
     }
