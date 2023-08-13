@@ -1,15 +1,11 @@
 package net.driedsponge.commands.music;
 
-import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.TrackScheduler;
 import net.driedsponge.VoiceController;
 import net.driedsponge.commands.CommonChecks;
 import net.driedsponge.commands.SlashCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
-import java.time.Duration;
 
 public class Seek extends SlashCommand {
     public Seek(){

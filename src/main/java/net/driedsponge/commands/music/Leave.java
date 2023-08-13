@@ -10,8 +10,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 
-import java.awt.*;
-
 public class Leave extends SlashCommand {
 
     public Leave() {

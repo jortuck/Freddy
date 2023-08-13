@@ -17,7 +17,6 @@ import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
-import java.awt.*;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -65,7 +64,7 @@ public class SpotifyLookup {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + tracks.getItems().length + " songs to the Queue from " + playlist.getName() + "!");
         embedBuilder.setColor(Main.PRIMARY_COLOR);
-        embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
+        embedBuilder.setFooter("Requested by " + event.getUser().getName(), event.getUser().getEffectiveAvatarUrl());
         embedBuilder.setThumbnail(playlist.getImages()[0].getUrl());
         event.getHook().sendMessageEmbeds(embedBuilder.build())
                 .addActionRow(Button.link(event.getOptions().get(0).getAsString(), "Playlist"))

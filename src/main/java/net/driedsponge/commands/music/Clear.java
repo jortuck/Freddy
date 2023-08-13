@@ -1,6 +1,5 @@
 package net.driedsponge.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
 import net.driedsponge.commands.SlashCommand;

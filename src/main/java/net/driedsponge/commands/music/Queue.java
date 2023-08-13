@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import java.awt.*;
+
 import java.util.concurrent.BlockingQueue;
 
 public class Queue extends SlashCommand {
@@ -65,7 +65,7 @@ public class Queue extends SlashCommand {
                         .append("[")
                         .append(song.getInfo().title)
                         .append("](" + song.getInfo().uri + ")")
-                        .append(" `(Requested by: " + song.getRequester().getUser().getAsTag() + ")`");
+                        .append(" `(Requested by: " + song.getRequester().getUser().getName() + ")`");
             }
             if (songs.size() > 10) {
                 queue.append("\n");

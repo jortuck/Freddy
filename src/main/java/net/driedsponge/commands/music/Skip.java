@@ -6,9 +6,7 @@ import net.driedsponge.commands.CommonChecks;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 
 public class Skip extends SlashCommand {
     public Skip() {

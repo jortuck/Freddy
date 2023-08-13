@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-import java.net.URL;
 import java.time.Duration;
 import java.util.*;
 import java.util.List;
@@ -47,12 +45,10 @@ public class TrackScheduler extends AudioEventAdapter {
         // Player was resumed
     }
 
-    @Override
-    public void onTrackStart(AudioPlayer player, AudioTrack track) {
-    }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        System.out.println(endReason);
         if (endReason.mayStartNext) {
             startNewTrack((Member) null);
         }
@@ -60,7 +56,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-
+        System.out.println(exception.getMessage());
     }
 
     @Override
@@ -81,7 +77,7 @@ public class TrackScheduler extends AudioEventAdapter {
      * @return Whether the queue was successfully shuffled or not.
      */
     public boolean shuffle() {
-        if (this.getQueue().size() > 0) {
+        if (!this.getQueue().isEmpty()) {
             List<Object> songs = Arrays.asList(this.queue.toArray());
             Collections.shuffle(songs,new Random());
             this.queue.clear();
@@ -136,7 +132,7 @@ public class TrackScheduler extends AudioEventAdapter {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + playlist.getTracks().size() + " songs to the Queue from " + playlist.getName() + "!");
         embedBuilder.setColor(Main.PRIMARY_COLOR);
-        embedBuilder.setFooter("Requested by " + event.getUser().getAsTag(), event.getUser().getEffectiveAvatarUrl());
+        embedBuilder.setFooter("Requested by " + event.getUser().getName(), event.getUser().getEffectiveAvatarUrl());
 
         event.getHook().sendMessageEmbeds(embedBuilder.build())
                 .addActionRow(Button.link(event.getOptions().get(0).getAsString(), "Playlist"))
@@ -157,7 +153,7 @@ public class TrackScheduler extends AudioEventAdapter {
         embedBuilder.addField("Artist", song.getInfo().author, true);
         embedBuilder.addField("Length", duration(song.getTrack().getDuration()), true);
         embedBuilder.setColor(Main.PRIMARY_COLOR);
-        embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getAsTag(), song.getRequester().getEffectiveAvatarUrl());
+        embedBuilder.setFooter("Requested by " + song.getRequester().getUser().getName(), song.getRequester().getEffectiveAvatarUrl());
         if(song.getThumbnail() != null){
             embedBuilder.setThumbnail(song.getThumbnail());
         }

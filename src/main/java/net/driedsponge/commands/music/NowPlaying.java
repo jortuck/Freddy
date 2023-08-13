@@ -1,14 +1,10 @@
 package net.driedsponge.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import net.driedsponge.*;
 import net.driedsponge.buttons.SkipButton;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import java.awt.*;
 
 public class NowPlaying extends SlashCommand {
     public NowPlaying() {

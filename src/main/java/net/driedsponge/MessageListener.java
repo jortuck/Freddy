@@ -1,7 +1,6 @@
 package net.driedsponge;
 
 import net.driedsponge.buttons.Entertaining;
-import net.driedsponge.buttons.GuildList;
 import net.driedsponge.commands.util.Help;
 import net.driedsponge.commands.util.Owner;
 import net.dv8tion.jda.api.EmbedBuilder;
