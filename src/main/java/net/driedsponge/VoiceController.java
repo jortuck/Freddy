@@ -70,6 +70,8 @@ public class VoiceController {
      */
     public void join() throws PermissionException{
             this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
+            // This has the bot deafening itself so people don't think it's listening.
+            this.getGuild().getAudioManager().setSelfDeafened(true);
     }
 
 

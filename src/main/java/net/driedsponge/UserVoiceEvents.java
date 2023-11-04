@@ -15,30 +15,14 @@ public class UserVoiceEvents extends ListenerAdapter {
         } else if (event.getGuild().getAudioManager().isConnected() && event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1){
             PlayerStore.get(event.getGuild()).leave();
         }
-
-
-        // Self deafen
-        if(event.getMember().getUser() == event.getJDA().getSelfUser()){
-            if(!event.getMember().getVoiceState().isGuildDeafened()){
-                selfDeafen(event);
-            }
-        }
-    }
-
-
-    @Override
-    public void onGuildVoiceGuildDeafen(GuildVoiceGuildDeafenEvent event){
-        if(event.getMember().getUser() == event.getJDA().getSelfUser()){
-            if(!event.isGuildDeafened()){
-                selfDeafen(event);
-            }
-        }
     }
 
     /**
      * Trys to make the bot deafen itself
+     * Deprecated because the bot can now deafen on its own without doing it through the server.
      * @param event Event that provides context
      */
+    @Deprecated
     private void selfDeafen(GenericGuildVoiceEvent event){
         if(event.getMember().hasPermission(Permission.VOICE_DEAF_OTHERS)){
             event.getMember().deafen(true).queue();
