@@ -28,6 +28,7 @@ public class CommandListener extends ListenerAdapter {
                 new Queue(),
                 new Shuffle(),
                 new Restart(),
+                new Remove(),
                 new Seek()
 
         };
