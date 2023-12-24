@@ -17,9 +17,12 @@ public class PreviousPageButton extends ButtonCommand {
 
     @Override
     public void execute(ButtonInteractionEvent event) {
+        changePage(event,-1);
+    }
+    public static void changePage(ButtonInteractionEvent event,int dir){
         try {
             int currentPage = event.getComponent().getId().charAt(2) - '0';
-            int page = currentPage - 1;
+            int page = currentPage + dir;
             QueueResponse queue = Queue.qResponse(event.getGuild(), page);
             event.getMessage().editMessageEmbeds(queue.getEmbed()).queue();
             if(!queue.isEmpty()){
@@ -33,7 +36,5 @@ public class PreviousPageButton extends ButtonCommand {
         } catch (Exception e) {
             event.reply(e.getMessage()).setEphemeral(true).queue();
         }
-
     }
-
 }

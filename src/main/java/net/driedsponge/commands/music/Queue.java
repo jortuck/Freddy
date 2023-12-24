@@ -62,7 +62,7 @@ public class Queue extends SlashCommand {
     public static QueueResponse qResponse(Guild guild, int page) throws Exception{
         int songsPerPage = 10;
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Queue Page "+page);
+        embedBuilder.setTitle("Queue - Page "+page);
         embedBuilder.setColor(Main.PRIMARY_COLOR);
 
         VoiceController vc = PlayerStore.get(guild);
@@ -74,17 +74,16 @@ public class Queue extends SlashCommand {
             throw new Exception("Invalid queue page! Please enter a page between 1 and "+pages+"!");
         }
 
-        embedBuilder.setTitle("Queue");
         StringBuilder queue = new StringBuilder();
 
         queue.append("**Now Playing - ").append(np.title).append("**");
         queue.append("\n");
         queue.append("\n**Up Next:**");
 
-        int loopLimit = Math.min(songCount, 10);
         int loopStart = ((page*songsPerPage)-songsPerPage);
         int loopEnd = Math.min(page*songsPerPage,songCount);
         if (songs.isEmpty()) {
+            embedBuilder.setTitle("Queue");
             queue.append(" No songs in the queue!");
         } else {
 
