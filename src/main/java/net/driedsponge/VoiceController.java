@@ -19,10 +19,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 
 public class VoiceController {
+    private static final Logger logger = LoggerFactory.getLogger(VoiceController.class);
     private final String guildId;
     private final JDA jda;
     private String channel;
@@ -63,13 +66,15 @@ public class VoiceController {
 
     public void setNowPlaying(Song nowPlaying) {
         this.nowPlaying = nowPlaying;
+        logger.info("Now playing "+nowPlaying.getInfo().title+" by "+nowPlaying.getInfo().author+" in "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
     }
 
     /**
      * Tells the bot to join the call.
      */
     public void join() throws PermissionException{
-            this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
+        logger.info("Connecting to "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
+        this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
             // This has the bot deafening itself so people don't think it's listening.
             this.getGuild().getAudioManager().setSelfDeafened(true);
     }
@@ -140,6 +145,7 @@ public class VoiceController {
      */
     public void leave(){
         this.getTrackScheduler().getQueue().clear();
+        logger.info("Disconnecting from "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
         this.getGuild().getAudioManager().closeAudioConnection();
         this.nowPlaying = null;
         player.destroy();
