@@ -19,9 +19,7 @@ public class Skip extends SlashCommand {
             int skipAmount = 1;
             try {
                 skipAmount = Math.abs(event.getInteraction().getOption("position").getAsInt());
-            }catch (Exception e){
-                throw new Exception("That is an invalid number!");
-            }
+            }catch (Exception ignored){}
             String skip = skip(event.getMember(),event.getGuild(),skipAmount);
             event.reply(skip).setEphemeral(true).queue();
         }catch (Exception e){
