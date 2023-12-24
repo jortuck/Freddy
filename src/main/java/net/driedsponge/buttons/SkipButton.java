@@ -14,7 +14,7 @@ public class SkipButton extends  ButtonCommand{
         @Override
         public void execute(ButtonInteractionEvent event){
                 try {
-                        String skip = Skip.skip(event.getMember(),event.getGuild());
+                        String skip = Skip.skip(event.getMember(),event.getGuild(), 1);
                         MessageEmbed original = event.getMessage().getEmbeds().get(0);
                         event.reply(skip).setEphemeral(true).queue();
                         // Set skip button as disabled when clicked. Maybe remove it entirely? idk.

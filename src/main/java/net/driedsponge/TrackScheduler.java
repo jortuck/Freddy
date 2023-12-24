@@ -50,7 +50,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         System.out.println(endReason);
         if (endReason.mayStartNext) {
-            startNewTrack((Member) null);
+            startNewTrack((Member) null, 1);
         }
     }
 
@@ -177,8 +177,9 @@ public class TrackScheduler extends AudioEventAdapter {
     /**
      * Starts a new track taken from the queue.
      * @param member Option Param for who skipped the last track
+     * @param amount Number of songs to skip over in the queue. Use 1 for default song playing.
      */
-    public void startNewTrack(@Nullable Member member) {
+    public void startNewTrack(@Nullable Member member, int amount) {
         String lastSong = vc.getNowPlaying().getInfo().title;
         if (queue.isEmpty()) {
             Guild guild = vc.getGuild();
@@ -196,7 +197,16 @@ public class TrackScheduler extends AudioEventAdapter {
             PlayerStore.remove(guild);
             return;
         }
-        Song song = queue.poll();
+        Song song;
+
+        // If the user wants to skip several songs, poll the skipped songs out of the queue.
+        if(amount != 1){
+            for (int i =0; i<amount-1; i++){
+                queue.poll();
+            }
+        }
+
+        song = queue.poll();
         this.vc.setNowPlaying(song);
         vc.getPlayer().playTrack(song.getTrack());
         MessageCreateAction msg = vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build());

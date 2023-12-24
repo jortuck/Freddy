@@ -119,8 +119,8 @@ public class VoiceController {
         });
     }
 
-    public void skip(Member member){
-        this.trackScheduler.startNewTrack(member);
+    public void skip(Member member, int amount){
+        this.trackScheduler.startNewTrack(member, amount);
     }
 
     public Song getNowPlaying() {

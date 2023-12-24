@@ -44,6 +44,7 @@ public class Interactions {
                 Commands.slash("np","Shows the song that is currently playing")
                         .setGuildOnly(true),
                 Commands.slash("skip","Skips the current song.")
+                        .addOption(OptionType.INTEGER,"position","If you wish to skip to a specific number in the queue, enter it here.",false)
                         .setGuildOnly(true),
                 Commands.slash("queue","Returns the songs in the queue.")
                         .setGuildOnly(true),
