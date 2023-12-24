@@ -48,7 +48,7 @@ public class Interactions {
                         .addOptions(new OptionData(OptionType.INTEGER,"position","If you wish to skip to a specific number in the queue, enter it here.").setMinValue(1).setRequired(false))
                         .setGuildOnly(true),
                 Commands.slash("remove","Removes a selected song from the queue.")
-                        .addOptions(new OptionData(OptionType.INTEGER,"position","The current queue position of the song you want to remove.s").setMinValue(1).setRequired(true))
+                        .addOptions(new OptionData(OptionType.INTEGER,"position","The current queue position of the song you want to remove.").setMinValue(1).setRequired(true))
                         .setGuildOnly(true),
                 Commands.slash("queue","Returns the songs in the queue.")
                         .addOptions(new OptionData(OptionType.INTEGER,"page","View other pages of the queue (if there are more than 10 songs).").setMinValue(1).setRequired(false))
