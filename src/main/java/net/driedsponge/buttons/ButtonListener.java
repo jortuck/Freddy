@@ -17,19 +17,21 @@ public class ButtonListener extends ListenerAdapter {
                 new GuildList(),
                 new Entertaining(),
                 new ShuffleButton(),
-                new RemoveSongButton(),
+                new NextPageButton(),
+                new PreviousPageButton(),
                 new SkipButton()
 
         };
         ArrayList<ButtonCommand> botCommands = new ArrayList<>(Arrays.asList(cmds));
         for (ButtonCommand command : botCommands) {
-            commands.put(command.getName().toLowerCase(), command);
+            commands.put(command.getName().toUpperCase(), command);
         }
     }
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        ButtonCommand command = commands.get(event.getComponent().getId().toLowerCase());
+        System.out.println(event.getComponent().getId().toUpperCase().substring(0,2));
+        ButtonCommand command = commands.get(event.getComponent().getId().toUpperCase().substring(0,2));
         command.execute(event);
     }
 

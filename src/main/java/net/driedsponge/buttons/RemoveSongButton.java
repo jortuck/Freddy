@@ -7,9 +7,9 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
 public class RemoveSongButton extends ButtonCommand {
-    public static final Button REMOVE_BUTTON = Button.danger("removesong","Remove Song");
+    public static final Button REMOVE_BUTTON = Button.danger("RS","Remove Song");
     public RemoveSongButton() {
-        super("removesong");
+        super("RS");
     }
 
     @Override

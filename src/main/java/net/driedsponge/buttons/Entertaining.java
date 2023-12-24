@@ -5,10 +5,10 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class Entertaining extends ButtonCommand{
-    public static final Button ENTERTAINING_BUTTON = Button.primary("entertaining","Current Calls");
+    public static final Button ENTERTAINING_BUTTON = Button.primary("EN","Current Calls");
 
     public Entertaining(){
-        super("entertaining");
+        super("EN");
     }
     @Override
     public void execute(ButtonInteractionEvent event){

@@ -1,17 +1,14 @@
 package net.driedsponge.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import net.driedsponge.Main;
-import net.driedsponge.PlayerStore;
-import net.driedsponge.Song;
-import net.driedsponge.VoiceController;
-import net.driedsponge.buttons.RemoveSongButton;
+import net.driedsponge.*;
+import net.driedsponge.buttons.NextPageButton;
+import net.driedsponge.buttons.PreviousPageButton;
 import net.driedsponge.buttons.ShuffleButton;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 
@@ -37,12 +34,18 @@ public class Queue extends SlashCommand {
                 page = Math.abs(event.getInteraction().getOption("page").getAsInt());
             }catch (NullPointerException ignored){}
             try{
-                MessageEmbed embed = qEmbed(event.getGuild(), page);
-                WebhookMessageCreateAction<Message> response = event.getHook().sendMessageEmbeds(embed);
-                if(!PlayerStore.get(event.getGuild()).getTrackScheduler().getQueue().isEmpty()){
+                QueueResponse qresponse = qResponse(event.getGuild(), page);
+                WebhookMessageCreateAction<Message> response = event.getHook().sendMessageEmbeds(qresponse.getEmbed());
+                if(!qresponse.isEmpty()){
                     // Add once discord decides to support number inputs in modals.
                     //response.addActionRow(ShuffleButton.SHUFFLE_BUTTON,RemoveSongButton.REMOVE_BUTTON);
-                    response.addActionRow(ShuffleButton.SHUFFLE_BUTTON);
+                    response.addActionRow(ShuffleButton.SHUFFLE_BUTTON,
+                            PreviousPageButton.PREVIOUS_PAGE_BUTTON.withId("PP"+page)
+                                    .withDisabled(page==qresponse.getFirstPage())
+                            ,
+                            NextPageButton.NEXT_PAGE_BUTTON.withId("NP"+page)
+                                    .withDisabled(page==qresponse.getLastPage())
+                    );
                 }
                 response.queue();
             } catch (Exception e){
@@ -56,7 +59,7 @@ public class Queue extends SlashCommand {
         }
     }
 
-    public static MessageEmbed qEmbed(Guild guild, int page) throws Exception{
+    public static QueueResponse qResponse(Guild guild, int page) throws Exception{
         int songsPerPage = 10;
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Queue Page "+page);
@@ -94,10 +97,9 @@ public class Queue extends SlashCommand {
                         .append("](" + song.getInfo().uri + ")")
                         .append(" `(Requested by: " + song.getRequester().getUser().getName() + ")`");
             }
-            embedBuilder.setFooter("Page "+page+" of "+ pages + " | Showing song(s) "+(loopStart+1)+"-"+(loopEnd)+" of "+(songCount+1)+".");
+            embedBuilder.setFooter("Page "+page+" of "+ pages + " | Showing song(s) "+(loopStart+1)+"-"+(loopEnd)+" of "+(songCount)+".");
         }
-
         embedBuilder.setDescription(queue);
-        return embedBuilder.build();
+        return new QueueResponse(embedBuilder.build(), queue.isEmpty(), 1, pages, page);
     }
 }

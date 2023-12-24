@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class SkipButton extends  ButtonCommand{
-        public static final Button SKIP_BUTTON = Button.primary("skip", "Skip");
+        public static final Button SKIP_BUTTON = Button.primary("SK", "Skip");
         public SkipButton(){
-            super("skip");
+            super("SK");
         }
 
         @Override
