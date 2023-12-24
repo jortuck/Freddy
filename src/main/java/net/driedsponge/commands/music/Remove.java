@@ -60,7 +60,7 @@ public class Remove extends SlashCommand {
             Song removedSong = tempQueue.get(position-1);
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setColor(Main.PRIMARY_COLOR)
-                    .setTitle(String.format(":axe: Removing %s from the queue!",removedSong.getInfo().title));
+                    .setTitle(String.format(":wastebasket: Removing %s from the queue!",removedSong.getInfo().title));
             tempQueue.remove(position-1);
             queue.addAll(tempQueue);
             return embedBuilder.build();
