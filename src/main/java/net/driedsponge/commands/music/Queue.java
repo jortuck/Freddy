@@ -9,8 +9,10 @@ import net.driedsponge.buttons.ShuffleButton;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -35,9 +37,11 @@ public class Queue extends SlashCommand {
             }catch (NullPointerException ignored){}
             try{
                 MessageEmbed embed = qEmbed(event.getGuild(), page);
-                event.getHook().sendMessageEmbeds(embed)
-                        .addActionRow(ShuffleButton.SHUFFLE_BUTTON)
-                        .queue();
+                WebhookMessageCreateAction<Message> response = event.getHook().sendMessageEmbeds(embed);
+                if(!PlayerStore.get(event.getGuild()).getTrackScheduler().getQueue().isEmpty()){
+                    response.addActionRow(ShuffleButton.SHUFFLE_BUTTON);
+                }
+                response.queue();
             } catch (Exception e){
                 event.getHook().sendMessage(e.getMessage()).setEphemeral(true).queue();
             }
@@ -60,7 +64,7 @@ public class Queue extends SlashCommand {
         BlockingQueue<Song> songs = vc.getTrackScheduler().getQueue();
         int songCount = songs.size();
         int pages = (songCount + songsPerPage - 1) / songsPerPage;
-        if(page>pages || page == 0){
+        if((page>pages && pages > 0) || page==0){
             throw new Exception("Invalid queue page! Please enter a page between 1 and "+pages+"!");
         }
 
@@ -75,7 +79,7 @@ public class Queue extends SlashCommand {
         int loopStart = ((page*songsPerPage)-songsPerPage);
         int loopEnd = Math.min(page*songsPerPage,songCount);
         if (songs.isEmpty()) {
-            queue.append("No songs in the queue!");
+            queue.append(" No songs in the queue!");
         } else {
 
             for (int i = loopStart; i < loopEnd; i++) {
@@ -87,12 +91,10 @@ public class Queue extends SlashCommand {
                         .append("](" + song.getInfo().uri + ")")
                         .append(" `(Requested by: " + song.getRequester().getUser().getName() + ")`");
             }
-
-
+            embedBuilder.setFooter("Page "+page+" of "+ pages + " | Showing song(s) "+(loopStart+1)+"-"+(loopEnd)+" of "+(songCount+1)+".");
         }
 
         embedBuilder.setDescription(queue);
-        embedBuilder.setFooter("Page "+page+" of "+ pages + " | Showing song(s) "+(loopStart+1)+"-"+(loopEnd)+" of "+(songCount+1)+".");
         return embedBuilder.build();
     }
 }
