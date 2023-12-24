@@ -5,6 +5,7 @@ import net.driedsponge.Main;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.Song;
 import net.driedsponge.VoiceController;
+import net.driedsponge.buttons.RemoveSongButton;
 import net.driedsponge.buttons.ShuffleButton;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -39,6 +40,8 @@ public class Queue extends SlashCommand {
                 MessageEmbed embed = qEmbed(event.getGuild(), page);
                 WebhookMessageCreateAction<Message> response = event.getHook().sendMessageEmbeds(embed);
                 if(!PlayerStore.get(event.getGuild()).getTrackScheduler().getQueue().isEmpty()){
+                    // Add once discord decides to support number inputs in modals.
+                    //response.addActionRow(ShuffleButton.SHUFFLE_BUTTON,RemoveSongButton.REMOVE_BUTTON);
                     response.addActionRow(ShuffleButton.SHUFFLE_BUTTON);
                 }
                 response.queue();

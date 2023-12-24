@@ -17,6 +17,7 @@ public class ButtonListener extends ListenerAdapter {
                 new GuildList(),
                 new Entertaining(),
                 new ShuffleButton(),
+                new RemoveSongButton(),
                 new SkipButton()
 
         };
