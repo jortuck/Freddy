@@ -16,7 +16,7 @@ public class ShuffleButton extends ButtonCommand {
         try {
                 Shuffle.shuffle(event.getMember(),event.getGuild());
                 event.getMessage().editMessage(Shuffle.replyMessage(event.getMember())).queue();
-                event.getMessage().editMessageEmbeds(Queue.qEmbed(event.getGuild())).queue();
+                event.getMessage().editMessageEmbeds(Queue.qEmbed(event.getGuild(),1)).queue();
                 event.reply("The queue has been shuffled.").setEphemeral(true).queue();
         } catch (Exception e) {
             event.reply(e.getMessage()).setEphemeral(true).queue();

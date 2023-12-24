@@ -3,6 +3,7 @@ package net.driedsponge;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 public class Interactions {
@@ -44,9 +45,10 @@ public class Interactions {
                 Commands.slash("np","Shows the song that is currently playing")
                         .setGuildOnly(true),
                 Commands.slash("skip","Skips the current song.")
-                        .addOption(OptionType.INTEGER,"position","If you wish to skip to a specific number in the queue, enter it here.",false)
+                        .addOptions(new OptionData(OptionType.INTEGER,"position","If you wish to skip to a specific number in the queue, enter it here.").setMinValue(1).setRequired(false))
                         .setGuildOnly(true),
                 Commands.slash("queue","Returns the songs in the queue.")
+                        .addOptions(new OptionData(OptionType.INTEGER,"page","View other pages of the queue (if there are more than 10 songs).").setMinValue(1).setRequired(false))
                         .setGuildOnly(true),
                 Commands.slash("shuffle","Shuffles the songs in the queue.")
                         .setGuildOnly(true),

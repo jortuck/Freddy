@@ -28,10 +28,19 @@ public class Queue extends SlashCommand {
 
 
         if (event.getGuild().getAudioManager().isConnected() && PlayerStore.get(event.getGuild()) != null) {
-            MessageEmbed embed = qEmbed(event.getGuild());
-            event.getHook().sendMessageEmbeds(embed)
-                    .addActionRow(ShuffleButton.SHUFFLE_BUTTON)
-                    .queue();
+            int page = 1;
+
+            try{
+                page = Math.abs(event.getInteraction().getOption("page").getAsInt());
+            }catch (NullPointerException ignored){}
+            try{
+                MessageEmbed embed = qEmbed(event.getGuild(), page);
+                event.getHook().sendMessageEmbeds(embed)
+                        .addActionRow(ShuffleButton.SHUFFLE_BUTTON)
+                        .queue();
+            } catch (Exception e){
+                event.getHook().sendMessage(e.getMessage()).setEphemeral(true).queue();
+            }
         } else {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setColor(Main.PRIMARY_COLOR);
@@ -40,7 +49,8 @@ public class Queue extends SlashCommand {
         }
     }
 
-    public static MessageEmbed qEmbed(Guild guild) {
+    public static MessageEmbed qEmbed(Guild guild, int page) throws Exception{
+        int songsPerPage = 10;
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Queue");
         embedBuilder.setColor(Main.PRIMARY_COLOR);
@@ -48,34 +58,41 @@ public class Queue extends SlashCommand {
         VoiceController vc = PlayerStore.get(guild);
         AudioTrackInfo np = vc.getNowPlaying().getInfo();
         BlockingQueue<Song> songs = vc.getTrackScheduler().getQueue();
+        int songCount = songs.size();
+        int pages = (songCount + songsPerPage - 1) / songsPerPage;
+        if(page>pages || page == 0){
+            throw new Exception("Invalid queue page! Please enter a page between 1 and "+pages+"!");
+        }
+
         embedBuilder.setTitle("Queue");
         StringBuilder queue = new StringBuilder();
 
         queue.append("**Now Playing - ").append(np.title).append("**");
         queue.append("\n");
         queue.append("\n**Up Next:**");
-        int loopLimit = Math.min(songs.size(), 10);
-        if (songs.size() < 1) {
-            queue.append(" No songs in the queue!");
+
+        int loopLimit = Math.min(songCount, 10);
+        int loopStart = ((page*songsPerPage)-songsPerPage);
+        int loopEnd = Math.min(page*songsPerPage,songCount);
+        if (songs.isEmpty()) {
+            queue.append("No songs in the queue!");
         } else {
-            for (int i = 0; i < loopLimit; i++) {
+
+            for (int i = loopStart; i < loopEnd; i++) {
                 Song song = (Song) songs.toArray()[i];
-                queue.append("\n").append(i + 1)
+                queue.append("\n").append(i+1)
                         .append(" - ")
                         .append("[")
                         .append(song.getInfo().title)
                         .append("](" + song.getInfo().uri + ")")
                         .append(" `(Requested by: " + song.getRequester().getUser().getName() + ")`");
             }
-            if (songs.size() > 10) {
-                queue.append("\n");
-                queue.append("\n**+ " + (songs.size() - 10) + " more songs!**");
-            }
 
 
         }
 
         embedBuilder.setDescription(queue);
+        embedBuilder.setFooter("Page "+page+" of "+ pages + " | Showing song(s) "+(loopStart+1)+"-"+(loopEnd)+" of "+(songCount+1)+".");
         return embedBuilder.build();
     }
 }
