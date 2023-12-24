@@ -52,7 +52,7 @@ public class Queue extends SlashCommand {
     public static MessageEmbed qEmbed(Guild guild, int page) throws Exception{
         int songsPerPage = 10;
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Queue");
+        embedBuilder.setTitle("Queue Page "+page);
         embedBuilder.setColor(Main.PRIMARY_COLOR);
 
         VoiceController vc = PlayerStore.get(guild);
