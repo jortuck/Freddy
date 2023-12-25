@@ -19,7 +19,7 @@ import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistRequest;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.*;
 
 public class SpotifyLookup {
     private static final Timestamp RESET_STAMP = new Timestamp(new Date().getTime());
@@ -55,23 +55,33 @@ public class SpotifyLookup {
      * @throws SpotifyWebApiException Spotify web API error
      */
     public static void loadPlayList(String playListId, SlashCommandInteractionEvent event, VoiceController vc) throws IOException, ParseException, SpotifyWebApiException {
+        int songsPerPage = 50;
         clientCredentials_Sync();
-
+        // Fancy code for Paginating spotify api results
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();
         Playlist playlist = request.execute();
-        Paging<PlaylistTrack> tracks = playlist.getTracks();
+        Paging<PlaylistTrack> tracks = spotifyApi.getPlaylistsItems(playListId).limit(songsPerPage).build().execute();
+        PlaylistTrack[] selectedTracks = tracks.getItems();
+        ArrayList<PlaylistTrack> listTracks = new ArrayList<>(Arrays.asList(selectedTracks));
+        // Prevent playlist over 500
+        int totalTracks =  Math.min(tracks.getTotal(),TrackScheduler.QUEUE_LIMIT);
+        if(totalTracks > 50){
+            int pages = (totalTracks + songsPerPage - 1) / songsPerPage;
+            for(int i = 1; i<pages; i++){
+                PlaylistTrack[] addTracks = spotifyApi.getPlaylistsItems(playListId).limit(songsPerPage).offset(i*songsPerPage).build().execute().getItems();
+                Collections.addAll(listTracks,addTracks);
+            }
+        }
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Added " + tracks.getItems().length + " songs to the Queue from " + playlist.getName() + "!");
+        embedBuilder.setTitle("Added " + totalTracks + " songs to the Queue from " + playlist.getName() + "!");
         embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setFooter("Requested by " + event.getUser().getName(), event.getUser().getEffectiveAvatarUrl());
         embedBuilder.setThumbnail(playlist.getImages()[0].getUrl());
         event.getHook().sendMessageEmbeds(embedBuilder.build())
                 .addActionRow(Button.link(event.getOptions().get(0).getAsString(), "Playlist"))
                 .queue();
-
-
-        for (PlaylistTrack spotifyTrack : tracks.getItems()) {
+        for (PlaylistTrack spotifyTrack : listTracks) {
             String searchTerm = spotifyTrack.getTrack().getName();
             vc.getPlayerManager().loadItem("ytmsearch:"+searchTerm, new AudioLoadResultHandler() {
                 @Override

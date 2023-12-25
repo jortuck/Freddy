@@ -84,7 +84,7 @@ public class Play extends SlashCommand {
                     event.reply("That spotify playlist could not be found. Make sure it's a valid **public** playlist.").setEphemeral(true).queue();
                 }
             } catch (Exception e){
-                event.replyEmbeds(badPermissions(e.getMessage()).build()).queue();
+                event.getHook().sendMessageEmbeds(badPermissions(e.getMessage()).build()).queue();
             }
         }
     }
