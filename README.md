@@ -1,6 +1,6 @@
 # Freddy Bot
 
-An open source Discord bot I made to play music for my friends since all the other ones got taken down by google.
+An open source Discord bot I made to play music for my friends since all the other ones were taken down by Google.
 
 - To access the bots help menu, use `/help` or mention the bot in a text channel.
 - [Invite The Bot](https://discord.com/api/oauth2/authorize?client_id=914454054808211476&permissions=414476271168&scope=bot%20applications.commands)
@@ -10,42 +10,18 @@ An open source Discord bot I made to play music for my friends since all the oth
 - Plays any song of your choice, as long as it's on YouTube!
 - YouTube searching enabled, no need to lookup URLs!
 - YouTube/Spotify playlist support for quickly adding your favorite songs to the queue!
-- Discord slash command support making user interaction easy!
+- Discord slash command support making it easy to control your music!
+- Queue up to 500 songs for you and your friends to listen to!
 
-# Self Hosting (Not Finished):
-The cool thing about an open source bot is that you can easily self-host it on your own system! If you 
+## Getting Started
+- Join a voice channel. Make sure the bot has permission to connect to the channel you join!
+- Use `/play [query]` in a channel if your choice. The query can be a search term, a YouTube link, YouTube playlist link, or a Spotify playlist link.
+  - Please note: The text channel where you put the first play command will become the text channel associated with your listening session. This means the bot will send updates and notifications about song playback to that channel. In order to change this, you must start a new listening session (have the bot leave and join back). In order for the bot to work, it must have permission to send messages in that text channel.
+  - If you want to restrict commands to certain roles or channels, go to `Server Settings` > `Integrations` > `Freddy Fazbear` > `Manage`.
+- That's it! The bot is playing music. There are several other commands for altering your playback experience, use `/help` to view them all.
 
-## Setup:
-
-### Getting Your Discord Bot Token:
-
-### Getting Your Spotify API Credentials:
-1. Visit the [Spotify developer dashboard](https://developer.spotify.com/dashboard/) to learn how to get a token.
-2. One logged in, head to https://developer.spotify.com/dashboard/applications and click the green `CREATE AN APP` button.
-3. One your app has been created, you should see Client ID and `SHOW CLIENT SECRET` directly below your app name and description. This will be your spotify api credentials.
-### Installation & Configuration:
-1. Clone the project from GitHub.
-    - `git clone https://github.com/DriedSponge/Freddy.git`
-2. In order for the bot to work, the following environment variables will need to be set. If you're using docker, they will bet set in the `settings.env` file (See Using Docker):
-    - `DISCORD_TOKEN`
-    - `SPOTIFY_CLIENT_ID`
-    - `SPOTIFY_CLIENT_SECRET`
-    - `OWNER_ID`
-
-## Running The Bot:
-
-### Using Docker:
-1. Make sure the system you intend the bot to run on has Docker installed and properly configured. **If you're not sure, what docker is or if it's setup properly on your system, don't use it.**
-2. Clone `settings.example.env` and rename the clone to `settings.env`.
-3. Open your new `settings.env` file and set all the environment variables. If you're confused on how to do this, take a look at the example in `settings.example.env`.
-4. Once you've set the environment variables, run `docker compose --profile prod up -d --build`. This should build & run the bot. If you encounter any errors when trying to start the bot, [open an issue on GitHub](https://github.com/DriedSponge/Freddy/issues).
-    
-.
-
-### Owner Commands
-
-These are a set of utility commands to help the bot owner. All owner commands use `!` has their prefix, so they can be used without having slash commands registered.
-
-- `!statistics` - Shows how many guilds the bot is in and how many guilds it's entertaining.
-- `!guildlist` - Shows a list of all guilds of which the bot is a member of.
-- `!entertaining` - Shows a list of all guilds where music is playing.
+## Additional Information
+- The queue has a hard limit of 500. I may raise this later on but for now it is 500.
+- I am limiting my hosted version of the bot (the one with the invite link here) to 100 servers. This is being done to avoid having to verify the bot with Discord, and to avoid a cease & desist from Google.
+- I will be posting and linking self-hosting instructions as soon as the process is easy enough to do so.
+- If you have any questions or need to reach out to me, please fill out the contact form on [my website](https://jordantucker.dev/#contact), email the email listed on my [GitHub profile](https://github.com/driedsponge), or add me on Discord `@driedsponge`.
