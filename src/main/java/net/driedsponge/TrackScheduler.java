@@ -207,6 +207,7 @@ public class TrackScheduler extends AudioEventAdapter {
         }
 
         song = queue.poll();
+        assert song != null;
         this.vc.setNowPlaying(song);
         vc.getPlayer().playTrack(song.getTrack());
         MessageCreateAction msg = vc.getTextChannel().sendMessageEmbeds(songCard("Now Playing", song).build());

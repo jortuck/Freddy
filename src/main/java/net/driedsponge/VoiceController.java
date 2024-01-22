@@ -66,6 +66,7 @@ public class VoiceController {
 
     public void setNowPlaying(Song nowPlaying) {
         this.nowPlaying = nowPlaying;
+        this.getVoiceChannel().modifyStatus(":musical_note: "+nowPlaying.getInfo().title).queue();
         logger.info("Now playing "+nowPlaying.getInfo().title+" by "+nowPlaying.getInfo().author+" in "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
     }
 
@@ -145,6 +146,7 @@ public class VoiceController {
      */
     public void leave(){
         this.getTrackScheduler().getQueue().clear();
+        this.getVoiceChannel().modifyStatus("").queue();
         logger.info("Disconnecting from "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
         this.getGuild().getAudioManager().closeAudioConnection();
         this.nowPlaying = null;
