@@ -24,12 +24,15 @@ repositories {
         url 'https://m2.dv8tion.net/releases'
         }
     maven { url 'https://jitpack.io' }
+    maven {
+        url 'https://maven.lavalink.dev/snapshots'
+    }
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    implementation 'dev.arbjerg:lavaplayer:2.1.1'
+    implementation"dev.arbjerg:lavaplayer:0eaeee195f0315b2617587aa3537fa202df07ddc-SNAPSHOT"
     implementation("net.dv8tion:JDA:5.0.0-beta.21")
     implementation ('se.michaelthelin.spotify:spotify-web-api-java:8.3.4');
     implementation ('ch.qos.logback:logback-classic:1.4.11');
