@@ -15,7 +15,7 @@ import java.util.List;
 public class Song {
     private AudioTrack track;
     private SlashCommandInteractionEvent event;
-    private String thumbnail = null;
+    private String thumbnail;
     public Song(AudioTrack track, SlashCommandInteractionEvent event){
         this.track = track;
         this.event = event;

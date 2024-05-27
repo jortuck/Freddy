@@ -17,6 +17,8 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import java.awt.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class Play extends SlashCommand {
@@ -48,7 +50,7 @@ public class Play extends SlashCommand {
             try {
                 VoiceController vc = getOrCreateVc(event.getGuild(),voiceChannel,event.getChannel().asTextChannel());
                 try {
-                    URL u = new URL(arg);
+                    URI u = new URI(arg);
                     if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")|| u.getHost().equals("music.youtube.com")) {
                         event.deferReply().queue();
                         url = u.toString();
@@ -70,7 +72,7 @@ public class Play extends SlashCommand {
                     } else {
                         event.reply("The URL you send must be a valid YouTube or Spotify link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
                     }
-                } catch (MalformedURLException exception) {
+                } catch (URISyntaxException exception) {
                     event.deferReply().queue();
                     event.getHook().sendMessage(":mag: Searching for **"+arg+"**...").queue();
                     vc.join();
