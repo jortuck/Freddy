@@ -5,10 +5,14 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import dev.lavalink.youtube.clients.AndroidWithThumbnail;
+import dev.lavalink.youtube.clients.MusicWithThumbnail;
+import dev.lavalink.youtube.clients.WebWithThumbnail;
+import dev.lavalink.youtube.clients.skeleton.Client;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -46,22 +50,20 @@ public class VoiceController {
         this.jda = voiceChannel.getJDA();
         this.channel = voiceChannel.getId();
         this.msgChannel = textChannel.getId();
+
         AudioManager audioManager = guild.getAudioManager();
-
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-        YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager();
-
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,new Client[]{new MusicWithThumbnail(), new AndroidWithThumbnail(), new WebWithThumbnail()} );
+        playerManager.registerSourceManager(youtube);
         this.playerManager = playerManager;
 
         AudioSourceManagers.registerRemoteSources(playerManager);
-
         AudioPlayer player = playerManager.createPlayer();
         this.player = player;
         audioManager.setSendingHandler(new MusicHandler(player));
         TrackScheduler trackScheduler = new TrackScheduler(this);
         this.trackScheduler = trackScheduler;
         player.addListener(trackScheduler);
-
     }
 
     public void setNowPlaying(Song nowPlaying) {

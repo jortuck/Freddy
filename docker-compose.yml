@@ -4,7 +4,7 @@ networks:
 
 services:
   java:
-    image: openjdk:16
+    image: openjdk:21
     networks:
         - freddy
     restart: unless-stopped

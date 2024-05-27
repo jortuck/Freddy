@@ -1,6 +1,5 @@
 package net.driedsponge.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.SpotifyLookup;
 import net.driedsponge.VoiceController;
@@ -21,8 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Play extends SlashCommand {
-
-    public AudioTrack current = null;
 
     public Play(){
         super(new String[]{"playskip","play"});
