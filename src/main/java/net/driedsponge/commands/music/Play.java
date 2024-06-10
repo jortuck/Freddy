@@ -10,16 +10,13 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
 import java.awt.*;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 public class Play extends SlashCommand {
 
@@ -38,7 +35,7 @@ public class Play extends SlashCommand {
             }
 
             VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel().asVoiceChannel();
-            String arg = event.getOptions().get(0).getAsString();
+            String arg = event.getOptions().getFirst().getAsString();
 
             // Check for valid YouTube links, if they did not send an url, search the term on YouTube.
             try {
