@@ -58,6 +58,15 @@ public class PlayerStore {
     }
 
     /**
+     * Method for determining if an active call is already happening for a server.
+     * @param guildId The id of the guild to check.
+     * @return Whether there is an existing controller for the guild.
+     */
+    public static boolean hasController(Long guildId){
+        return  controllers.containsKey(guildId);
+    }
+
+    /**
      * Removes a controller from the controllers store.
      * @param guild The guild.
      */

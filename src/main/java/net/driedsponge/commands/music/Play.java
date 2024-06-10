@@ -31,21 +31,16 @@ public class Play extends SlashCommand {
     public void execute(SlashCommandInteractionEvent event) {
         if (event.getName().equals("play") || event.getName().equals("playskip")) {
 
-            AudioManager audioManager = event.getGuild().getAudioManager();
-
             // Join if not connected, check for perms
             if (!event.getMember().getVoiceState().inAudioChannel()) {
                 event.reply("You must be in a voice channel to play a song!").setEphemeral(true).queue();
                 return;
             }
 
-
             VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel().asVoiceChannel();
             String arg = event.getOptions().get(0).getAsString();
 
-
             // Check for valid YouTube links, if they did not send an url, search the term on YouTube.
-            System.out.println(arg);
             try {
                 VoiceController vc = getOrCreateVc(event.getGuild(), voiceChannel, event.getChannel().asTextChannel());
                 if (isURL(arg)) {
@@ -53,14 +48,12 @@ public class Play extends SlashCommand {
                     try {
                         if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be") || u.getHost().equals("music.youtube.com")) {
                             event.deferReply().queue();
-                            vc.join();
                             vc.play(u.toString(), event, event.getName().equals("playskip"));
                         } else if (u.getHost().equals("open.spotify.com")) {
                             String[] paths = u.getPath().split("/", 3);
                             if (paths[1].equals("playlist")) {
                                 if (paths[2] != null) {
                                     event.deferReply().queue();
-                                    vc.join();
                                     SpotifyLookup.loadPlayList(paths[2], event, vc);
                                 } else {
                                     event.reply("Invalid Spotify playlist!").setEphemeral(true).queue();
@@ -79,7 +72,6 @@ public class Play extends SlashCommand {
                 } else {
                     event.deferReply().queue();
                     event.getHook().sendMessage(":mag: Searching for **" + arg + "**...").queue();
-                    vc.join();
                     vc.play("ytsearch:" + arg, event, event.getName().equals("playskip"));
                 }
             } catch (Exception e) {
@@ -120,7 +112,7 @@ public class Play extends SlashCommand {
      */
     private VoiceController getOrCreateVc(Guild guild, VoiceChannel voiceChannel, TextChannel textChannel) throws Exception {
         if (guild.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL)) {
-            if (PlayerStore.get(guild.getIdLong()) != null) {
+            if (PlayerStore.hasController(guild.getIdLong())) {
                 return PlayerStore.get(guild.getIdLong());
             }
             VoiceController vc = new VoiceController(guild, voiceChannel, textChannel);

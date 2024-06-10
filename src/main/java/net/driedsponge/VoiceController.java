@@ -72,18 +72,12 @@ public class VoiceController {
         logger.info("Now playing "+nowPlaying.getInfo().title+" by "+nowPlaying.getInfo().author+" in "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
     }
 
-    /**
-     * Tells the bot to join the call.
-     */
-    public void join() throws PermissionException{
-        logger.info("Connecting to "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
-        this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
-            // This has the bot deafening itself so people don't think it's listening.
-            this.getGuild().getAudioManager().setSelfDeafened(true);
-    }
-
-
     public void play(String song, SlashCommandInteractionEvent event, boolean now){
+        if(!this.getGuild().getAudioManager().isConnected()){
+            logger.info("Connecting to "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
+            this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
+            this.getGuild().getAudioManager().setSelfDeafened(true);
+        }
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
