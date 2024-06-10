@@ -23,8 +23,8 @@ import java.net.URL;
 
 public class Play extends SlashCommand {
 
-    public Play(){
-        super(new String[]{"playskip","play"});
+    public Play() {
+        super(new String[]{"playskip", "play"});
     }
 
     @Override
@@ -34,61 +34,73 @@ public class Play extends SlashCommand {
             AudioManager audioManager = event.getGuild().getAudioManager();
 
             // Join if not connected, check for perms
-                if (!event.getMember().getVoiceState().inAudioChannel()) {
-                    event.reply("You must be in a voice channel to play a song!").setEphemeral(true).queue();
-                    return;
-                }
-
+            if (!event.getMember().getVoiceState().inAudioChannel()) {
+                event.reply("You must be in a voice channel to play a song!").setEphemeral(true).queue();
+                return;
+            }
 
 
             VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel().asVoiceChannel();
             String arg = event.getOptions().get(0).getAsString();
-            String url;
 
 
             // Check for valid YouTube links, if they did not send an url, search the term on YouTube.
+            System.out.println(arg);
             try {
-                VoiceController vc = getOrCreateVc(event.getGuild(),voiceChannel,event.getChannel().asTextChannel());
-                try {
+                VoiceController vc = getOrCreateVc(event.getGuild(), voiceChannel, event.getChannel().asTextChannel());
+                if (isURL(arg)) {
                     URI u = new URI(arg);
-                    if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be")|| u.getHost().equals("music.youtube.com")) {
-                        event.deferReply().queue();
-                        url = u.toString();
-                        vc.join();
-                        vc.play(url, event, event.getName().equals("playskip"));
-                    } else if(u.getHost().equals("open.spotify.com")){
-                        String[] paths = u.getPath().split("/",3);
-                        if(paths[1].equals("playlist")){
-                            if(paths[2] != null){
-                                event.deferReply().queue();
-                                vc.join();
-                                SpotifyLookup.loadPlayList(paths[2],event, vc);
-                            }else{
-                                event.reply("Invalid Spotify playlist!").setEphemeral(true).queue();
+                    try {
+                        if (u.getHost().equals("youtube.com") || u.getHost().equals("www.youtube.com") || u.getHost().equals("youtu.be") || u.getHost().equals("music.youtube.com")) {
+                            event.deferReply().queue();
+                            vc.join();
+                            vc.play(u.toString(), event, event.getName().equals("playskip"));
+                        } else if (u.getHost().equals("open.spotify.com")) {
+                            String[] paths = u.getPath().split("/", 3);
+                            if (paths[1].equals("playlist")) {
+                                if (paths[2] != null) {
+                                    event.deferReply().queue();
+                                    vc.join();
+                                    SpotifyLookup.loadPlayList(paths[2], event, vc);
+                                } else {
+                                    event.reply("Invalid Spotify playlist!").setEphemeral(true).queue();
+                                }
+                            } else {
+                                event.reply("Invalid Spotify link!").setEphemeral(true).queue();
                             }
-                        }else {
-                            event.reply("Invalid Spotify link!").setEphemeral(true).queue();
+                        } else {
+                            event.reply("The URL you send must be a valid YouTube or Spotify link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
                         }
-                    } else {
-                        event.reply("The URL you send must be a valid YouTube or Spotify link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
+                    } catch (IOException | ParseException e) {
+                        event.reply("Sorry, there was an error playing your song. Please try again later.").setEphemeral(true).queue();
+                    } catch (SpotifyWebApiException e) {
+                        event.reply("That spotify playlist could not be found. Make sure it's a valid **public** playlist.").setEphemeral(true).queue();
                     }
-                } catch (URISyntaxException exception) {
+                } else {
                     event.deferReply().queue();
-                    event.getHook().sendMessage(":mag: Searching for **"+arg+"**...").queue();
+                    event.getHook().sendMessage(":mag: Searching for **" + arg + "**...").queue();
                     vc.join();
-                    vc.play("ytsearch:"+arg, event,  event.getName().equals("playskip"));
-                } catch (IOException | ParseException e) {
-                    event.reply("Sorry, there was an error playing your song. Please try again later.").setEphemeral(true).queue();
-                } catch (SpotifyWebApiException e){
-                    event.reply("That spotify playlist could not be found. Make sure it's a valid **public** playlist.").setEphemeral(true).queue();
+                    vc.play("ytsearch:" + arg, event, event.getName().equals("playskip"));
                 }
-            } catch (Exception e){
-                event.getHook().sendMessageEmbeds(badPermissions(e.getMessage()).build()).queue();
+            } catch (Exception e) {
+                event.replyEmbeds(badPermissions(e.getMessage()).build()).queue();
             }
         }
     }
 
-    private EmbedBuilder badPermissions(String msg){
+    private boolean isURL(String url){
+        try {
+            URI u = new URI(url);
+            if(u.isAbsolute()){
+                return true;
+            }
+        } catch (URISyntaxException e){
+            return false;
+        }
+        return  false;
+    }
+
+    private EmbedBuilder badPermissions(String msg) {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Error: Insufficient Permissions");
         embed.setDescription(msg);
@@ -99,21 +111,22 @@ public class Play extends SlashCommand {
 
     /**
      * Check for existing voice controller, if none then create
+     *
      * @param guild
      * @param voiceChannel
      * @param textChannel
      * @return
      * @throws Exception
      */
-    private VoiceController getOrCreateVc(Guild guild, VoiceChannel voiceChannel, TextChannel textChannel) throws Exception{
-        if(guild.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL)){
+    private VoiceController getOrCreateVc(Guild guild, VoiceChannel voiceChannel, TextChannel textChannel) throws Exception {
+        if (guild.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL)) {
             if (PlayerStore.get(guild.getIdLong()) != null) {
                 return PlayerStore.get(guild.getIdLong());
             }
-            VoiceController vc = new VoiceController(guild,voiceChannel,textChannel);
-            PlayerStore.store(guild,vc);
+            VoiceController vc = new VoiceController(guild, voiceChannel, textChannel);
+            PlayerStore.store(guild, vc);
             return vc;
-        }else{
+        } else {
             throw new Exception("It looks like I don't have enough permissions to enter the call. I would love to play music for you, but please make sure I can join! I am missing the `VOICE_CONNECT` permission.");
         }
 
