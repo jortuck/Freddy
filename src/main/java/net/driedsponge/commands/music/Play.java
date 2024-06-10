@@ -103,12 +103,6 @@ public class Play extends SlashCommand {
 
     /**
      * Check for existing voice controller, if none then create
-     *
-     * @param guild
-     * @param voiceChannel
-     * @param textChannel
-     * @return
-     * @throws Exception
      */
     private VoiceController getOrCreateVc(Guild guild, VoiceChannel voiceChannel, TextChannel textChannel) throws Exception {
         if (guild.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.VIEW_CHANNEL)) {
