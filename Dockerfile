@@ -1,4 +1,4 @@
-FROM openjdk:16
+FROM openjdk:21
 
 COPY .  .
 
