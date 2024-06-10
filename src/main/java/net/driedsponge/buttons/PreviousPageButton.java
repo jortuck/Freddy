@@ -30,7 +30,7 @@ public class PreviousPageButton extends ButtonCommand {
                         PreviousPageButton.PREVIOUS_PAGE_BUTTON.withId("PP"+page)
                                 .withDisabled(page==queue.getFirstPage()),
                         NextPageButton.NEXT_PAGE_BUTTON.withId("NP"+page)
-                                .withDisabled(page==queue.getLastPage()))).queue();
+                                .withDisabled(page==queue.getLastPage() || queue.getLastPage() == 0))).queue();
             }
             event.reply("Going to page "+page+"!").setEphemeral(true).queue();
         } catch (Exception e) {

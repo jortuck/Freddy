@@ -29,6 +29,7 @@ public class QueueResponse {
         return firstPage;
     }
 
+    // Returns 0 if there is only one page.
     public int getLastPage() {
         return lastPage;
     }

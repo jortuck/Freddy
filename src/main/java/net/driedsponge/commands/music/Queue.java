@@ -44,7 +44,7 @@ public class Queue extends SlashCommand {
                                     .withDisabled(page==qresponse.getFirstPage())
                             ,
                             NextPageButton.NEXT_PAGE_BUTTON.withId("NP"+page)
-                                    .withDisabled(page==qresponse.getLastPage())
+                                    .withDisabled(page==qresponse.getLastPage() || qresponse.getLastPage()==0)
                     );
                 }
                 response.queue();
