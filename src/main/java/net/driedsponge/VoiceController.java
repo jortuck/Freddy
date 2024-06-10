@@ -67,17 +67,17 @@ public class VoiceController {
     }
 
     public void setNowPlaying(Song nowPlaying) {
+        if(!this.getGuild().getAudioManager().isConnected()){
+            logger.info("Connecting to "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
+            this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
+            this.getGuild().getAudioManager().setSelfDeafened(true);
+        }
         this.nowPlaying = nowPlaying;
         this.getVoiceChannel().modifyStatus(":musical_note: "+nowPlaying.getInfo().title).queue();
         logger.info("Now playing "+nowPlaying.getInfo().title+" by "+nowPlaying.getInfo().author+" in "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
     }
 
     public void play(String song, SlashCommandInteractionEvent event, boolean now){
-        if(!this.getGuild().getAudioManager().isConnected()){
-            logger.info("Connecting to "+this.getVoiceChannel().getName()+" in "+this.getGuild().getName()+" ("+this.getGuild().getId()+")");
-            this.getGuild().getAudioManager().openAudioConnection(this.getVoiceChannel());
-            this.getGuild().getAudioManager().setSelfDeafened(true);
-        }
         playerManager.loadItem(song, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {

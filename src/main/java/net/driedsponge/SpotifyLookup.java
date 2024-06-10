@@ -62,7 +62,7 @@ public class SpotifyLookup {
         Playlist playlist = request.execute();
         Paging<PlaylistTrack> tracks = spotifyApi.getPlaylistsItems(playListId).limit(songsPerPage).build().execute();
         PlaylistTrack[] selectedTracks = tracks.getItems();
-        ArrayList<PlaylistTrack> listTracks = new ArrayList<>(Arrays.asList(selectedTracks));
+        List<PlaylistTrack> listTracks = new ArrayList<>(Arrays.asList(selectedTracks));
         // Prevent playlist over 500
         int totalTracks =  Math.min(tracks.getTotal(),TrackScheduler.QUEUE_LIMIT);
         if(totalTracks > 50){

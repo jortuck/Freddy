@@ -62,9 +62,16 @@ public class Play extends SlashCommand {
                             event.reply("The URL you send must be a valid YouTube or Spotify link. **Tip: You can also just search the name of your song!**").setEphemeral(true).queue();
                         }
                     } catch (IOException | ParseException e) {
-                        event.reply("Sorry, there was an error playing your song. Please try again later.").setEphemeral(true).queue();
+                        String errror = "Sorry, there was an error playing your song. Please try " +
+                                "again later.";
+                        if(event.isAcknowledged()){
+                            event.getHook().sendMessage(errror).setEphemeral(true).queue();
+                        }else{
+                            event.reply(errror).setEphemeral(true).queue();
+                        }
                     } catch (SpotifyWebApiException e) {
-                        event.reply("That spotify playlist could not be found. Make sure it's a valid **public** playlist.").setEphemeral(true).queue();
+                        String error = "That spotify playlist could not be found. Make sure it's a valid **public** playlist.";
+                        event.getHook().sendMessage(error).queue();
                     }
                 } else {
                     event.deferReply().queue();
