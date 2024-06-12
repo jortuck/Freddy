@@ -24,4 +24,6 @@ An open source Discord bot I made to play music for my friends since all the oth
 - The queue has a hard limit of 500. I may raise this later on but for now it is 500.
 - I am limiting my hosted version of the bot (the one with the invite link here) to 100 servers. This is being done to avoid having to verify the bot with Discord, and to avoid a cease & desist from Google.
 - I will be posting and linking self-hosting instructions as soon as the process is easy enough to do so.
-- If you have any questions or need to reach out to me, please fill out the contact form on [my website](https://jordantucker.dev/#contact), email the email listed on my [GitHub profile](https://github.com/driedsponge), or add me on Discord `@driedsponge`.
+- If you have any questions or need to reach out to me, please fill out the contact form on
+[my website](https://jortuck.com/#contact), email the email listed on my
+[GitHub profile](https://github.com/jortuck), or add me on Discord `@driedsponge`.
