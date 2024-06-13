@@ -16,24 +16,4 @@ public class UserVoiceEvents extends ListenerAdapter {
             PlayerStore.get(event.getGuild()).leave();
         }
     }
-
-    /**
-     * Trys to make the bot deafen itself
-     * Deprecated because the bot can now deafen on its own without doing it through the server.
-     * @param event Event that provides context
-     */
-    @Deprecated
-    private void selfDeafen(GenericGuildVoiceEvent event){
-        if(event.getMember().hasPermission(Permission.VOICE_DEAF_OTHERS)){
-            event.getMember().deafen(true).queue();
-        }else{
-            VoiceController vc = PlayerStore.get(event.getGuild());
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.RED);
-            embed.setTitle("Please give me permission to deafen!");
-            embed.setDescription("Please give me permission to deafen so I can deafean myself." +
-                    " This will help save my resources. **You can also manually sever deafen me.**");
-            vc.getTextChannel().sendMessageEmbeds(embed.build()).queue();
-        }
-    }
 }
