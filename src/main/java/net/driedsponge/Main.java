@@ -38,7 +38,7 @@ public class Main {
         // Disable compression (not recommended)
         builder.setCompression(Compression.NONE);
 
-        builder.enableIntents(GatewayIntent.MESSAGE_CONTENT);
+        builder.enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_VOICE_STATES);
 
         builder.setActivity(Activity.watching("for /help"));
 

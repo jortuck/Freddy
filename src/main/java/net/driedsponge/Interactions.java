@@ -17,6 +17,7 @@ public class Interactions {
         CommandData[] cmds = {
                 Commands.slash("ping","Check the bots ping"),
                 Commands.slash("leave","Tells the bot to leave the current voice channel.").setGuildOnly(true),
+                Commands.slash("join","Tells the bot to join the current voice channel.").setGuildOnly(true),
                 Commands.slash("play","Tells the bot to play a song. If a song is already playing, it will be added to the queue.")
                         .addOption(
                                 OptionType.STRING,
