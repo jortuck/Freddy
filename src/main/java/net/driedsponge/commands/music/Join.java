@@ -1,6 +1,7 @@
 package net.driedsponge.commands.music;
 
 import net.driedsponge.Main;
+import net.driedsponge.Player;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
 import net.driedsponge.actions.VoiceChannelActions;
@@ -27,7 +28,8 @@ public class Join extends SlashCommand {
         AudioManager audioManager = event.getGuild().getAudioManager();
         if (event.getMember().getVoiceState().inAudioChannel()) {
             try {
-                VoiceChannelActions.join(event.getMember().getVoiceState().getChannel(), audioManager);
+                Player.PLAYERS.put(event.getGuild().getId(),
+                        new Player(event.getMember().getVoiceState().getChannel()));
                 event.reply("Joining your channel").queue();
             }catch (Exception e){
                 event.reply(e.getMessage()).queue();
