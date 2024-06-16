@@ -50,8 +50,7 @@ public class Main {
         allowedHosts.add("www.youtube.com");
         allowedHosts.add("youtu.be");
         allowedHosts.add("music.youtube.com");
-
-        SpotifyLookup.clientCredentials_Sync();
+        allowedHosts.add("open.spotify.com");
 
         String token = System.getenv("DISCORD_TOKEN");
 

@@ -1,4 +1,7 @@
 package net.driedsponge;
 
-public class BadHostException extends RuntimeException{
+public final class BadHostException extends RuntimeException{
+    public BadHostException(String message){
+        super(message);
+    }
 }

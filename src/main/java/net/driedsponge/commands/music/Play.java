@@ -1,21 +1,9 @@
 package net.driedsponge.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import net.driedsponge.*;
-import net.driedsponge.actions.VoiceChannelActions;
 import net.driedsponge.commands.SlashCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
-import org.apache.hc.core5.http.ParseException;
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 
-import java.awt.*;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -36,16 +24,21 @@ public final class Play extends SlashCommand {
                                 .getVoiceState().getChannel()));
                     }
                     Player player = Player.PLAYERS.get(event.getGuild().getId());
-                    if (!player.getChannel().asVoiceChannel().getId()
+                    if (!player.getVoiceChannel().asVoiceChannel().getId()
                             .equals(event.getMember().getVoiceState().getChannel().asVoiceChannel().getId())) {
                         player.updateChannel(event.getMember().getVoiceState().getChannel());
                     }
 
                     if(isURL(arg)){
-                        player.play(new URI(arg));
+                        try {
+                            event.deferReply().queue();
+                            player.play(new URI(arg),event);
+                        }catch (BadHostException e){
+                            event.getHook().sendMessage(e.getMessage()).queue();
+                        }
                     }else{
-                        player.play("ytsearch:" + arg);
-                        event.reply("playing song").queue();
+                        event.deferReply().queue();
+                        player.play("ytsearch:" + arg, event);
                     }
 
                 } catch (Exception e) {
@@ -58,6 +51,11 @@ public final class Play extends SlashCommand {
         }
     }
 
+    /**
+     * Helper method for determine if a string is a URL.
+     * @param url The url you want to check.
+     * @return Returns true if the string is a URL, otherwise returns false.
+     */
     private boolean isURL(String url){
         try {
             URI u = new URI(url);
