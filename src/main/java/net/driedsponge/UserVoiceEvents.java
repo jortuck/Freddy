@@ -1,12 +1,8 @@
 package net.driedsponge;
 
 import net.driedsponge.actions.VoiceChannelActions;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.guild.voice.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import java.awt.*;
 
 public class UserVoiceEvents extends ListenerAdapter {
     @Override
@@ -17,6 +13,7 @@ public class UserVoiceEvents extends ListenerAdapter {
                     System.out.println("Joined");
                 }else{
                     System.out.println("Left");
+                    VoiceChannelActions.leave(event.getGuild().getAudioManager());
                 }
             }else{
                 System.out.println("moved");

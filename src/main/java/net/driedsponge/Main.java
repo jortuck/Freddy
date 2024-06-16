@@ -1,5 +1,12 @@
 package net.driedsponge;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import dev.lavalink.youtube.clients.AndroidWithThumbnail;
+import dev.lavalink.youtube.clients.MusicWithThumbnail;
+import dev.lavalink.youtube.clients.WebWithThumbnail;
+import dev.lavalink.youtube.clients.skeleton.Client;
 import net.driedsponge.buttons.*;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
@@ -19,12 +26,21 @@ import java.io.IOException;
 
 public class Main {
     public static final String OWNER_ID = System.getenv("OWNER_ID");
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
-
     public static final Color PRIMARY_COLOR = Color.MAGENTA;
+    public static AudioPlayerManager PLAYER_MANAGER;
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) throws LoginException, IOException, ParseException, SpotifyWebApiException {
 
         logger.info("Starting bot...");
+
+        // Register player manager
+        AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,
+                new Client[]{new MusicWithThumbnail(), new AndroidWithThumbnail(), new WebWithThumbnail()} );
+        playerManager.registerSourceManager(youtube);
+        PLAYER_MANAGER = playerManager;
+        logger.info("Registered player manager with YouTube source.");
+
         SpotifyLookup.clientCredentials_Sync();
 
         String token = System.getenv("DISCORD_TOKEN");
