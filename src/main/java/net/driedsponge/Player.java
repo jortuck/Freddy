@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.EventListener;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Player {
+public final class Player {
     public static final HashMap<String, Player> PLAYERS = new HashMap<>();
 
     private final Guild guild;
@@ -31,6 +32,16 @@ public class Player {
     private TrackSchedule schedule;
     private final BlockingQueue<AudioTrack> queue;
 
+    /**
+     * @param channel
+     * @throws IllegalArgumentException –
+     * If the provided channel was null.
+     * If the provided channel is not part of the Guild that the current audio connection is connected to.
+     * @throws UnsupportedOperationException – If audio is disabled due to an internal JDA error
+     * @throws net.dv8tion.jda.api.exceptions.InsufficientPermissionException –
+     * If the currently logged in account does not have the Permission VOICE_CONNECT
+     * If the currently logged in account does not have the Permission VOICE_MOVE_OTHERS and the user limit has been exceeded!
+     */
     public Player(AudioChannelUnion channel){
         this.guild = channel.getGuild();
         this.channel = channel;
@@ -47,6 +58,14 @@ public class Player {
     public void play(String song){
         System.out.println(song);
         Main.PLAYER_MANAGER.loadItem(song,new StandardResultLoader(queue, player));
+    }
+
+    public void play(URI song){
+        if(Main.getAllowedHosts().contains(song.getHost())){
+
+        }else{
+            throw new BadHostException();
+        }
     }
 
     public AudioChannelUnion getChannel(){

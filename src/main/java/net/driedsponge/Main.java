@@ -23,11 +23,16 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
     public static final String OWNER_ID = System.getenv("OWNER_ID");
     public static final Color PRIMARY_COLOR = Color.MAGENTA;
     public static AudioPlayerManager PLAYER_MANAGER;
+    private static final List<String> allowedHosts = new ArrayList<>();
+
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) throws LoginException, IOException, ParseException, SpotifyWebApiException {
 
@@ -40,6 +45,11 @@ public class Main {
         playerManager.registerSourceManager(youtube);
         PLAYER_MANAGER = playerManager;
         logger.info("Registered player manager with YouTube source.");
+
+        allowedHosts.add("youtube.com");
+        allowedHosts.add("www.youtube.com");
+        allowedHosts.add("youtu.be");
+        allowedHosts.add("music.youtube.com");
 
         SpotifyLookup.clientCredentials_Sync();
 
@@ -71,8 +81,12 @@ public class Main {
         builder.addEventListeners(new ButtonListener());
 
         JDA jda = builder.build();
-
         Interactions.initialize(jda.updateCommands());
+
+
     }
 
+    public static List<String> getAllowedHosts(){
+        return Collections.unmodifiableList(allowedHosts);
+    }
 }
