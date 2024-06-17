@@ -82,7 +82,7 @@ public final class SpotifyPlaylist {
     }
 
     public List<PlaylistTrack> getSongs(){
-        return Collections.unmodifiableList(this.songs);
+        return (this.songs);
     }
 
     public String getName(){

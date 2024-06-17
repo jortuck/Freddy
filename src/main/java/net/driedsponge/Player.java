@@ -56,7 +56,7 @@ public final class Player {
     }
 
     public void play(String song, SlashCommandInteractionEvent event) {
-        Main.PLAYER_MANAGER.loadItem(song, new StandardResultLoader(event));
+        Main.PLAYER_MANAGER.loadItem(song, new StandardResultLoader(event, false));
     }
 
     public void play(URI song, SlashCommandInteractionEvent event) throws BadHostException {
@@ -67,7 +67,17 @@ public final class Player {
                     try {
                         SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2]);
                         SpotifyResultLoader loader = new SpotifyResultLoader(event);
-                        for (PlaylistTrack spotify : playlist.getSongs()) {
+                        List<PlaylistTrack> songs = playlist.getSongs();
+
+                        if(player.getPlayingTrack() == null){
+                            PlaylistTrack firstSong = songs.removeFirst();
+                            Main.PLAYER_MANAGER.loadItem(
+                                    "ytmsearch:" + firstSong.getTrack().getName(),
+                                    new StandardResultLoader(event, true)
+                            );
+                        }
+
+                        for (PlaylistTrack spotify : songs) {
                             Main.PLAYER_MANAGER.loadItem(
                                     "ytmsearch:" + spotify.getTrack().getName(), loader);
                         }
@@ -81,13 +91,14 @@ public final class Player {
                                 ).build()
                         ).queue();
                     } catch (Exception e) {
+                        e.printStackTrace();
                         throw new BadHostException("Make sure it's a public playlist " + e.getMessage());
                     }
                 } else {
                     throw new BadHostException("Invalid spotify Playlist link");
                 }
             } else {
-                Main.PLAYER_MANAGER.loadItem(song.toString(), new StandardResultLoader(event));
+                Main.PLAYER_MANAGER.loadItem(song.toString(), new StandardResultLoader(event, false));
             }
         } else {
             throw new BadHostException("The URL must be valid YouTube URL or Spotify Playlist Link");
@@ -146,17 +157,7 @@ public final class Player {
 
         @Override
         public void trackLoaded(AudioTrack track) {
-            QueuedSong song = new QueuedSong(track, event);
-            if (nowPlaying == null) {
-                nowPlaying = song;
-                player.playTrack(song.getTrack());
-                event.getHook().sendMessageEmbeds(
-                        Embeds.songCard("Now Playing", song).build()
-                ).queue();
-            } else {
-                queue.offer(song);
-            }
-
+            queue.offer(new QueuedSong(track, event));
         }
 
         @Override
@@ -177,15 +178,16 @@ public final class Player {
 
     private final class StandardResultLoader implements AudioLoadResultHandler {
         private SlashCommandInteractionEvent event;
-
-        public StandardResultLoader(SlashCommandInteractionEvent event) {
+        private boolean now;
+        public StandardResultLoader(SlashCommandInteractionEvent event, boolean now) {
             this.event = event;
+            this.now = now;
         }
 
         @Override
         public void trackLoaded(AudioTrack track) {
             QueuedSong song = new QueuedSong(track, event);
-            if (nowPlaying == null) {
+            if (now) {
                 nowPlaying = song;
                 player.playTrack(track);
                 event.getHook().sendMessageEmbeds(
