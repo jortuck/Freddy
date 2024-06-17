@@ -84,4 +84,17 @@ public final class SpotifyPlaylist {
     public List<PlaylistTrack> getSongs(){
         return Collections.unmodifiableList(this.songs);
     }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getImage(){
+        return this.image;
+    }
+
+    public String getUrl(){
+        return this.url;
+    }
+
 }
