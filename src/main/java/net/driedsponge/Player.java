@@ -16,6 +16,7 @@ import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -27,7 +28,7 @@ public final class Player {
     private AudioChannelUnion voiceChannel;
     private GuildMessageChannel textChannel;
     private TrackEvents schedule;
-    private final BlockingQueue<AudioTrack> queue;
+    private final BlockingQueue<QueuedSong> queue;
 
     /**
      * @param channel
@@ -105,7 +106,7 @@ public final class Player {
             if(queue.isEmpty()){
                 textChannel.sendMessage("Queue is empty! No more songs to play!").queue();
             }else{
-                player.playTrack(queue.poll());
+                player.playTrack(queue.poll().getTrack());
                 textChannel.sendMessage("Starting new song!").queue();
             }
         }
@@ -121,7 +122,7 @@ public final class Player {
             if(player.getPlayingTrack() == null){
                 event.getHook().sendMessage("playing first song").queue();
             }else{
-                queue.offer(track);
+                queue.offer(new QueuedSong(track,event));
             }
         }
 
@@ -153,7 +154,7 @@ public final class Player {
                 player.playTrack(track);
                 event.getHook().sendMessage("Playing your song now!").queue();
             }else {
-                queue.offer(track);
+                queue.offer(new QueuedSong(track, event));
                 event.getHook().sendMessage(track.getInfo().title+" added to queue!").queue();
             }
         }
@@ -165,7 +166,7 @@ public final class Player {
                 trackLoaded(playlist.getTracks().getFirst());
             }else{
                 for(AudioTrack track : playlist.getTracks()){
-                    queue.offer(track);
+                    queue.offer(new QueuedSong(track, event));
                 }
             }
         }
