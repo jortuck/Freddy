@@ -6,7 +6,11 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
-public class Interactions {
+public final class Interactions {
+
+    private Interactions(){
+        throw new AssertionError();
+    }
 
     /**
      * Takes a list of our commands and adds them to discord. This is kind of the master command list.
