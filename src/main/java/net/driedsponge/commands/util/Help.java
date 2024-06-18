@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.Command;
 import java.awt.*;
 import java.util.List;
 
-public class Help extends SlashCommand {
+public final class Help extends SlashCommand {
     public Help() {
         super("help");
     }

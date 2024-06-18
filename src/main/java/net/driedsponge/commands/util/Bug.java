@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 
-public class Bug extends SlashCommand {
+public final class Bug extends SlashCommand {
     private static final Logger logger = LoggerFactory.getLogger(Bug.class);
 
     public Bug() {

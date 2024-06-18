@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
 
-public class Owner {
+public final class Owner {
 
 
     public static EmbedBuilder callList(JDA jda){

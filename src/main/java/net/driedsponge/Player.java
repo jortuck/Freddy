@@ -68,7 +68,6 @@ public final class Player {
                         SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2]);
                         SpotifyResultLoader loader = new SpotifyResultLoader(event);
                         List<PlaylistTrack> songs = playlist.getSongs();
-
                         if(player.getPlayingTrack() == null){
                             PlaylistTrack firstSong = songs.removeFirst();
                             Main.PLAYER_MANAGER.loadItem(
@@ -76,7 +75,6 @@ public final class Player {
                                     new StandardResultLoader(event, true)
                             );
                         }
-
                         for (PlaylistTrack spotify : songs) {
                             Main.PLAYER_MANAGER.loadItem(
                                     "ytmsearch:" + spotify.getTrack().getName(), loader);

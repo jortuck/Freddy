@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class Queue extends SlashCommand {
+public final class Queue extends SlashCommand {
 
 
     public Queue() {
