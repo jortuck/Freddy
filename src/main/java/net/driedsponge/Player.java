@@ -59,7 +59,7 @@ public final class Player {
         Main.PLAYER_MANAGER.loadItem(song, new StandardResultLoader(event, false));
     }
 
-    public void play(URI song, SlashCommandInteractionEvent event) throws BadHostException {
+    public void play(URI song, SlashCommandInteractionEvent event, boolean now) throws BadHostException {
         if (Main.getAllowedHosts().contains(song.getHost())) {
             if (song.getHost().equals("open.spotify.com")) {
                 String[] paths = song.getPath().split("/", 3);
@@ -68,7 +68,7 @@ public final class Player {
                         SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2]);
                         SpotifyResultLoader loader = new SpotifyResultLoader(event);
                         List<PlaylistTrack> songs = playlist.getSongs();
-                        if(player.getPlayingTrack() == null){
+                        if(player.getPlayingTrack() == null || now){
                             PlaylistTrack firstSong = songs.removeFirst();
                             Main.PLAYER_MANAGER.loadItem(
                                     "ytmsearch:" + firstSong.getTrack().getName(),
@@ -96,7 +96,7 @@ public final class Player {
                     throw new BadHostException("Invalid spotify Playlist link");
                 }
             } else {
-                Main.PLAYER_MANAGER.loadItem(song.toString(), new StandardResultLoader(event, false));
+                Main.PLAYER_MANAGER.loadItem(song.toString(), new StandardResultLoader(event, now));
             }
         } else {
             throw new BadHostException("The URL must be valid YouTube URL or Spotify Playlist Link");
