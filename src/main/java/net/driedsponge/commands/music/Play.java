@@ -32,13 +32,13 @@ public final class Play extends SlashCommand {
                     if(isURL(arg)){
                         try {
                             event.deferReply().queue();
-                            player.play(new URI(arg),event);
+                            player.play(new URI(arg),event, event.getName().equals("playskip"));
                         }catch (BadHostException e){
                             event.getHook().sendMessage(e.getMessage()).queue();
                         }
                     }else{
                         event.deferReply().queue();
-                        player.play("ytsearch:" + arg, event);
+                        player.play("ytsearch:" + arg, event,event.getName().equals("playskip"));
                     }
 
                 } catch (Exception e) {

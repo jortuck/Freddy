@@ -49,14 +49,16 @@ public final class Player {
         this.schedule = new TrackEvents();
         player.addListener(schedule);
         guild.getAudioManager().openAudioConnection(channel);
+        guild.getAudioManager().setSelfDeafened(true);
         guild.getAudioManager().setSendingHandler(new MusicHandler(player));
         this.queue = new LinkedBlockingQueue<>();
         this.textChannel = channel.asGuildMessageChannel();
 
     }
 
-    public void play(String song, SlashCommandInteractionEvent event) {
-        Main.PLAYER_MANAGER.loadItem(song, new StandardResultLoader(event, false));
+    public void play(String song, SlashCommandInteractionEvent event, boolean now) {
+        boolean playNow = now || player.getPlayingTrack() == null;
+        Main.PLAYER_MANAGER.loadItem(song, new StandardResultLoader(event, playNow));
     }
 
     public void play(URI song, SlashCommandInteractionEvent event, boolean now) throws BadHostException {
@@ -96,7 +98,8 @@ public final class Player {
                     throw new BadHostException("Invalid spotify Playlist link");
                 }
             } else {
-                Main.PLAYER_MANAGER.loadItem(song.toString(), new StandardResultLoader(event, now));
+                boolean playNow = now || player.getPlayingTrack() == null;
+                Main.PLAYER_MANAGER.loadItem(song.toString(), new StandardResultLoader(event, playNow));
             }
         } else {
             throw new BadHostException("The URL must be valid YouTube URL or Spotify Playlist Link");
@@ -121,10 +124,6 @@ public final class Player {
         return new ArrayList<>(List.of(songs));
     }
 
-    public void playNow(String song) {
-
-    }
-
     private final class TrackEvents extends AudioEventAdapter {
         @Override
         public void onTrackStart(AudioPlayer player, AudioTrack track) {
@@ -134,14 +133,15 @@ public final class Player {
 
         @Override
         public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-            if (queue.isEmpty()) {
-                textChannel.sendMessage("Queue is empty! No more songs to play!").queue();
-            } else {
+            System.out.println(endReason);
+            if (!queue.isEmpty() && endReason.mayStartNext) {
                 QueuedSong nextSong = queue.poll();
                 player.playTrack(nextSong.getTrack());
                 textChannel.sendMessageEmbeds(
-                    Embeds.songCard("Now Playing", nextSong).build()
+                        Embeds.songCard("Now Playing", nextSong).build()
                 ).queue();
+            } else {
+                textChannel.sendMessage("Queue is empty! No more songs to play!").queue();
             }
         }
     }
@@ -206,11 +206,15 @@ public final class Player {
                 trackLoaded(playlist.getTracks().getFirst());
             } else {
                 for (AudioTrack track : playlist.getTracks()) {
-                    if (nowPlaying == null) {
-                        nowPlaying = new QueuedSong(track, event);
+                    QueuedSong song = new QueuedSong(track, event);
+                    if (now) {
                         player.playTrack(track);
+                        event.getHook().sendMessageEmbeds(
+                                Embeds.songCard("Now Playing", song).build()
+                        ).queue();
+                        now = false;
                     } else {
-                        queue.offer(new QueuedSong(track, event));
+                        queue.offer(song);
                     }
                 }
                 event.getHook().sendMessageEmbeds(Embeds.playlistEmbed(
