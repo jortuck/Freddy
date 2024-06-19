@@ -5,6 +5,7 @@ import net.driedsponge.VoiceController;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +20,7 @@ public final class Bug extends SlashCommand {
 
     @Override
     public void execute(SlashCommandInteractionEvent event){
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.RED);
-        embedBuilder.setTitle("New Bug Report");
-        embedBuilder.addField("Sender",event.getUser().getName()+" ("+event.getUser().getId()+")", true);
-        embedBuilder.addField("Guild",event.getGuild().getName()+" ("+event.getGuild().getId()+")", true);
-        embedBuilder.setDescription(event.getOptions().get(0).getAsString());
-        embedBuilder.setAuthor(event.getUser().getName(),event.getUser().getAvatarUrl());
+        EmbedBuilder embedBuilder = getEmbedBuilder(event);
         logger.warn("Bug Report From {} ({}) in {} ({}): {}",
                 event.getUser().getName(),
                 event.getUser().getId(),
@@ -45,5 +40,16 @@ public final class Bug extends SlashCommand {
                         "(<https://github.com/jortuck/Freddy/issues/new/choose>).**")
                 .setEphemeral(true).queue();
 
+    }
+
+    private static @NotNull EmbedBuilder getEmbedBuilder(SlashCommandInteractionEvent event) {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(Color.RED);
+        embedBuilder.setTitle("New Bug Report");
+        embedBuilder.addField("Sender", event.getUser().getName()+" ("+ event.getUser().getId()+")", true);
+        embedBuilder.addField("Guild", event.getGuild().getName()+" ("+ event.getGuild().getId()+")", true);
+        embedBuilder.setDescription(event.getOptions().get(0).getAsString());
+        embedBuilder.setAuthor(event.getUser().getName(), event.getUser().getAvatarUrl());
+        return embedBuilder;
     }
 }
