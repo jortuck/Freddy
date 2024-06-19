@@ -1,7 +1,5 @@
 package net.driedsponge;
 
-import net.driedsponge.actions.VoiceChannelActions;
-import net.driedsponge.commands.music.Play;
 import net.dv8tion.jda.api.events.guild.voice.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;

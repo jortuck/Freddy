@@ -1,17 +1,8 @@
 package net.driedsponge.commands.music;
 
-import net.driedsponge.Main;
 import net.driedsponge.Player;
-import net.driedsponge.PlayerStore;
-import net.driedsponge.VoiceController;
-import net.driedsponge.actions.VoiceChannelActions;
 import net.driedsponge.commands.SlashCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.managers.AudioManager;
 
 public class Join extends SlashCommand {
 
