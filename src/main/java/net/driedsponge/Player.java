@@ -124,6 +124,9 @@ public final class Player {
         this.voiceChannel = channel;
     }
 
+    /**
+     * Returns the currently playing song as a Queued song. Returns null if no song is being played.
+     */
     public QueuedSong getNowPlaying(){
         return nowPlaying;
     }
@@ -133,6 +136,13 @@ public final class Player {
         return new ArrayList<>(List.of(songs));
     }
 
+    public Guild getGuild(){
+        return this.guild;
+    }
+
+    /**
+     * Private class for tracking player events such as trackEnd, tracKStart, etc.
+     */
     private final class TrackEvents extends AudioEventAdapter {
         @Override
         public void onTrackStart(AudioPlayer player, AudioTrack track) {
@@ -155,11 +165,13 @@ public final class Player {
             if (!queue.isEmpty() && endReason.mayStartNext) {
                 QueuedSong nextSong = queue.poll();
                 player.playTrack(nextSong.getTrack());
+                nowPlaying = nextSong;
                 textChannel.sendMessageEmbeds(
                         Embeds.songCard("Now Playing", nextSong).build()
                 ).queue();
             } else {
                 textChannel.sendMessage("Queue is empty! No more songs to play!").queue();
+                nowPlaying = null;
             }
         }
     }
@@ -278,6 +290,14 @@ public final class Player {
 
     public static boolean contains(String guildId){
         return PLAYERS.containsKey(guildId);
+    }
+
+    /**
+     * Get a list of active players.
+     * @return An unmodifiable list of the active players.
+     */
+    public static List<Player> getPlayers(){
+       return List.of(PLAYERS.values().toArray(new Player[]{}));
     }
 
 }
