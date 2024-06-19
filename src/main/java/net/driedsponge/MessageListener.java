@@ -24,7 +24,7 @@ public class MessageListener extends ListenerAdapter {
                         .setActionRow(Entertaining.ENTERTAINING_BUTTON)
                         .queue();
             }else if(event.getMessage().getContentRaw().startsWith("!entertaining")){
-                EmbedBuilder embedBuilder = Owner.statistics(event);
+                EmbedBuilder embedBuilder = Owner.callList(event.getJDA());
                 event.getMessage().replyEmbeds(embedBuilder.build()).queue();
             }
         }
