@@ -26,7 +26,12 @@ public final class Bug extends SlashCommand {
         embedBuilder.addField("Guild",event.getGuild().getName()+" ("+event.getGuild().getId()+")", true);
         embedBuilder.setDescription(event.getOptions().get(0).getAsString());
         embedBuilder.setAuthor(event.getUser().getName(),event.getUser().getAvatarUrl());
-        logger.warn("Bug Report From "+event.getUser().getName()+" ("+event.getUser().getId()+") in "+event.getGuild().getName()+" ("+event.getGuild().getId()+")"+": "+event.getOptions().get(0).getAsString());
+        logger.warn("Bug Report From {} ({}) in {} ({}): {}",
+                event.getUser().getName(),
+                event.getUser().getId(),
+                event.getGuild().getName(),
+                event.getGuild().getId(),
+                event.getOptions().get(0).getAsString());
         event.getJDA().retrieveUserById(Main.OWNER_ID).queue(owner ->{
             owner.openPrivateChannel().queue(response ->{
                 response.sendMessageEmbeds(embedBuilder.build()).queue();
@@ -34,6 +39,11 @@ public final class Bug extends SlashCommand {
         });
 
 
-        event.reply("Your bug report has been sent, thank you!").setEphemeral(true).queue();
+        event.reply("Your bug report has been sent, thank you! " +
+                "**If you would like to provide more information, please submit an " +
+                        "[issue on GitHub]" +
+                        "(<https://github.com/jortuck/Freddy/issues/new/choose>).**")
+                .setEphemeral(true).queue();
+
     }
 }
