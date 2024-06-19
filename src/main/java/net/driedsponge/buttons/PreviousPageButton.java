@@ -5,9 +5,14 @@ import net.driedsponge.commands.music.Queue;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.interactions.components.LayoutComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PreviousPageButton extends ButtonCommand {
     public static final Button PREVIOUS_PAGE_BUTTON = Button.primary("PP","Previous Page");
@@ -31,8 +36,11 @@ public class PreviousPageButton extends ButtonCommand {
                                 .withDisabled(page==queue.getFirstPage()),
                         NextPageButton.NEXT_PAGE_BUTTON.withId("NP"+page)
                                 .withDisabled(page==queue.getLastPage() || queue.getLastPage() == 0))).queue();
+                event.reply("Going to page "+page+"!").setEphemeral(true).queue();
+            }else {
+                event.reply("The queue is empty.").setEphemeral(true).queue();
+                event.getMessage().editMessageComponents().queue();
             }
-            event.reply("Going to page "+page+"!").setEphemeral(true).queue();
         } catch (Exception e) {
             event.reply(e.getMessage()).setEphemeral(true).queue();
         }

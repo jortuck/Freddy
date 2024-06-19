@@ -61,13 +61,19 @@ public final class Queue extends SlashCommand {
         }
     }
 
-    public static QueueResponse qResponse(Guild guild, int page) throws Exception {
+    public static QueueResponse qResponse(Guild guild, int page) {
+        if(!Player.contains(guild.getId())){
+            throw new IllegalStateException("The bot is not playing anything.");
+        }
         int songsPerPage = 10;
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Queue - Page " + page);
         embedBuilder.setColor(Main.PRIMARY_COLOR);
 
         Player player = Player.get(guild.getId());
+        if(player.getNowPlaying() == null){
+            throw new IllegalStateException("The bot is not playing anything.");
+        }
         AudioTrackInfo np = player.getNowPlaying().getInfo();
         List<QueuedSong> songs = player.getQueue();
         int songCount = songs.size();
@@ -100,6 +106,6 @@ public final class Queue extends SlashCommand {
             embedBuilder.setFooter("Page " + page + " of " + pages + " | Showing song(s) " + (loopStart + 1) + "-" + (loopEnd) + " of " + (songCount) + ".");
         }
         embedBuilder.setDescription(queue);
-        return new QueueResponse(embedBuilder.build(), queue.isEmpty(), 1, pages, page);
+        return new QueueResponse(embedBuilder.build(), player.getQueue().isEmpty(), 1, pages, page);
     }
 }
