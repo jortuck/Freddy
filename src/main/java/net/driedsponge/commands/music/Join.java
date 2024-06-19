@@ -4,7 +4,7 @@ import net.driedsponge.Player;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class Join extends SlashCommand {
+public final class Join extends SlashCommand {
 
     public Join() {
         super("Join");
