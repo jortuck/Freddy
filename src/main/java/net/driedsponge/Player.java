@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
@@ -110,6 +111,10 @@ public final class Player {
         return voiceChannel;
     }
 
+    /**
+     * Moves the bot to a new voice channel.
+     * @param channel The channel to move the bot to.
+     */
     public void updateChannel(AudioChannelUnion channel) {
         this.guild.getAudioManager().openAudioConnection(channel);
         this.voiceChannel = channel;
@@ -127,8 +132,17 @@ public final class Player {
     private final class TrackEvents extends AudioEventAdapter {
         @Override
         public void onTrackStart(AudioPlayer player, AudioTrack track) {
-            voiceChannel.asVoiceChannel().modifyStatus(":musical_note: " + player.getPlayingTrack()
-                    .getInfo().title).queue();
+            try {
+                voiceChannel.asVoiceChannel().modifyStatus(":musical_note: " + player.getPlayingTrack()
+                        .getInfo().title).queue();
+            } catch (InsufficientPermissionException e){
+                logger.warn("Tried to set voice status in {} ({} - {}) but did not have permission to.",
+                        voiceChannel.getName(),
+                        guild.getName(),
+                        guild.getId()
+                        );
+            }
+
         }
 
         @Override

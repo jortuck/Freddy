@@ -14,11 +14,6 @@ public class VoiceChannelActions {
     };
 
     public static void leave(AudioManager manager){
-        if(manager.isConnected()){
             manager.closeAudioConnection();
-        }else{
-            System.out.println("remove player from store");
-            Player.PLAYERS.remove(manager.getGuild().getId());
-        }
     };
 }
