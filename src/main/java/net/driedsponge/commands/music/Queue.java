@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
 public final class Queue extends SlashCommand {
 
@@ -37,16 +36,16 @@ public final class Queue extends SlashCommand {
             }
             try {
                 QueueResponse qresponse = qResponse(event.getGuild(), page);
-                WebhookMessageCreateAction<Message> response = event.getHook().sendMessageEmbeds(qresponse.getEmbed());
-                if (!qresponse.isEmpty()) {
+                WebhookMessageCreateAction<Message> response = event.getHook().sendMessageEmbeds(qresponse.embed());
+                if (!qresponse.empty()) {
                     // Add once discord decides to support number inputs in modals.
                     //response.addActionRow(ShuffleButton.SHUFFLE_BUTTON,RemoveSongButton.REMOVE_BUTTON);
                     response.addActionRow(ShuffleButton.SHUFFLE_BUTTON,
                             PreviousPageButton.PREVIOUS_PAGE_BUTTON.withId("PP" + page)
-                                    .withDisabled(page == qresponse.getFirstPage())
+                                    .withDisabled(page == qresponse.firstPage())
                             ,
                             NextPageButton.NEXT_PAGE_BUTTON.withId("NP" + page)
-                                    .withDisabled(page == qresponse.getLastPage() || qresponse.getLastPage() == 0)
+                                    .withDisabled(page == qresponse.lastPage() || qresponse.lastPage() == 0)
                     );
                 }
                 response.queue();
