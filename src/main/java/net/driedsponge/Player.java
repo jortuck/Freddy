@@ -136,8 +136,18 @@ public final class Player {
         return new ArrayList<>(List.of(songs));
     }
 
+    /**
+     * Returns the guild that is associated with this player.
+     */
     public Guild getGuild(){
         return this.guild;
+    }
+
+    /**
+     * Clears the queue for the player.
+     */
+    public void clearQueue(){
+        this.queue.clear();
     }
 
     /**
