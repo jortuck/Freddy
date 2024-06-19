@@ -26,8 +26,7 @@ public final class UserVoiceEvents extends ListenerAdapter {
                             event.getChannelLeft().getName(),
                             event.getGuild().getName(),
                             event.getGuild().getId());
-                    Player.PLAYERS.remove(event.getGuild().getId());
-                    System.out.println(Player.PLAYERS.size());
+                    Player.destroy(event.getGuild().getId());
                 }
             } else {
                 if (event.getChannelJoined().getMembers().size() == 1) {
@@ -38,7 +37,7 @@ public final class UserVoiceEvents extends ListenerAdapter {
                             event.getChannelJoined().getName(),
                             event.getGuild().getName(),
                             event.getGuild().getId());
-                    Player.PLAYERS.remove(event.getGuild().getId());
+                    Player.destroy(event.getGuild().getId());
                 }
             }
         }else if(event.getGuild().getAudioManager().isConnected()){

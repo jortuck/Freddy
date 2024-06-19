@@ -19,11 +19,10 @@ public final class Play extends SlashCommand {
             if (event.getMember().getVoiceState().inAudioChannel()) {
                 String arg = event.getOptions().getFirst().getAsString();
                 try {
-                    if (!Player.PLAYERS.containsKey(event.getGuild().getId())) {
-                        Player.PLAYERS.put(event.getGuild().getId(), new Player(event.getMember()
-                                .getVoiceState().getChannel()));
+                    if (!Player.contains(event.getGuild().getId())) {
+                        Player.createPlayer(event.getMember().getVoiceState().getChannel());
                     }
-                    Player player = Player.PLAYERS.get(event.getGuild().getId());
+                    Player player = Player.get(event.getGuild().getId());
                     if (!player.getVoiceChannel().asVoiceChannel().getId()
                             .equals(event.getMember().getVoiceState().getChannel().asVoiceChannel().getId())) {
                         player.updateChannel(event.getMember().getVoiceState().getChannel());

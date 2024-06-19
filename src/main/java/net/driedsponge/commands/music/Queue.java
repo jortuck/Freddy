@@ -28,7 +28,7 @@ public final class Queue extends SlashCommand {
         event.deferReply().queue();
 
 
-        if (Player.PLAYERS.containsKey(event.getGuild().getId())) {
+        if (Player.contains(event.getGuild().getId())) {
             int page = 1;
 
             try {
@@ -67,7 +67,7 @@ public final class Queue extends SlashCommand {
         embedBuilder.setTitle("Queue - Page " + page);
         embedBuilder.setColor(Main.PRIMARY_COLOR);
 
-        Player player = Player.PLAYERS.get(guild.getId());
+        Player player = Player.get(guild.getId());
         AudioTrackInfo np = player.getNowPlaying().getInfo();
         List<QueuedSong> songs = player.getQueue();
         int songCount = songs.size();

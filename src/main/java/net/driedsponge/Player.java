@@ -23,7 +23,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public final class Player {
-    public static final HashMap<String, Player> PLAYERS = new HashMap<>();
+    private static final HashMap<String, Player> PLAYERS = new HashMap<>();
 
     private final Guild guild;
     private AudioPlayer player;
@@ -43,7 +43,7 @@ public final class Player {
      * logged in account does not have the Permission VOICE_MOVE_OTHERS and the user limit has been
      * exceeded!
      */
-    public Player(AudioChannelUnion channel) {
+    private Player(AudioChannelUnion channel) {
         this.guild = channel.getGuild();
         this.voiceChannel = channel;
         this.player = Main.PLAYER_MANAGER.createPlayer();
@@ -54,7 +54,11 @@ public final class Player {
         guild.getAudioManager().setSendingHandler(new MusicHandler(player));
         this.queue = new LinkedBlockingQueue<>();
         this.textChannel = channel.asGuildMessageChannel();
-
+        logger.info("Initialized a new Player in {} ({} - {})",
+                voiceChannel.getName(),
+                guild.getName(),
+                guild.getId()
+                );
     }
 
     public void play(String song, SlashCommandInteractionEvent event, boolean now) {
@@ -250,6 +254,30 @@ public final class Player {
         public void loadFailed(FriendlyException exception) {
             event.getHook().sendMessage(exception.getMessage()).queue();
         }
+    }
+
+    public static Player createPlayer(AudioChannelUnion channel){
+        Player newPlayer = new Player(channel);
+        PLAYERS.put(channel.getGuild().getId(),newPlayer);
+        return newPlayer;
+    }
+
+    public static void destroy(String guildId){
+        if(PLAYERS.containsKey(guildId)){
+            Player player = PLAYERS.remove(guildId);
+            player.player.destroy();
+            logger.info("Destroyed player in {} ({})",
+                    player.guild.getName(),
+                    player.guild.getId());
+        }
+    }
+
+    public static Player get(String guildId){
+        return PLAYERS.get(guildId);
+    }
+
+    public static boolean contains(String guildId){
+        return PLAYERS.containsKey(guildId);
     }
 
 }

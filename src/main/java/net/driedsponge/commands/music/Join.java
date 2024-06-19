@@ -25,11 +25,9 @@ public class Join extends SlashCommand {
     }
 
     private void join(SlashCommandInteractionEvent event) {
-        AudioManager audioManager = event.getGuild().getAudioManager();
         if (event.getMember().getVoiceState().inAudioChannel()) {
             try {
-                Player.PLAYERS.put(event.getGuild().getId(),
-                        new Player(event.getMember().getVoiceState().getChannel()));
+                Player.createPlayer(event.getMember().getVoiceState().getChannel());
                 event.reply("Joining your channel").queue();
             }catch (Exception e){
                 event.reply(e.getMessage()).queue();
