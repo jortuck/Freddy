@@ -20,4 +20,4 @@ A  description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Additional context**
-Add any other context about the problem here.
+Add any other context about the problem here. If the bot returned an error, please write it here. If able to, please add the time when the error happened so I can check the logs for additional context.
