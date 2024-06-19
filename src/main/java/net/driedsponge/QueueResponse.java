@@ -1,9 +1,8 @@
 package net.driedsponge;
 
-import net.driedsponge.commands.music.Queue;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class QueueResponse {
+public final class QueueResponse {
     private MessageEmbed embed;
     private boolean empty;
     private int firstPage;

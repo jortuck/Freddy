@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PreviousPageButton extends ButtonCommand {
+public final class PreviousPageButton extends ButtonCommand {
     public static final Button PREVIOUS_PAGE_BUTTON = Button.primary("PP","Previous Page");
     public PreviousPageButton() {
         super("PP");
