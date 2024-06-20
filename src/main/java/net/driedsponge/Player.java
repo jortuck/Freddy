@@ -388,6 +388,17 @@ public final class Player {
     public static void destroy(String guildId){
         if(PLAYERS.containsKey(guildId)){
             Player player = PLAYERS.remove(guildId);
+            try{
+                if(player.voiceChannel.asVoiceChannel().getStatus().startsWith(":musical_note:")){
+                    player.voiceChannel.asVoiceChannel().modifyStatus("").queue();
+                }
+            }catch (InsufficientPermissionException e){
+                logger.warn("Tried to set voice status in {} ({} - {}) but did not have permission to.",
+                        player.voiceChannel.getName(),
+                        player.guild.getName(),
+                        player.guild.getId()
+                );
+            }
             player.player.destroy();
             logger.info("Destroyed player in {} ({})",
                     player.guild.getName(),

@@ -20,6 +20,9 @@ public final class UserVoiceEvents extends ListenerAdapter {
                             event.getChannelJoined().getName(),
                             event.getGuild().getName(),
                             event.getGuild().getId());
+                    if(event.getChannelJoined().getMembers().size()==1){
+                        event.getGuild().getAudioManager().closeAudioConnection();
+                    }
                 } else {
                     logger.info("Disconnected from {} in {} ({})",
                             event.getChannelLeft().getName(),
