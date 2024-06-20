@@ -289,7 +289,7 @@ public final class Player {
 
         @Override
         public void loadFailed(FriendlyException exception) {
-            System.out.println(exception.getMessage());
+            logger.warn("Loading of song failed from spotify: "+exception.getMessage());
         }
     }
 
@@ -348,12 +348,15 @@ public final class Player {
 
         @Override
         public void noMatches() {
-            event.getHook().sendMessage("no matches for the desired song").queue();
+            event.getHook().sendMessage("We could not find your song!").queue();
         }
 
         @Override
         public void loadFailed(FriendlyException exception) {
-            event.getHook().sendMessage(exception.getMessage()).queue();
+            logger.warn("Loading of song failed: "+exception.getMessage());
+            event.getHook().sendMessageEmbeds(
+                    Embeds.error("Unfortunately that song failed to load.",exception.getMessage()).build()
+            ).queue();
         }
     }
 

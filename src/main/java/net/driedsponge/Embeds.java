@@ -18,8 +18,11 @@ public final class Embeds {
 
     public static EmbedBuilder error(String title, String description){
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(title);
-        embedBuilder.setDescription(description);
+        embedBuilder.setTitle("An Error Occurred Performing That Operation");
+        embedBuilder.setDescription("### "+title);
+        embedBuilder.appendDescription("\n *Below is the error message. If the message below does" +
+                "not make any sense, please report it using the `/bug` command!*");
+        embedBuilder.appendDescription("\n```\n"+description+"\n```");
         embedBuilder.setColor(Color.RED);
         embedBuilder.setFooter("Time Stamp: "+new Timestamp(System.currentTimeMillis()).toString());
         return embedBuilder;
