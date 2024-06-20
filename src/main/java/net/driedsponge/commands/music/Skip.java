@@ -1,5 +1,6 @@
 package net.driedsponge.commands.music;
 
+import net.driedsponge.Player;
 import net.driedsponge.PlayerStore;
 import net.driedsponge.VoiceController;
 import net.driedsponge.commands.CommonChecks;
@@ -39,22 +40,12 @@ public class Skip extends SlashCommand {
         if(!CommonChecks.listeningMusic(member,guild)){
             throw new Exception("You need to be in a voice channel with the bot to skip.");
         }
-        if(CommonChecks.playingMusic(guild)){
-            VoiceController vc = PlayerStore.get(guild);
-            if(!vc.getTrackScheduler().getQueue().isEmpty()){
-                if(vc.getTrackScheduler().getQueue().size() >= amount){
-                    vc.skip(member, amount);
-                    return "Skipping "+amount+" song(s)...";
-                }else{
-                    throw new Exception("That is an invalid amount of songs to skip!");
-                }
-            }else{
-                vc.skip(member, amount);
-                return "No more songs left in the queue!";
-            }
+        if(Player.contains(guild.getId()) && Player.get(guild.getId()).getNowPlaying() != null){
+            Player player = Player.get(guild.getId());
+            player.skip(amount);
+            return "Skipping "+amount+" song(s)...";
         }else{
-            throw new Exception("Nothing to skip.");
+            throw new IllegalStateException("Nothing to skip.");
         }
-
     }
 }

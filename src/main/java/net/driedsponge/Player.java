@@ -8,6 +8,8 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.driedsponge.buttons.SkipButton;
+import net.driedsponge.commands.music.Play;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
@@ -22,6 +24,32 @@ import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * This is the big class that controls the core features of the music player. It has many exposed
+ * methods for controlling music based on other inputs.
+ * <p>
+ *     We do not use the onTrackStart event to note when songs start playing. There are four
+ *     important places where this is done instead:
+ *     <ul>
+ *         <li>
+ *              At {@link #skip(int)} when the user skips some songs and we need to set now playing
+ *              on the new song they are listening to.
+ *         </li>
+ *         <li>
+ *             At {@link StandardResultLoader#playlistLoaded(AudioPlaylist)}  } when we need to play
+ *             the first song in a playlist.
+ *         </li>
+ *         <li>
+ *             At {@link TrackEvents#onTrackEnd(AudioPlayer, AudioTrack, AudioTrackEndReason)} when
+ *             it's time to move on in the queue.
+ *         </li>
+ *         <li>
+ *             At {@link StandardResultLoader#trackLoaded(AudioTrack)} for standard initial playing
+ *             of a song.
+ *         </li>
+ *     </ul>
+ * </p>
+ */
 public final class Player {
     private static final HashMap<String, Player> PLAYERS = new HashMap<>();
 
@@ -39,7 +67,7 @@ public final class Player {
      * @throws IllegalArgumentException If the provided channel was null. If the provided channel is
      * not part of the Guild that the current audio connection is connected to.
      * @throws UnsupportedOperationException If audio is disabled due to an internal JDA error
-     * @throws net.dv8tion.jda.api.exceptions.InsufficientPermissionException If the currently
+     * @throws InsufficientPermissionException If the currently
      * logged in account does not have the Permission VOICE_MOVE_OTHERS and the user limit has been
      * exceeded!
      */
@@ -120,6 +148,24 @@ public final class Player {
      * @param channel The channel to move the bot to.
      */
     public void updateChannel(AudioChannelUnion channel) {
+        try {
+            String previousStatus =  this.voiceChannel.asVoiceChannel().getStatus();
+            if(previousStatus.startsWith(":musical_note:")){
+                if(channel.asVoiceChannel().getStatus().isBlank()
+                        || channel.asVoiceChannel().getStatus().startsWith(":musical_note:")){
+                    channel.asVoiceChannel().modifyStatus(
+                            previousStatus
+                    ).queue();
+                }
+                this.voiceChannel.asVoiceChannel().modifyStatus("").queue();
+            }
+        } catch (InsufficientPermissionException e){
+            logger.warn("Tried to set voice status in {} ({} - {}) but did not have permission to.",
+                    channel.getName(),
+                    guild.getName(),
+                    guild.getId()
+            );
+        }
         this.guild.getAudioManager().openAudioConnection(channel);
         this.voiceChannel = channel;
     }
@@ -151,14 +197,46 @@ public final class Player {
     }
 
     /**
+     * Skips through the queues x amount of times.
+     * @throws IllegalArgumentException if x greater than queue size or < 1 and the queue is not empty
+     * @throws IllegalStateException if nothing is playing.
+     */
+    public void skip(int x){
+        if(queue.isEmpty() || x == queue.size()+1){
+            player.stopTrack();
+            return;
+        }
+        if(x<1 || x > queue.size()){
+            throw new IllegalArgumentException("Can't skip *"+x+"* song(s) in a queue" +
+                    " with *"+queue.size()+"* song(s)!");
+        }
+        if(this.nowPlaying == null){
+            throw new IllegalArgumentException();
+        }
+        QueuedSong nextSong = null;
+        for(int i = 0; i<x; i++){
+            nextSong = queue.poll();
+        }
+        assert nextSong != null;
+        player.playTrack(nextSong.getTrack());
+        nowPlaying = nextSong;
+        textChannel.sendMessageEmbeds(
+                Embeds.songCard("Now Playing", nextSong).build()
+        ).addActionRow(SkipButton.SKIP_BUTTON).queue();
+    }
+
+    /**
      * Private class for tracking player events such as trackEnd, tracKStart, etc.
      */
     private final class TrackEvents extends AudioEventAdapter {
         @Override
         public void onTrackStart(AudioPlayer player, AudioTrack track) {
             try {
-                voiceChannel.asVoiceChannel().modifyStatus(":musical_note: " + player.getPlayingTrack()
-                        .getInfo().title).queue();
+                String currentStatus = voiceChannel.asVoiceChannel().getStatus();
+                if(currentStatus.isBlank() || currentStatus.startsWith(":musical_note:")){
+                    voiceChannel.asVoiceChannel().modifyStatus(":musical_note: " + player.getPlayingTrack()
+                            .getInfo().title).queue();
+                }
             } catch (InsufficientPermissionException e){
                 logger.warn("Tried to set voice status in {} ({} - {}) but did not have permission to.",
                         voiceChannel.getName(),
@@ -178,7 +256,8 @@ public final class Player {
                 nowPlaying = nextSong;
                 textChannel.sendMessageEmbeds(
                         Embeds.songCard("Now Playing", nextSong).build()
-                ).queue();
+                ).addActionRow(SkipButton.SKIP_BUTTON)
+                        .queue();
             } else {
                 textChannel.sendMessage("Queue is empty! No more songs to play!").queue();
                 nowPlaying = null;
@@ -230,7 +309,7 @@ public final class Player {
                 player.playTrack(track);
                 event.getHook().sendMessageEmbeds(
                         Embeds.songCard("Now Playing", song).build()
-                ).queue();
+                ).addActionRow(SkipButton.SKIP_BUTTON).queue();
             } else {
                 queue.offer(song);
                 event.getHook().sendMessageEmbeds(
@@ -251,7 +330,7 @@ public final class Player {
                         player.playTrack(track);
                         event.getHook().sendMessageEmbeds(
                                 Embeds.songCard("Now Playing", song).build()
-                        ).queue();
+                        ).addActionRow(SkipButton.SKIP_BUTTON).queue();
                         now = false;
                     } else {
                         queue.offer(song);
@@ -278,7 +357,17 @@ public final class Player {
         }
     }
 
+    /**
+     * Creates a new player for the given voice channel. If there is already a player in the guild
+     * it will attempt to move the bot, throwing an error if it does not have permission.
+     * @return The player created, or if the bot is already in a call, the player stored
+     */
     public static Player createPlayer(AudioChannelUnion channel){
+        if(PLAYERS.containsKey(channel.getGuild().getId())) {
+            Player player = PLAYERS.get(channel.getGuild().getId());
+            player.updateChannel(channel);
+            return player;
+        }
         Player newPlayer = new Player(channel);
         PLAYERS.put(channel.getGuild().getId(),newPlayer);
         return newPlayer;

@@ -1,6 +1,7 @@
 package net.driedsponge;
 
 import net.dv8tion.jda.api.events.guild.voice.*;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.slf4j.Logger;
@@ -27,15 +28,15 @@ public final class UserVoiceEvents extends ListenerAdapter {
                     Player.destroy(event.getGuild().getId());
                 }
             } else {
+                logger.info("Moving from from {} to {} in {} ({})",
+                        event.getChannelLeft().getName(),
+                        event.getChannelJoined().getName(),
+                        event.getGuild().getName(),
+                        event.getGuild().getId());
                 if (event.getChannelJoined().getMembers().size() == 1) {
                     event.getGuild().getAudioManager().closeAudioConnection();
                 }else{
-                    logger.info("Moving from from {} to {} in {} ({})",
-                            event.getChannelLeft().getName(),
-                            event.getChannelJoined().getName(),
-                            event.getGuild().getName(),
-                            event.getGuild().getId());
-                    Player.destroy(event.getGuild().getId());
+                    Player.get(event.getGuild().getId()).updateChannel(event.getChannelJoined());
                 }
             }
         }else if(event.getGuild().getAudioManager().isConnected()){
