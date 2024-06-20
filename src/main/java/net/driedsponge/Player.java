@@ -9,7 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.driedsponge.buttons.SkipButton;
-import net.driedsponge.commands.music.Play;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
@@ -249,7 +248,17 @@ public final class Player {
 
         @Override
         public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-            System.out.println(endReason);
+            if(endReason == AudioTrackEndReason.LOAD_FAILED){
+                textChannel.sendMessageEmbeds(
+                        Embeds.error(
+                                "Failed Loading *"+nowPlaying.getInfo().title+"*."
+                                        +" Moving onto the next track.",
+                                        "For an unknown reason, this song could not be loaded."
+                                +" Please try requesting the song again. If this issue persists, make a new bug" +
+                                                " report using /bug.")
+                                .build()
+                ).queue();
+            }
             if (!queue.isEmpty() && endReason.mayStartNext) {
                 QueuedSong nextSong = queue.poll();
                 player.playTrack(nextSong.getTrack());
