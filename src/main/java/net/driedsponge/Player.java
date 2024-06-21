@@ -9,11 +9,14 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.driedsponge.buttons.SkipButton;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
@@ -22,7 +25,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
+// TODO: Break this beast of a class up some time.
 /**
  * This is the big class that controls the core features of the music player. It has many exposed
  * methods for controlling music based on other inputs.
@@ -89,11 +92,13 @@ public final class Player {
     }
 
     public void play(String song, SlashCommandInteractionEvent event, boolean now) {
+        textChannel = event.getChannel().asTextChannel();
         boolean playNow = now || player.getPlayingTrack() == null;
         Main.PLAYER_MANAGER.loadItem(song, new StandardResultLoader(event, playNow));
     }
 
     public void play(URI song, SlashCommandInteractionEvent event, boolean now) throws BadHostException {
+        textChannel = event.getChannel().asTextChannel();
         if (Main.getAllowedHosts().contains(song.getHost())) {
             if (song.getHost().equals("open.spotify.com")) {
                 String[] paths = song.getPath().split("/", 3);
@@ -219,11 +224,43 @@ public final class Player {
         assert nextSong != null;
         player.playTrack(nextSong.getTrack());
         nowPlaying = nextSong;
-        textChannel.sendMessageEmbeds(
-                Embeds.songCard("Now Playing", nextSong).build()
-        ).addActionRow(SkipButton.SKIP_BUTTON).queue();
+        sendMessageEmbed(Embeds.songCard("Now Playing", nextSong).build(), true);
     }
 
+    private void sendMessage(String text){
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle(text);
+        eb.setColor(Main.PRIMARY_COLOR);
+        sendMessageEmbed(eb.build());
+    }
+
+    private void sendMessageEmbed(MessageEmbed embed, boolean includeSkip){
+        try {
+            MessageCreateAction action = textChannel.sendMessageEmbeds(embed);
+            if(includeSkip){
+                action.addActionRow(SkipButton.SKIP_BUTTON);
+            }
+            action.queue();
+        }catch (InsufficientPermissionException e){
+            try {
+                logger.warn("Failed to send message to #{} in {} ({}), trying voice channel text" +
+                        "channel.",
+                        textChannel.getName(), guild.getName(), guild.getId());
+                MessageCreateAction action2 = this.voiceChannel.asGuildMessageChannel().sendMessageEmbeds(embed);
+                if(includeSkip){
+                    action2.addActionRow(SkipButton.SKIP_BUTTON);
+                }
+                action2.queue();
+            }catch (InsufficientPermissionException e2){
+                logger.warn("Failed to send message voice channel in {} ({})!",
+                        guild.getName(), guild.getId());
+            }
+        }
+    }
+
+    private void sendMessageEmbed(MessageEmbed embed){
+        sendMessageEmbed(embed, false);
+    }
     /**
      * Private class for tracking player events such as trackEnd, tracKStart, etc.
      */
@@ -249,26 +286,21 @@ public final class Player {
         @Override
         public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
             if(endReason == AudioTrackEndReason.LOAD_FAILED){
-                textChannel.sendMessageEmbeds(
-                        Embeds.error(
+                sendMessageEmbed(Embeds.error(
                                 "Failed Loading *"+nowPlaying.getInfo().title+"*."
                                         +" Moving onto the next track.",
-                                        "For an unknown reason, this song could not be loaded."
-                                +" Please try requesting the song again. If this issue persists, make a new bug" +
-                                                " report using /bug.")
-                                .build()
-                ).queue();
+                                "For an unknown reason, this song could not be loaded."
+                                        +" Please try requesting the song again. If this issue persists, make a new bug" +
+                                        " report using /bug.")
+                        .build());
             }
             if (!queue.isEmpty() && endReason.mayStartNext) {
                 QueuedSong nextSong = queue.poll();
                 player.playTrack(nextSong.getTrack());
                 nowPlaying = nextSong;
-                textChannel.sendMessageEmbeds(
-                        Embeds.songCard("Now Playing", nextSong).build()
-                ).addActionRow(SkipButton.SKIP_BUTTON)
-                        .queue();
+                sendMessageEmbed(Embeds.songCard("Now Playing", nextSong).build(), true);
             } else {
-                textChannel.sendMessage("Queue is empty! No more songs to play!").queue();
+                sendMessage("Queue is empty! No more songs to play!");
                 nowPlaying = null;
             }
         }
