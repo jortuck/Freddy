@@ -1,5 +1,6 @@
 package net.driedsponge.commands.music;
 
+import net.driedsponge.Embeds;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 
@@ -20,7 +21,7 @@ public final class Leave extends SlashCommand {
         AudioManager audioManager = Objects.requireNonNull(event.getGuild()).getAudioManager();
         if(audioManager.isConnected()){
             if(audioManager.getConnectedChannel() == event.getMember().getVoiceState().getChannel()){
-                event.reply("Leaving!").queue();
+                event.replyEmbeds(Embeds.basic("Leaving!").build()).queue();
                 audioManager.closeAudioConnection();
             }else{
                 event.reply("You need to be in the same voice call as me!")

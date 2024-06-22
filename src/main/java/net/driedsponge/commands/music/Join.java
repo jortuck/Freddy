@@ -1,5 +1,6 @@
 package net.driedsponge.commands.music;
 
+import net.driedsponge.Embeds;
 import net.driedsponge.Player;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -19,7 +20,9 @@ public final class Join extends SlashCommand {
         if (event.getMember().getVoiceState().inAudioChannel()) {
             try {
                 Player.createPlayer(event.getMember().getVoiceState().getChannel());
-                event.reply("Joining your channel").queue();
+                event.replyEmbeds(
+                        Embeds.basic("Joining "+event.getMember().getVoiceState().getChannel().getName()).build()
+                ).queue();
             }catch (Exception e){
                 event.reply(e.getMessage()).queue();
             }
