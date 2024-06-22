@@ -294,12 +294,14 @@ public final class Player {
                                         " report using /bug.")
                         .build());
             }
+            // Start next song if there is one in the queue and the current one finished.
             if (!queue.isEmpty() && endReason.mayStartNext) {
                 QueuedSong nextSong = queue.poll();
                 player.playTrack(nextSong.getTrack());
                 nowPlaying = nextSong;
                 sendMessageEmbed(Embeds.songCard("Now Playing", nextSong).build(), true);
-            } else {
+            } else if(queue.isEmpty() && player.getPlayingTrack()==null){
+                // this works because we are checking getPlayingTrack form the player, not nowPlaying
                 sendMessage("Queue is empty! No more songs to play!");
                 nowPlaying = null;
             }

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 
+// TODO: Finish or remove this!
 public class RemoveSongButton extends ButtonCommand {
     public static final Button REMOVE_BUTTON = Button.danger("RS","Remove Song");
     public RemoveSongButton() {
