@@ -1,5 +1,6 @@
 package net.driedsponge.commands.music;
 
+import net.driedsponge.Embeds;
 import net.driedsponge.Player;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -20,8 +21,10 @@ public final class Pause extends SlashCommand {
             if (state.getChannel() == player.getVoiceChannel()) {
                 try{
                     player.setPaused(!event.getName().equals("resume"));
-                    event.reply(
-                            event.getName().equals("resume") ? "Resuming..." : "Pausing..."
+                    event.replyEmbeds(
+                            Embeds.basic(
+                                    event.getName().equals("resume") ? "Resuming playback!" : "Pausing playback!"
+                            ).build()
                     ).queue();
                 }catch (IllegalArgumentException e){
                     event.reply(e.getMessage()).setEphemeral(true).queue();

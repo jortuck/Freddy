@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.driedsponge.buttons.SkipButton;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
@@ -61,7 +62,7 @@ public final class Player {
     private GuildMessageChannel textChannel;
     private TrackEvents schedule;
     private QueuedSong nowPlaying;
-    private final BlockingQueue<QueuedSong> queue;
+    private BlockingQueue<QueuedSong> queue;
     private static final Logger logger = LoggerFactory.getLogger(Player.class);
 
     /**
@@ -208,11 +209,6 @@ public final class Player {
             throw new IllegalArgumentException("Please use `/pause` if you would like to pause playback!");
         }
         player.setPaused(pause);
-        if(pause){
-            sendMessage(":pause_button: Playback Paused!");
-        }else{
-            sendMessage(":arrow_forward:  Playback Resumed!");
-        }
     }
 
     /**
@@ -244,11 +240,22 @@ public final class Player {
         player.setPaused(false);
     }
 
+    /**
+     * Shuffles the queue.
+     * @throws IllegalStateException If queue.size() <= 1
+     */
+    public void shuffle(){
+        if(queue.size() <= 1){
+            throw new IllegalStateException("The queue is not big enough to be shuffled!");
+        }
+        List<QueuedSong> tempList = this.getQueue();
+        Collections.shuffle(tempList);
+        this.queue = new LinkedBlockingQueue<>();
+        this.queue.addAll(tempList);
+    }
+
     private void sendMessage(String text){
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle(text);
-        eb.setColor(Main.PRIMARY_COLOR);
-        sendMessageEmbed(eb.build());
+        sendMessageEmbed(Embeds.basic(text).build());
     }
 
     private void sendMessageEmbed(MessageEmbed embed, boolean includeSkip){

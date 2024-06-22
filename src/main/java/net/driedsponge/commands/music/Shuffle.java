@@ -1,14 +1,13 @@
 package net.driedsponge.commands.music;
 
-import net.driedsponge.PlayerStore;
-import net.driedsponge.VoiceController;
-import net.driedsponge.commands.CommonChecks;
+import net.driedsponge.Embeds;
+import net.driedsponge.Player;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class Shuffle extends SlashCommand {
+public final class Shuffle extends SlashCommand {
     public Shuffle() {
         super("shuffle");
     }
@@ -18,25 +17,31 @@ public class Shuffle extends SlashCommand {
 
         try {
             shuffle(event.getMember(),event.getGuild());
-            event.reply("The queue has been shuffled!").queue();
+            event.replyEmbeds(Embeds.basic("The queue has been shuffled!").setFooter(
+                    "Shuffled by "+event.getMember().getEffectiveName(),
+                    event.getMember().getEffectiveAvatarUrl()
+            ).build()).queue();
         } catch (Exception e) {
             event.reply(e.getMessage()).setEphemeral(true).queue();
         }
     }
 
     /**
-     * Shuffle the queue
-     * @param member
-     * @param guild
+     * Shuffles the queue from the perspective of a user interaction.
+     * @param member The person who shuffled the queue.
+     * @param guild The guild where to shuffle the queue.
+     * @throws IllegalStateException If the queue is empty or the user is not in the call.
      */
-    public static void shuffle(Member member, Guild guild) throws Exception{
-        if (CommonChecks.listeningMusic(member, guild) && CommonChecks.listeningMusic(member, guild)) {
-            VoiceController vc = PlayerStore.get(guild);
-            if (!vc.getTrackScheduler().shuffle()) {
-                throw new Exception("There are no songs in the queue to shuffle.");
+    public static void shuffle(Member member, Guild guild) throws IllegalStateException{
+        Player player = Player.get(guild.getId());
+        if (player != null) {
+            if(player.getVoiceChannel().asVoiceChannel() == member.getVoiceState().getChannel()){
+                player.shuffle();
+            }else{
+                throw new IllegalStateException("You must be in the same channel as be to shuffle the queue!");
             }
         } else {
-            throw new Exception("You need to be in a call listening to music to use this command!");
+            throw new IllegalStateException("There is nothing playing right now.");
         }
     }
 

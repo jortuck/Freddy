@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class CommandListener extends ListenerAdapter {
+public final class CommandListener extends ListenerAdapter {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private static final HashMap<String, SlashCommand> commands = new HashMap<>();
     public CommandListener() {

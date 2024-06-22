@@ -72,4 +72,11 @@ public final class Embeds {
         embedBuilder.setThumbnail(image);
         return embedBuilder;
     }
+
+    public static EmbedBuilder basic(String message){
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle(message);
+        eb.setColor(Main.PRIMARY_COLOR);
+        return eb;
+    }
 }
