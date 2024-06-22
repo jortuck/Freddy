@@ -52,7 +52,7 @@ public final class Owner {
         return embedBuilder;
     }
 
-    public static EmbedBuilder statistics(MessageReceivedEvent event) {
+    public static void statistics(MessageReceivedEvent event) {
         JDA jda = event.getJDA();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Main.PRIMARY_COLOR);
@@ -62,7 +62,6 @@ public final class Owner {
         event.getMessage().replyEmbeds(embedBuilder.build())
                 .setActionRow(Entertaining.ENTERTAINING_BUTTON, GuildList.GUILD_LIST_BUTTON)
                 .queue();
-        return embedBuilder;
     }
 
 
