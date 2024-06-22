@@ -235,6 +235,9 @@ public final class Player {
     }
 
     private void sendMessageEmbed(MessageEmbed embed, boolean includeSkip){
+        if(this.textChannel==null){
+            return;
+        }
         try {
             MessageCreateAction action = textChannel.sendMessageEmbeds(embed);
             if(includeSkip){
@@ -422,6 +425,7 @@ public final class Player {
     public static void destroy(String guildId){
         if(PLAYERS.containsKey(guildId)){
             Player player = PLAYERS.remove(guildId);
+            player.textChannel = null;
             try{
                 if(player.voiceChannel.asVoiceChannel().getStatus().startsWith(":musical_note:")){
                     player.voiceChannel.asVoiceChannel().modifyStatus("").queue();
