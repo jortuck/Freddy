@@ -41,7 +41,7 @@ public class Main {
         // Register player manager
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,
-                new Client[]{new MusicWithThumbnail(), new AndroidWithThumbnail(), new WebWithThumbnail()} );
+                new MusicWithThumbnail(), new AndroidWithThumbnail(), new WebWithThumbnail());
         playerManager.registerSourceManager(youtube);
         PLAYER_MANAGER = playerManager;
         logger.info("Registered player manager with YouTube source.");
@@ -55,11 +55,9 @@ public class Main {
         String token = System.getenv("DISCORD_TOKEN");
 
         JDABuilder builder = JDABuilder.createDefault(token);
-        // Disable parts of the cache
+        // Manage parts of the cache
         builder.disableCache(CacheFlag.MEMBER_OVERRIDES);
         builder.enableCache(CacheFlag.VOICE_STATE);
-        // Enable the bulk delete event
-        builder.setBulkDeleteSplittingEnabled(false);
         // Disable compression (not recommended)
         builder.setCompression(Compression.NONE);
 
@@ -69,20 +67,15 @@ public class Main {
 
         //Voice
         builder.addEventListeners(new UserVoiceEvents());
-
         //Commands
         builder.addEventListeners(new CommandListener());
-
         // Messages
         builder.addEventListeners(new MessageListener());
-
         // Buttons
         builder.addEventListeners(new ButtonListener());
 
         JDA jda = builder.build();
         Interactions.initialize(jda.updateCommands());
-
-
     }
 
     public static List<String> getAllowedHosts(){

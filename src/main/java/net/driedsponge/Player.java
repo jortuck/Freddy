@@ -200,6 +200,21 @@ public final class Player {
         this.queue.clear();
     }
 
+   public void setPaused(boolean pause){
+        if(pause && player.isPaused()){
+            throw new IllegalArgumentException("I am already paused! Use `/resume` to continue playback!");
+        }
+        if(!pause && !player.isPaused()){
+            throw new IllegalArgumentException("Please use `/pause` if you would like to pause playback!");
+        }
+        player.setPaused(pause);
+        if(pause){
+            sendMessage(":pause_button: Playback Paused!");
+        }else{
+            sendMessage(":arrow_forward:  Playback Resumed!");
+        }
+    }
+
     /**
      * Skips through the queues x amount of times.
      * @throws IllegalArgumentException if x greater than queue size or < 1 and the queue is not empty
@@ -225,6 +240,8 @@ public final class Player {
         player.playTrack(nextSong.getTrack());
         nowPlaying = nextSong;
         sendMessageEmbed(Embeds.songCard("Now Playing", nextSong).build(), true);
+        // TODO: Look into how we can prevent slight clip of previous song if un-pausing.
+        player.setPaused(false);
     }
 
     private void sendMessage(String text){
