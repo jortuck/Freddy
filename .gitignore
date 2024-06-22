@@ -1,4 +1,5 @@
 /build
 /.idea
 .gradle
+freddy.log
 settings.env
