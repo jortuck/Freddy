@@ -19,7 +19,7 @@ public final class Restart extends SlashCommand {
                         ":arrows_counterclockwise: Now playing "+player.getNowPlaying().getInfo().title+" from the beginning!"
                 ).build()).queue();
             }else{
-                event.reply("You must be in the same channel as me to seek!").setEphemeral(true).queue();
+                event.reply("You must be in the same channel as me to restart the song!").setEphemeral(true).queue();
             }
         }else {
             event.reply("There is nothing playing right now.").setEphemeral(true).queue();
