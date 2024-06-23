@@ -3,7 +3,6 @@ package net.driedsponge;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
-
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -57,15 +56,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public final class Player {
     private static final HashMap<String, Player> PLAYERS = new HashMap<>();
-
+    private static final Logger logger = LoggerFactory.getLogger(Player.class);
     private final Guild guild;
-    private AudioPlayer player;
+    private final AudioPlayer player;
     private AudioChannelUnion voiceChannel;
     private GuildMessageChannel textChannel;
-    private TrackEvents schedule;
+    private final TrackEvents schedule;
     private QueuedSong nowPlaying;
     private BlockingQueue<QueuedSong> queue;
-    private static final Logger logger = LoggerFactory.getLogger(Player.class);
 
     /**
      * @param channel
@@ -94,6 +92,62 @@ public final class Player {
         );
     }
 
+    /**
+     * Creates a new player for the given voice channel. If there is already a player in the guild
+     * it will attempt to move the bot, throwing an error if it does not have permission.
+     *
+     * @return The player created, or if the bot is already in a call, the player stored
+     */
+    public static Player createPlayer(AudioChannelUnion channel) {
+        if (PLAYERS.containsKey(channel.getGuild().getId())) {
+            Player player = PLAYERS.get(channel.getGuild().getId());
+            player.updateChannel(channel);
+            return player;
+        }
+        Player newPlayer = new Player(channel);
+        PLAYERS.put(channel.getGuild().getId(), newPlayer);
+        return newPlayer;
+    }
+
+    public static void destroy(String guildId) {
+        if (PLAYERS.containsKey(guildId)) {
+            Player player = PLAYERS.remove(guildId);
+            player.textChannel = null;
+            try {
+                if (player.voiceChannel.asVoiceChannel().getStatus().startsWith(":musical_note:")) {
+                    player.voiceChannel.asVoiceChannel().modifyStatus("").queue();
+                }
+            } catch (InsufficientPermissionException e) {
+                logger.warn("Tried to set voice status in {} ({} - {}) but did not have permission to.",
+                        player.voiceChannel.getName(),
+                        player.guild.getName(),
+                        player.guild.getId()
+                );
+            }
+            player.player.destroy();
+            logger.info("Destroyed player in {} ({})",
+                    player.guild.getName(),
+                    player.guild.getId());
+        }
+    }
+
+    public static Player get(String guildId) {
+        return PLAYERS.get(guildId);
+    }
+
+    public static boolean contains(String guildId) {
+        return PLAYERS.containsKey(guildId);
+    }
+
+    /**
+     * Get a list of active players.
+     *
+     * @return An unmodifiable list of the active players.
+     */
+    public static List<Player> getPlayers() {
+        return List.of(PLAYERS.values().toArray(new Player[]{}));
+    }
+
     public void play(String song, SlashCommandInteractionEvent event, boolean now) {
         if (Main.QUEUE_LIMIT - queue.size() == 0) {
             throw new IllegalStateException("The queue is full!");
@@ -113,7 +167,7 @@ public final class Player {
                 String[] paths = song.getPath().split("/", 3);
                 if (paths[1].equals("playlist") && paths[2] != null) {
                     try {
-                        SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2],Main.QUEUE_LIMIT-queue.size());
+                        SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2], Main.QUEUE_LIMIT - queue.size());
                         SpotifyResultLoader loader = new SpotifyResultLoader(event);
                         List<PlaylistTrack> songs = playlist.getSongs();
                         if (player.getPlayingTrack() == null || now) {
@@ -134,7 +188,7 @@ public final class Player {
                                         playlist.getImage(),
                                         event.getUser()
                                 ).build()
-                        ).addActionRow(Button.link(playlist.getUrl(),"Spotify Playlist")).queue();
+                        ).addActionRow(Button.link(playlist.getUrl(), "Spotify Playlist")).queue();
                     } catch (Exception e) {
                         throw new BadHostException("Make sure it's a public playlist " + e.getMessage());
                     }
@@ -308,7 +362,7 @@ public final class Player {
     /**
      * Returns true if the queue is full.
      */
-    public boolean isFull(){
+    public boolean isFull() {
         return queue.size() == Main.QUEUE_LIMIT;
     }
 
@@ -395,7 +449,7 @@ public final class Player {
     }
 
     private final class SpotifyResultLoader implements AudioLoadResultHandler {
-        private SlashCommandInteractionEvent event;
+        private final SlashCommandInteractionEvent event;
 
         public SpotifyResultLoader(SlashCommandInteractionEvent event) {
             this.event = event;
@@ -423,7 +477,7 @@ public final class Player {
     }
 
     private final class StandardResultLoader implements AudioLoadResultHandler {
-        private SlashCommandInteractionEvent event;
+        private final SlashCommandInteractionEvent event;
         private boolean now;
 
         public StandardResultLoader(SlashCommandInteractionEvent event, boolean now) {
@@ -476,7 +530,6 @@ public final class Player {
                         } else {
                             break; // stop loading the playlist, no more room
                         }
-                        ;
                     }
                 }
                 if (numAdded == 0) {
@@ -506,62 +559,6 @@ public final class Player {
                     Embeds.error("Unfortunately that song failed to load.", exception.getMessage()).build()
             ).queue();
         }
-    }
-
-    /**
-     * Creates a new player for the given voice channel. If there is already a player in the guild
-     * it will attempt to move the bot, throwing an error if it does not have permission.
-     *
-     * @return The player created, or if the bot is already in a call, the player stored
-     */
-    public static Player createPlayer(AudioChannelUnion channel) {
-        if (PLAYERS.containsKey(channel.getGuild().getId())) {
-            Player player = PLAYERS.get(channel.getGuild().getId());
-            player.updateChannel(channel);
-            return player;
-        }
-        Player newPlayer = new Player(channel);
-        PLAYERS.put(channel.getGuild().getId(), newPlayer);
-        return newPlayer;
-    }
-
-    public static void destroy(String guildId) {
-        if (PLAYERS.containsKey(guildId)) {
-            Player player = PLAYERS.remove(guildId);
-            player.textChannel = null;
-            try {
-                if (player.voiceChannel.asVoiceChannel().getStatus().startsWith(":musical_note:")) {
-                    player.voiceChannel.asVoiceChannel().modifyStatus("").queue();
-                }
-            } catch (InsufficientPermissionException e) {
-                logger.warn("Tried to set voice status in {} ({} - {}) but did not have permission to.",
-                        player.voiceChannel.getName(),
-                        player.guild.getName(),
-                        player.guild.getId()
-                );
-            }
-            player.player.destroy();
-            logger.info("Destroyed player in {} ({})",
-                    player.guild.getName(),
-                    player.guild.getId());
-        }
-    }
-
-    public static Player get(String guildId) {
-        return PLAYERS.get(guildId);
-    }
-
-    public static boolean contains(String guildId) {
-        return PLAYERS.containsKey(guildId);
-    }
-
-    /**
-     * Get a list of active players.
-     *
-     * @return An unmodifiable list of the active players.
-     */
-    public static List<Player> getPlayers() {
-        return List.of(PLAYERS.values().toArray(new Player[]{}));
     }
 
 }

@@ -6,13 +6,17 @@ import net.driedsponge.commands.util.Help;
 import net.driedsponge.commands.util.Ping;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class CommandListener extends ListenerAdapter {
     private static final HashMap<String, SlashCommand> commands = new HashMap<>();
+    private static final Set<CommandData> commandData = new HashSet<>();
     public static final CommandListener INSTANCE = new CommandListener();
-
     private CommandListener() {
         SlashCommand[] botCommands = new SlashCommand[]{
                 Skip.INSTANCE,
@@ -33,14 +37,15 @@ public final class CommandListener extends ListenerAdapter {
 
         };
         for (SlashCommand command : botCommands) {
-            if (command.getAlias().length > 0) {
-                for (String name : command.getAlias()) {
-                    commands.put(name.toLowerCase(), command);
-                }
-            } else {
-                commands.put(command.getName().toLowerCase(), command);
+            for (CommandData data : command.getCommand()) {
+                commands.put(data.getName(), command);
+                commandData.add(data);
             }
         }
+    }
+
+    public static void upsertCommands(CommandListUpdateAction jda){
+        jda.addCommands(commandData).queue();
     }
 
     @Override

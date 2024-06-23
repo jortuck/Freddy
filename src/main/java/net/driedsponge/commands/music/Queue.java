@@ -1,7 +1,10 @@
 package net.driedsponge.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import net.driedsponge.*;
+import net.driedsponge.Main;
+import net.driedsponge.Player;
+import net.driedsponge.QueueResponse;
+import net.driedsponge.QueuedSong;
 import net.driedsponge.buttons.NextPageButton;
 import net.driedsponge.buttons.PreviousPageButton;
 import net.driedsponge.buttons.ShuffleButton;
@@ -10,16 +13,66 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 
 import java.util.List;
 
-public final class Queue extends SlashCommand {
+public final class Queue implements SlashCommand {
 
     public static final Queue INSTANCE = new Queue();
 
-    private Queue() {
-        super("queue");
+    private Queue(){}
+
+    public static QueueResponse qResponse(Guild guild, int page) {
+        if (!Player.contains(guild.getId())) {
+            throw new IllegalStateException("The bot is not playing anything.");
+        }
+        int songsPerPage = 10;
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Queue - Page " + page);
+        embedBuilder.setColor(Main.PRIMARY_COLOR);
+
+        Player player = Player.get(guild.getId());
+        if (player.getNowPlaying() == null) {
+            throw new IllegalStateException("The bot is not playing anything.");
+        }
+        AudioTrackInfo np = player.getNowPlaying().getInfo();
+        List<QueuedSong> songs = player.getQueue();
+        int songCount = songs.size();
+        int pages = (songCount + songsPerPage - 1) / songsPerPage;
+        if ((page > pages && pages > 0) || page == 0) {
+            throw new IndexOutOfBoundsException("Invalid queue page! Please enter a page between 1 and " + pages + "!");
+        }
+
+        StringBuilder queue = new StringBuilder();
+
+        queue.append("**Now Playing - ").append(np.title).append("**");
+        queue.append("\n");
+        queue.append("\n**Up Next:**");
+
+        int loopStart = ((page * songsPerPage) - songsPerPage);
+        int loopEnd = Math.min(page * songsPerPage, songCount);
+        if (songs.isEmpty()) {
+            embedBuilder.setTitle("Queue");
+            queue.append(" No songs in the queue!");
+        } else {
+            for (int i = loopStart; i < loopEnd; i++) {
+                QueuedSong song = (QueuedSong) songs.toArray()[i];
+                queue.append("\n").append(i + 1)
+                        .append(" - ")
+                        .append("[")
+                        .append(song.getInfo().title)
+                        .append("](" + song.getInfo().uri + ")")
+                        .append(" `(Requested by: " + song.getRequester().getUser().getName() + ")`");
+            }
+            embedBuilder.setFooter("Page " + page + " of " + pages + " | Showing song(s) " + (loopStart + 1) + "-" + (loopEnd) + " of " + (songCount) + ".");
+        }
+        embedBuilder.setDescription(queue);
+        return new QueueResponse(embedBuilder.build(), player.getQueue().isEmpty(), 1, pages, page);
     }
 
     @Override
@@ -61,51 +114,10 @@ public final class Queue extends SlashCommand {
         }
     }
 
-    public static QueueResponse qResponse(Guild guild, int page) {
-        if(!Player.contains(guild.getId())){
-            throw new IllegalStateException("The bot is not playing anything.");
-        }
-        int songsPerPage = 10;
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Queue - Page " + page);
-        embedBuilder.setColor(Main.PRIMARY_COLOR);
-
-        Player player = Player.get(guild.getId());
-        if(player.getNowPlaying() == null){
-            throw new IllegalStateException("The bot is not playing anything.");
-        }
-        AudioTrackInfo np = player.getNowPlaying().getInfo();
-        List<QueuedSong> songs = player.getQueue();
-        int songCount = songs.size();
-        int pages = (songCount + songsPerPage - 1) / songsPerPage;
-        if ((page > pages && pages > 0) || page == 0) {
-            throw new IndexOutOfBoundsException("Invalid queue page! Please enter a page between 1 and " + pages + "!");
-        }
-
-        StringBuilder queue = new StringBuilder();
-
-        queue.append("**Now Playing - ").append(np.title).append("**");
-        queue.append("\n");
-        queue.append("\n**Up Next:**");
-
-        int loopStart = ((page * songsPerPage) - songsPerPage);
-        int loopEnd = Math.min(page * songsPerPage, songCount);
-        if (songs.isEmpty()) {
-            embedBuilder.setTitle("Queue");
-            queue.append(" No songs in the queue!");
-        } else {
-            for (int i = loopStart; i < loopEnd; i++) {
-                QueuedSong song = (QueuedSong) songs.toArray()[i];
-                queue.append("\n").append(i + 1)
-                        .append(" - ")
-                        .append("[")
-                        .append(song.getInfo().title)
-                        .append("](" + song.getInfo().uri + ")")
-                        .append(" `(Requested by: " + song.getRequester().getUser().getName() + ")`");
-            }
-            embedBuilder.setFooter("Page " + page + " of " + pages + " | Showing song(s) " + (loopStart + 1) + "-" + (loopEnd) + " of " + (songCount) + ".");
-        }
-        embedBuilder.setDescription(queue);
-        return new QueueResponse(embedBuilder.build(), player.getQueue().isEmpty(), 1, pages, page);
+    @Override
+    public SlashCommandData[] getCommand() {
+        return new SlashCommandData[]{Commands.slash("queue", "Returns the songs in the queue.")
+                .addOptions(new OptionData(OptionType.INTEGER, "page", "View other pages of the queue (if there are more than 10 songs).").setMinValue(1).setRequired(false))
+                .setGuildOnly(true)};
     }
 }

@@ -1,13 +1,11 @@
 package net.driedsponge;
 
-import ch.qos.logback.core.Appender;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import dev.lavalink.youtube.clients.AndroidWithThumbnail;
 import dev.lavalink.youtube.clients.MusicWithThumbnail;
 import dev.lavalink.youtube.clients.WebWithThumbnail;
-import dev.lavalink.youtube.clients.skeleton.Client;
 import net.driedsponge.buttons.*;
 import net.driedsponge.commands.*;
 import net.dv8tion.jda.api.JDA;
@@ -77,7 +75,7 @@ public class Main {
         builder.addEventListeners(new ButtonListener());
 
         JDA jda = builder.build();
-        Interactions.initialize(jda.updateCommands());
+        CommandListener.upsertCommands(jda.updateCommands());
     }
 
     public static List<String> getAllowedHosts(){
