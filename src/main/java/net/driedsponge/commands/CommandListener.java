@@ -16,7 +16,7 @@ public final class CommandListener extends ListenerAdapter {
     private static final HashMap<String, SlashCommand> commands = new HashMap<>();
 
     public CommandListener() {
-        SlashCommand[] cmds = new SlashCommand[]{
+        SlashCommand[] botCommands = new SlashCommand[]{
                 Skip.INSTANCE,
                 Ping.INSTANCE,
                 Play.INSTANCE,
@@ -34,7 +34,6 @@ public final class CommandListener extends ListenerAdapter {
                 Join.INSTANCE
 
         };
-        ArrayList<SlashCommand> botCommands = new ArrayList<>(Arrays.asList(cmds));
         for (SlashCommand command : botCommands) {
             if (command.getAlias().length > 0) {
                 for (String name : command.getAlias()) {
