@@ -70,7 +70,7 @@ public class Main {
         //Voice
         builder.addEventListeners(new UserVoiceEvents());
         //Commands
-        builder.addEventListeners(new CommandListener());
+        builder.addEventListeners(CommandListener.INSTANCE);
         // Messages
         builder.addEventListeners(new MessageListener());
         // Buttons

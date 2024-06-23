@@ -12,9 +12,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public final class CommandListener extends ListenerAdapter {
+    public static final CommandListener INSTANCE = new CommandListener();
     private static final HashMap<String, SlashCommand> commands = new HashMap<>();
 
-    public CommandListener() {
+    private CommandListener() {
         SlashCommand[] botCommands = new SlashCommand[]{
                 Skip.INSTANCE,
                 Ping.INSTANCE,
