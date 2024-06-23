@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-public class Remove extends SlashCommand {
+public final class Remove extends SlashCommand {
     public Remove() {
         super("remove");
     }
