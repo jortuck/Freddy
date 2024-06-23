@@ -18,8 +18,9 @@ public final class SkipButton extends ButtonCommand {
         try {
             String skip = Skip.skip(event.getMember(), event.getGuild(), 1);
             event.replyEmbeds(Embeds.basic(skip)
-                    .setFooter("Skipped by "+event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl())
-                    .build()).queue();
+                            .setFooter("Skipped by " + event.getMember().getEffectiveName(), event.getMember().getEffectiveAvatarUrl())
+                            .build())
+                    .queue();
             // Set skip button as disabled when clicked. Maybe remove it entirely? idk.
             event.editButton(SKIP_BUTTON.asDisabled()).queue();
         } catch (Exception e) {
