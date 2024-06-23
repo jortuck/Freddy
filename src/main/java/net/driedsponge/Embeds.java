@@ -64,7 +64,7 @@ public final class Embeds {
         return timeString;
     }
 
-    public static EmbedBuilder playlistEmbed(String name, int totalTracks, String image, String url, User user){
+    public static EmbedBuilder playlistEmbed(String name, int totalTracks, String image, User user){
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Added " + totalTracks + " songs to the Queue from " + name + "!");
         embedBuilder.setColor(Main.PRIMARY_COLOR);

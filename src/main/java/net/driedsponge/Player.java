@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public final class Player {
         guild.getAudioManager().openAudioConnection(channel);
         guild.getAudioManager().setSelfDeafened(true);
         guild.getAudioManager().setSendingHandler(new MusicHandler(player));
-        this.queue = new LinkedBlockingQueue<>();
+        this.queue = new LinkedBlockingQueue<>(Main.QUEUE_LIMIT);
         this.textChannel = channel.asGuildMessageChannel();
         logger.info("Initialized a new Player in {} ({} - {})",
                 voiceChannel.getName(),
@@ -94,19 +95,25 @@ public final class Player {
     }
 
     public void play(String song, SlashCommandInteractionEvent event, boolean now) {
+        if (Main.QUEUE_LIMIT - queue.size() == 0) {
+            throw new IllegalStateException("The queue is full!");
+        }
         textChannel = event.getChannel().asTextChannel();
         boolean playNow = now || player.getPlayingTrack() == null;
         Main.PLAYER_MANAGER.loadItem(song, new StandardResultLoader(event, playNow));
     }
 
     public void play(URI song, SlashCommandInteractionEvent event, boolean now) throws BadHostException {
+        if (Main.QUEUE_LIMIT - queue.size() == 0) {
+            throw new IllegalStateException("The queue is full!");
+        }
         textChannel = event.getChannel().asTextChannel();
         if (Main.getAllowedHosts().contains(song.getHost())) {
             if (song.getHost().equals("open.spotify.com")) {
                 String[] paths = song.getPath().split("/", 3);
                 if (paths[1].equals("playlist") && paths[2] != null) {
                     try {
-                        SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2]);
+                        SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2],Main.QUEUE_LIMIT-queue.size());
                         SpotifyResultLoader loader = new SpotifyResultLoader(event);
                         List<PlaylistTrack> songs = playlist.getSongs();
                         if (player.getPlayingTrack() == null || now) {
@@ -125,12 +132,10 @@ public final class Player {
                                         playlist.getName(),
                                         playlist.getSongs().size(),
                                         playlist.getImage(),
-                                        playlist.getUrl(),
                                         event.getUser()
                                 ).build()
-                        ).queue();
+                        ).addActionRow(Button.link(playlist.getUrl(),"Spotify Playlist")).queue();
                     } catch (Exception e) {
-                        e.printStackTrace();
                         throw new BadHostException("Make sure it's a public playlist " + e.getMessage());
                     }
                 } else {
@@ -254,25 +259,26 @@ public final class Player {
         }
         List<QueuedSong> tempList = this.getQueue();
         Collections.shuffle(tempList);
-        this.queue = new LinkedBlockingQueue<>();
+        this.queue = new LinkedBlockingQueue<>(Main.QUEUE_LIMIT);
         this.queue.addAll(tempList);
     }
 
     /**
      * Remove a song from the queue. This is  runs in O(n).
+     *
      * @param x The index of the song you want to remove (0 being the first song).
-     * @throws IllegalArgumentException If x is > 0 or greater than queue size.
      * @return The song that was removed from the queue.
+     * @throws IllegalArgumentException If x is > 0 or greater than queue size.
      */
-    public QueuedSong remove(int x){
-        if(x < 0 || x>=queue.size()){
-            throw new IllegalArgumentException(x+1+" is an invalid song to remove!");
+    public QueuedSong remove(int x) {
+        if (x < 0 || x >= queue.size()) {
+            throw new IllegalArgumentException(x + 1 + " is an invalid song to remove!");
         }
         Iterator<QueuedSong> itr = this.queue.iterator();
         int index = 0;
-        while (itr.hasNext()){
+        while (itr.hasNext()) {
             QueuedSong songToRemove = itr.next();
-            if(index == x){
+            if (index == x) {
                 System.out.println(songToRemove.getInfo().title);
                 itr.remove();
                 return songToRemove;
@@ -284,18 +290,26 @@ public final class Player {
 
     /**
      * Change the position of the player.
+     *
      * @param milliseconds The position of the song in milliseconds to skip to.
-     * @throws IllegalStateException If the bot is not playing music.
+     * @throws IllegalStateException    If the bot is not playing music.
      * @throws IllegalArgumentException If the number of milliseconds is out of bounds of 0 and the song.
      */
-    public void seek(long milliseconds){
-        if(this.nowPlaying == null){
+    public void seek(long milliseconds) {
+        if (this.nowPlaying == null) {
             throw new IllegalStateException("I am not playing any music!");
         }
-        if(milliseconds < 0 || milliseconds > this.nowPlaying.getInfo().length){
+        if (milliseconds < 0 || milliseconds > this.nowPlaying.getInfo().length) {
             throw new IllegalArgumentException("Invalid time to skip to!");
         }
         this.player.getPlayingTrack().setPosition(milliseconds);
+    }
+
+    /**
+     * Returns true if the queue is full.
+     */
+    public boolean isFull(){
+        return queue.size() == Main.QUEUE_LIMIT;
     }
 
     private void sendMessage(String text) {
@@ -427,10 +441,16 @@ public final class Player {
                         Embeds.songCard("Now Playing", song).build()
                 ).addActionRow(SkipButton.SKIP_BUTTON).queue();
             } else {
-                queue.offer(song);
-                event.getHook().sendMessageEmbeds(
-                        Embeds.songCard("Song Added To Queue", song).build()
-                ).queue();
+                if (queue.offer(song)) { // returns false if the queue is full
+                    event.getHook().sendMessageEmbeds(
+                            Embeds.songCard("Song Added To Queue", song).build()
+                    ).queue();
+                } else {
+                    event.getHook().sendMessageEmbeds(
+                            Embeds.basic("The queue is full!").build()
+                    ).queue();
+                }
+
             }
         }
 
@@ -440,22 +460,34 @@ public final class Player {
             if (playlist.isSearchResult()) {
                 trackLoaded(playlist.getTracks().getFirst());
             } else {
+                int numAdded = 0;
                 for (AudioTrack track : playlist.getTracks()) {
                     QueuedSong song = new QueuedSong(track, event);
                     if (now) {
                         player.playTrack(track);
+                        nowPlaying = song;
                         event.getHook().sendMessageEmbeds(
                                 Embeds.songCard("Now Playing", song).build()
                         ).addActionRow(SkipButton.SKIP_BUTTON).queue();
                         now = false;
                     } else {
-                        queue.offer(song);
+                        if (queue.offer(song)) {
+                            numAdded++;
+                        } else {
+                            break; // stop loading the playlist, no more room
+                        }
+                        ;
                     }
+                }
+                if (numAdded == 0) {
+                    event.getHook().sendMessageEmbeds(
+                            Embeds.basic("The queue is full!").build()
+                    ).queue();
+                    return;
                 }
                 event.getHook().sendMessageEmbeds(Embeds.playlistEmbed(
                         playlist.getName(),
-                        playlist.getTracks().size(),
-                        null,
+                        numAdded,
                         null,
                         event.getUser()
                 ).build()).queue();

@@ -37,7 +37,7 @@ public final class SpotifyPlaylist {
     private SpotifyPlaylist(Playlist playlist, List<PlaylistTrack> songs){
         this.name = playlist.getName();
         this.image = playlist.getImages()[0].getUrl();
-        this.url = playlist.getHref();
+        this.url = playlist.getExternalUrls().get("spotify");
         this.author = playlist.getOwner().getDisplayName();
         this.songs = songs;
     }
@@ -58,11 +58,13 @@ public final class SpotifyPlaylist {
     /**
      * Fetches tracks for the specified playlist from the Spotify API.
      * Each track will be added to the queue.
-     *
+     * TODO: Look into one loop for all of this. Something like space left and loop over that (split by
+     * 50s then stop when limit is hit or playlist end, whichever comes first).
      * @param playListId The ID of the Spotify playlist.
+     * @param space The space left in the queue.
      * @throws SpotifyWebApiException Spotify web API error
      */
-    public static SpotifyPlaylist fromId(String playListId) throws IOException, ParseException, SpotifyWebApiException {
+    public static SpotifyPlaylist fromId(String playListId, int space) throws IOException, ParseException, SpotifyWebApiException {
         logger.info("Fetching Spotify Playlist ID {}",playListId);
         int songsPerPage = 50;
         clientCredentials_Sync();
@@ -70,15 +72,24 @@ public final class SpotifyPlaylist {
         GetPlaylistRequest request = spotifyApi.getPlaylist(playListId).build();
         Playlist playlist = request.execute();
         Paging<PlaylistTrack> tracks = spotifyApi.getPlaylistsItems(playListId).limit(songsPerPage).build().execute();
-        PlaylistTrack[] selectedTracks = tracks.getItems();
-        List<PlaylistTrack> listTracks = new ArrayList<>(Arrays.asList(selectedTracks));
+        List<PlaylistTrack> listTracks = new ArrayList<>();
+        for (PlaylistTrack track : tracks.getItems()){
+            listTracks.add(track);
+            space--;
+            if(space == 0){
+                break;
+            }
+        }
         // Prevent playlist over 500
-        int totalTracks = Math.min(tracks.getTotal(), Main.QUEUE_LIMIT);
-        if (totalTracks > 50) {
-            int pages = (totalTracks + songsPerPage - 1) / songsPerPage;
-            for (int i = 1; i < pages; i++) {
-                PlaylistTrack[] addTracks = spotifyApi.getPlaylistsItems(playListId).limit(songsPerPage).offset(i * songsPerPage).build().execute().getItems();
-                Collections.addAll(listTracks, addTracks);
+        int pages = (tracks.getTotal() + songsPerPage - 1) / songsPerPage;
+        for (int i = 1; i < pages && space!=0; i++) {
+            PlaylistTrack[] addTracks = spotifyApi.getPlaylistsItems(playListId).limit(songsPerPage).offset(i * songsPerPage).build().execute().getItems();
+            for (PlaylistTrack track : addTracks){
+                listTracks.add(track);
+                space--;
+                if(space == 0){
+                    break;
+                }
             }
         }
         return new SpotifyPlaylist(playlist,listTracks);

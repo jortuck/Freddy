@@ -28,16 +28,20 @@ public final class Play extends SlashCommand {
                         player.updateChannel(event.getMember().getVoiceState().getChannel());
                     }
 
-                    if(isURL(arg)){
+                    if(player.isFull()){
+                        event.reply("The queue is full! Please skip or remove a song." +
+                                " The current queue limit is **"+Main.QUEUE_LIMIT+"**.").setEphemeral(true).queue();
+                    }else if(isURL(arg)){
                         try {
                             event.deferReply().queue();
                             player.play(new URI(arg),event, event.getName().equals("playskip"));
-                        }catch (BadHostException e){
+                        }catch (BadHostException|IllegalStateException e){
                             event.getHook().sendMessage(e.getMessage()).queue();
                         }
                     }else{
                         event.deferReply().queue();
                         player.play("ytsearch:" + arg, event,event.getName().equals("playskip"));
+
                     }
 
                 } catch (Exception e) {
