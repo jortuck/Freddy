@@ -17,6 +17,7 @@ public final class Interactions {
      * @param commands JDA commands list thing
      */
     public static void initialize(CommandListUpdateAction commands){
+        // TODO: Look into moving this into command classes as methods.
         CommandData[] commandData = {
                 Commands.slash("ping","Check the bots ping"),
                 Commands.slash("leave","Tells the bot to leave the current voice channel.").setGuildOnly(true),
