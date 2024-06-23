@@ -7,13 +7,11 @@ import net.driedsponge.commands.util.Ping;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public final class CommandListener extends ListenerAdapter {
-    public static final CommandListener INSTANCE = new CommandListener();
     private static final HashMap<String, SlashCommand> commands = new HashMap<>();
+    public static final CommandListener INSTANCE = new CommandListener();
 
     private CommandListener() {
         SlashCommand[] botCommands = new SlashCommand[]{
