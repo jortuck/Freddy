@@ -38,7 +38,7 @@ public final class Shuffle extends SlashCommand {
             if(player.getVoiceChannel().asVoiceChannel() == member.getVoiceState().getChannel()){
                 player.shuffle();
             }else{
-                throw new IllegalStateException("You must be in the same channel as be to shuffle the queue!");
+                throw new IllegalStateException("You must be in the same channel as me to shuffle the queue!");
             }
         } else {
             throw new IllegalStateException("There is nothing playing right now.");
