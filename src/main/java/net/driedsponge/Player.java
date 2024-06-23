@@ -282,6 +282,22 @@ public final class Player {
         return null;
     }
 
+    /**
+     * Change the position of the player.
+     * @param milliseconds The position of the song in milliseconds to skip to.
+     * @throws IllegalStateException If the bot is not playing music.
+     * @throws IllegalArgumentException If the number of milliseconds is out of bounds of 0 and the song.
+     */
+    public void seek(long milliseconds){
+        if(this.nowPlaying == null){
+            throw new IllegalStateException("I am not playing any music!");
+        }
+        if(milliseconds < 0 || milliseconds > this.nowPlaying.getInfo().length){
+            throw new IllegalArgumentException("Invalid time to skip to!");
+        }
+        this.player.getPlayingTrack().setPosition(milliseconds);
+    }
+
     private void sendMessage(String text) {
         sendMessageEmbed(Embeds.basic(text).build());
     }
