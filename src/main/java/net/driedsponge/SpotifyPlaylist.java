@@ -18,8 +18,8 @@ import java.util.*;
 
 public final class SpotifyPlaylist {
     private static final Timestamp RESET_STAMP = new Timestamp(new Date().getTime());
-    private static final String clientId = System.getenv("SPOTIFY_CLIENT_ID");
-    private static final String clientSecret = System.getenv("SPOTIFY_CLIENT_SECRET");
+    private static String clientId = System.getenv("SPOTIFY_CLIENT_ID");
+    private static String clientSecret = System.getenv("SPOTIFY_CLIENT_SECRET");
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
@@ -109,6 +109,11 @@ public final class SpotifyPlaylist {
 
     public String getUrl(){
         return this.url;
+    }
+
+    public static void updateCredentials(String spotifyClientID, String spotifyClientSecret){
+        clientId = spotifyClientID;
+        clientSecret = spotifyClientSecret;
     }
 
 }
