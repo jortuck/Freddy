@@ -17,8 +17,7 @@ public final class Interactions {
      * @param commands JDA commands list thing
      */
     public static void initialize(CommandListUpdateAction commands){
-
-        CommandData[] cmds = {
+        CommandData[] commandData = {
                 Commands.slash("ping","Check the bots ping"),
                 Commands.slash("leave","Tells the bot to leave the current voice channel.").setGuildOnly(true),
                 Commands.slash("join","Tells the bot to join the current voice channel.").setGuildOnly(true),
@@ -68,7 +67,7 @@ public final class Interactions {
                         .addOption(OptionType.STRING,"time","The time in the audio to skip to. The format should be MM:SS",true)
                         .setGuildOnly(true)
         };
-        commands.addCommands(cmds);
+        commands.addCommands(commandData);
         commands.queue();
 
     }
