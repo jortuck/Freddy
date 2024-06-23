@@ -1,7 +1,6 @@
 package net.driedsponge.commands.util;
 
 import net.driedsponge.Main;
-import net.driedsponge.VoiceController;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

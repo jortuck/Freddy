@@ -32,6 +32,7 @@ public class Main {
     public static final String OWNER_ID = System.getenv("OWNER_ID");
     public static final Color PRIMARY_COLOR = Color.MAGENTA;
     public static AudioPlayerManager PLAYER_MANAGER;
+    public static final int QUEUE_LIMIT = 500;
     private static final List<String> allowedHosts = new ArrayList<>();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);

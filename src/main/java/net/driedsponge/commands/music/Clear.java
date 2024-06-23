@@ -1,12 +1,10 @@
 package net.driedsponge.commands.music;
 
 import net.driedsponge.Player;
-import net.driedsponge.PlayerStore;
-import net.driedsponge.VoiceController;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public final class Clear extends SlashCommand {
     public Clear(){

@@ -1,17 +1,10 @@
 package net.driedsponge.commands.music;
 
 import net.driedsponge.*;
-import net.driedsponge.commands.CommonChecks;
 import net.driedsponge.commands.SlashCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
 
 public final class Remove extends SlashCommand {
     public Remove() {

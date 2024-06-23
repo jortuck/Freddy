@@ -1,7 +1,6 @@
 package net.driedsponge.commands.music;
 
 import net.driedsponge.*;
-import net.driedsponge.commands.CommonChecks;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 public final class Restart extends SlashCommand {

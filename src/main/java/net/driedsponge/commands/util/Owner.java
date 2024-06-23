@@ -2,7 +2,6 @@ package net.driedsponge.commands.util;
 
 import net.driedsponge.Main;
 import net.driedsponge.Player;
-import net.driedsponge.PlayerStore;
 import net.driedsponge.buttons.Entertaining;
 import net.driedsponge.buttons.GuildList;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -58,7 +57,7 @@ public final class Owner {
         embedBuilder.setColor(Main.PRIMARY_COLOR);
         embedBuilder.setTitle(jda.getSelfUser().getName() + " Statistics");
         embedBuilder.addField("Guilds", String.valueOf(jda.getGuilds().size()), true);
-        embedBuilder.addField("Currently Entertaining", String.valueOf(PlayerStore.size()), true);
+        embedBuilder.addField("Currently Entertaining", String.valueOf(Player.getPlayers().size()), true);
         event.getMessage().replyEmbeds(embedBuilder.build())
                 .setActionRow(Entertaining.ENTERTAINING_BUTTON, GuildList.GUILD_LIST_BUTTON)
                 .queue();

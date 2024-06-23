@@ -70,7 +70,7 @@ public final class SpotifyPlaylist {
         PlaylistTrack[] selectedTracks = tracks.getItems();
         List<PlaylistTrack> listTracks = new ArrayList<>(Arrays.asList(selectedTracks));
         // Prevent playlist over 500
-        int totalTracks = Math.min(tracks.getTotal(), TrackScheduler.QUEUE_LIMIT);
+        int totalTracks = Math.min(tracks.getTotal(), Main.QUEUE_LIMIT);
         if (totalTracks > 50) {
             int pages = (totalTracks + songsPerPage - 1) / songsPerPage;
             for (int i = 1; i < pages; i++) {
