@@ -12,38 +12,40 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public final class CommandListener extends ListenerAdapter {
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static final HashMap<String, SlashCommand> commands = new HashMap<>();
+
     public CommandListener() {
         SlashCommand[] cmds = new SlashCommand[]{
-                new Skip(),
-                new Ping(),
-                new Play(),
-                new Bug(),
-                new Clear(),
-                new Help(),
-                new Leave(),
-                new NowPlaying(),
-                new Pause(),
-                new Queue(),
-                new Shuffle(),
-                new Restart(),
-                new Remove(),
-                new Seek(),
-                new Join()
+                Skip.INSTANCE,
+                Ping.INSTANCE,
+                Play.INSTANCE,
+                Bug.INSTANCE,
+                Clear.INSTANCE,
+                Help.INSTANCE,
+                Leave.INSTANCE,
+                NowPlaying.INSTANCE,
+                Pause.INSTANCE,
+                Queue.INSTANCE,
+                Shuffle.INSTANCE,
+                Restart.INSTANCE,
+                Remove.INSTANCE,
+                Seek.INSTANCE,
+                Join.INSTANCE
 
         };
         ArrayList<SlashCommand> botCommands = new ArrayList<>(Arrays.asList(cmds));
         for (SlashCommand command : botCommands) {
-            if(command.getAlias().length > 0){
-                for(String name: command.getAlias()){
+            if (command.getAlias().length > 0) {
+                for (String name : command.getAlias()) {
                     commands.put(name.toLowerCase(), command);
                 }
-            }else{
+            } else {
                 commands.put(command.getName().toLowerCase(), command);
             }
         }
     }
+
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         SlashCommand command = commands.get(event.getName());

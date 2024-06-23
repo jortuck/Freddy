@@ -6,9 +6,13 @@ import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public final class Seek extends SlashCommand {
-    public Seek(){
+
+    public static final Seek INSTANCE = new Seek();
+
+    private Seek(){
         super("seek");
     }
+
     @Override
     public void execute(SlashCommandInteractionEvent event)  {
         Player player = Player.get(event.getGuild().getId());

@@ -9,7 +9,10 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.Objects;
 
 public final class NowPlaying extends SlashCommand {
-    public NowPlaying() {
+
+    public static final NowPlaying INSTANCE = new NowPlaying();
+
+    private NowPlaying() {
         super("np");
     }
 

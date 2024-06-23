@@ -10,7 +10,10 @@ import java.awt.*;
 import java.util.List;
 
 public final class Help extends SlashCommand {
-    public Help() {
+
+    public static final Help INSTANCE = new Help();
+
+    private Help() {
         super("help");
     }
 

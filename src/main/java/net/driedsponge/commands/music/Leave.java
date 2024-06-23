@@ -7,8 +7,9 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.Objects;
 
 public final class Leave extends SlashCommand {
+    public static final Leave INSTANCE = new Leave();
 
-    public Leave() {
+    private Leave() {
         super("leave");
     }
 

@@ -7,7 +7,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public final class Clear extends SlashCommand {
-    public Clear(){
+
+    public static final Clear INSTANCE = new Clear();
+
+    private Clear(){
         super("clear");
     }
     @Override

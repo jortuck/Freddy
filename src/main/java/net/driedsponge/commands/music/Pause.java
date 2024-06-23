@@ -8,7 +8,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
 
 public final class Pause extends SlashCommand {
-    public Pause() {
+
+    public static final Pause INSTANCE = new Pause();
+
+    private Pause() {
         super(new String[]{"pause", "resume"});
     }
 

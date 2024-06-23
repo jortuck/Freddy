@@ -16,8 +16,9 @@ import java.util.List;
 
 public final class Queue extends SlashCommand {
 
+    public static final Queue INSTANCE = new Queue();
 
-    public Queue() {
+    private Queue() {
         super("queue");
     }
 

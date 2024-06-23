@@ -8,7 +8,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public final class Skip extends SlashCommand {
-    public Skip() {
+
+    public static final Skip INSTANCE = new Skip();
+
+    private Skip() {
         super("skip");
     }
 

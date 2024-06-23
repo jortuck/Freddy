@@ -9,7 +9,9 @@ import java.net.URISyntaxException;
 
 public final class Play extends SlashCommand {
 
-    public Play() {
+    public static final Play INSTANCE = new Play();
+
+    private Play() {
         super(new String[]{"playskip", "play"});
     }
 

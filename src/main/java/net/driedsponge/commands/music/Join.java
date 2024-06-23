@@ -7,7 +7,9 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 public final class Join extends SlashCommand {
 
-    public Join() {
+    public static final Join INSTANCE = new Join();
+
+    private Join() {
         super("Join");
     }
 

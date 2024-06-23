@@ -7,7 +7,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public final class Remove extends SlashCommand {
-    public Remove() {
+
+    public static final Remove INSTANCE = new Remove();
+
+    private Remove() {
         super("remove");
     }
 

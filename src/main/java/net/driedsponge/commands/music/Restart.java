@@ -4,7 +4,10 @@ import net.driedsponge.*;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 public final class Restart extends SlashCommand {
-    public Restart() {
+
+    public static final Restart INSTANCE = new Restart();
+
+    private Restart() {
         super("restart");
     }
 

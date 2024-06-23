@@ -8,7 +8,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public final class Shuffle extends SlashCommand {
-    public Shuffle() {
+
+    public static final Shuffle INSTANCE = new Shuffle();
+
+    private Shuffle() {
         super("shuffle");
     }
 
