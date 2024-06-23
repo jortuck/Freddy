@@ -1,5 +1,6 @@
 package net.driedsponge.commands.music;
 
+import net.driedsponge.Embeds;
 import net.driedsponge.Player;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.entities.Guild;
@@ -20,7 +21,9 @@ public final class Skip extends SlashCommand {
             } catch (Exception ignored) {
             }
             String skip = skip(event.getMember(), event.getGuild(), skipAmount);
-            event.reply(skip).setEphemeral(true).queue();
+            event.replyEmbeds(
+                    Embeds.basic(skip).build()
+            ).queue();
         } catch (Exception e) {
             event.reply(e.getMessage()).setEphemeral(true).queue();
         }
@@ -32,8 +35,8 @@ public final class Skip extends SlashCommand {
      * @param member The person who is skipping the song.
      * @param guild  The guild where the song is being skipped
      * @param amount The amount of songs to skip.
-     * @return
-     * @throws Exception
+     * @return A message indicating what was skipped.
+     * @throws IllegalStateException If the user is not listening to music with the bot.
      */
     public static String skip(Member member, Guild guild, int amount) {
         Player player = Player.get(guild.getId());
