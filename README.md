@@ -37,7 +37,8 @@ down by Google.
 
 ## Additional Information
 
-- The queue has a hard limit of 500. I may raise this later on but for now it is 500.
+- The queue has a hard limit of 500. I may raise this later on but for now it is 500. If you are 
+self-hosting the bot, you can change the `QUEUE_LIMIT` environment variable.
 - I am limiting my hosted version of the bot (the one with the invite link here) to 100 servers.
   This is being done to avoid having to verify the bot with Discord, and to avoid a cease & desist
   from Google.
