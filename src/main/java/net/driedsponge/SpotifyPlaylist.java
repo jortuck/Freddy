@@ -1,6 +1,8 @@
 package net.driedsponge;
 
 import org.apache.hc.core5.http.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
@@ -25,7 +27,7 @@ public final class SpotifyPlaylist {
             .build();
     private static final ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials()
             .build();
-
+    private static final Logger logger = LoggerFactory.getLogger(SpotifyPlaylist.class);
     private String name;
     private String image;
     private String author;
@@ -47,9 +49,9 @@ public final class SpotifyPlaylist {
             // Set access token for further "spotifyApi" object usage
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
 
-            System.out.println("Expires in: " + clientCredentials.getExpiresIn());
+            logger.info("New Spotify Credentials, Expires In: {}", clientCredentials.getExpiresIn());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
+            logger.warn("Spotify Error: {}",  e.getMessage());
         }
     }
 
@@ -61,6 +63,7 @@ public final class SpotifyPlaylist {
      * @throws SpotifyWebApiException Spotify web API error
      */
     public static SpotifyPlaylist fromId(String playListId) throws IOException, ParseException, SpotifyWebApiException {
+        logger.info("Fetching Spotify Playlist ID {}",playListId);
         int songsPerPage = 50;
         clientCredentials_Sync();
         // Fancy code for Paginating spotify api results
