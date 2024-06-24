@@ -119,11 +119,39 @@ you can regenerate it from the app's dashboard.
 
 1. Head to the [releases page](https://github.com/jortuck/Freddy/releases) and download the latest
 jar artifact from the most recent release. 
-
+2. In addition, download the corresponding script file from the release page.
+    - If you are on Windows, download `start.bat`.
+    - If you are on Mac/Linux, download `start.sh`.
+3. Move the jar and the executable to a folder on your system. It does not matter where the folder is
+located, as long both files are together.
+4. Double-click the executable (the sh/bat file) to start the bot. It will crash the first time around, but it should
+generate a `config.json`.
+5. Open the `config.json` file, and set the variables inside to the environment variables you have
+from the previous section. 
+6. Finally, double-click the executable one more time to start the bot. If everything was configured
+correctly, it should be running, and you should be able to use the commands. If you are encountering
+any issues, check the `freddy.log` file for errors. If you cannot resolve your issue, [create a new
+issue on GitHub](https://github.com/jortuck/Freddy/issues/new/choose).
+7. You might get messages from your operating system saying that the file is "not safe" because it is
+not from a verified developer. There is no way for me to stop these messages, but I can guarentee
+everything from this repository is safe. If you do not believe me, feel free to download the source
+code and compile the application yourself.
 
 </details>
 
 <details>
 <summary>Hosting With Docker (Advanced)</summary>
+
+These instructions assume you already have docker installed on your system, and you have some
+technical knowledge. If these instructions don't make sense, use the above guide.
+1. Download the code by cloning it with git or downloading the zip from GitHub.
+    - `git clone https://github.com/jortuck/Freddy.git`
+2. Move the cloned folder to any desired location on your computer.
+3. Make a copy of the `settings.example.env` and rename it to `settings.env`. Once you have done this,
+open `settings.env` and fill in the environment variables from the earlier instructions. 
+4. After you have done this, you can run `docker compose up --build` to start the bot.
+5. The `Dockerfile` is also included in the repository. While there is no hosted image, feel free to
+make your own build.
+
 </details>
 
