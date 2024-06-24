@@ -46,7 +46,8 @@ instructions below.
   [my website](https://jortuck.com/#contact), email the email listed on my
   [GitHub profile](https://github.com/jortuck), or add me on Discord `@driedsponge`.
 
-## Self Hosting
+<details>
+<summary>Self Hosting</summary>
 
 ### Prerequisites
 
@@ -92,10 +93,22 @@ to use the bot (I would recommend 500). If you set the value to 0, the max amoun
 infinite.
 
 ##### SPOTIFY_CLIENT_ID & SPOTIFY_CLIENT_SECRET (Optional)
+These variables are not required but **necessary if you want to support Spotify playlist**, as the bot 
+uses the Spotify web API to fetch playlist data;
 
+If you do not plan on needing Spotify support, please set both of these variables to `null`.
 
-### Hosting With Docker
-The easiest way to host the bot is with docker. If you have docker installed on your machine or server
-the setup is relatively easy
+In order to get your Spotify client ID and client secret, follow the steps below.
+Sure, here are the step-by-step instructions to create a Spotify app and get the client ID and secret:  
+Visit the Spotify Developer Dashboard at https://developer.spotify.com/dashboard/.  
+Log in with your Spotify account. If you don't have a Spotify account, you'll need to create one.  
+Once you're logged in, click on the Create an App button.  
+You'll be asked to enter a name for your app and a description. Fill in these fields with appropriate information.  
+Check the boxes to agree to the terms and conditions, then click on the Create button.  
+You'll be redirected to your app's dashboard. Here, you can see your Client ID and Client Secret.  
+Remember to keep your Client ID and Client Secret confidential. If your Client Secret gets compromised, you can regenerate it from the app's dashboard.
 
-### Hosting Without Docker
+### Hosting Without Docker (Easy)
+
+### Hosting With Docker (Advanced)
+</details>
