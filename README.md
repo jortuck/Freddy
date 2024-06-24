@@ -47,11 +47,10 @@ instructions below.
   [GitHub profile](https://github.com/jortuck), or add me on Discord `@driedsponge`.
 
 ## Self Hosting
-
 <details>
-<summary>*Instructions*</summary>
 
-### Prerequisites
+<summary>Prerequisites</summary>
+
 #### Java
 As you can see from the repository, this bot was written in Java. Any attempt to run this bot
 requires **Java 21**, or any later version
@@ -100,16 +99,24 @@ uses the Spotify web API to fetch playlist data;
 If you do not plan on needing Spotify support, please set both of these variables to `null`.
 <details>
 <summary>Steps To Obtain Spotify API Credentials</summary>
-Sure, here are the step-by-step instructions to create a Spotify app and get the client ID and secret:  
-Visit the Spotify Developer Dashboard at https://developer.spotify.com/dashboard/.  
-Log in with your Spotify account. If you don't have a Spotify account, you'll need to create one.  
-Once you're logged in, click on the Create an App button.  
-You'll be asked to enter a name for your app and a description. Fill in these fields with appropriate information.  
-Check the boxes to agree to the terms and conditions, then click on the Create button.  
-You'll be redirected to your app's dashboard. Here, you can see your Client ID and Client Secret.  
-Remember to keep your Client ID and Client Secret confidential. If your Client Secret gets compromised, you can regenerate it from the app's dashboard.
-</details>
-</details>
-### Hosting Without Docker (Easy)
 
-### Hosting With Docker (Advanced)
+1. Visit the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).  
+2. Log in with your Spotify account. If you don't have a Spotify account, you'll need to create one.  
+3. Once you're logged in, click on the Create an App button.  
+4. You'll be asked to enter a name for your app and a description. Fill in these fields with appropriate information.  
+5. Check the boxes to agree to the terms and conditions, then click on the Create button.  
+6. You'll be redirected to your app's dashboard. Here, you can see your Client ID and Client Secret.  
+7. Remember to keep your Client ID and Client Secret confidential. If your Client Secret gets compromised,
+you can regenerate it from the app's dashboard.
+
+</details>
+</details>
+
+<details>
+<summary>Hosting Without Docker (Easy)</summary>
+</details>
+
+<details>
+<summary>Hosting With Docker (Advanced)</summary>
+</details>
+
