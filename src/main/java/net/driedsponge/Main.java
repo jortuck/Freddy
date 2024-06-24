@@ -81,6 +81,7 @@ public class Main {
         builder.addEventListeners(new ButtonListener());
 
         JDA jda = builder.build();
+
         CommandListener.upsertCommands(jda.updateCommands());
     }
 

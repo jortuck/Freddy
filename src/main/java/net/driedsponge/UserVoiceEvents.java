@@ -21,7 +21,7 @@ public final class UserVoiceEvents extends ListenerAdapter {
                             event.getGuild().getName(),
                             event.getGuild().getId());
                     if(event.getChannelJoined().getMembers().size()==1){
-                        event.getGuild().getAudioManager().closeAudioConnection();
+                        Player.destroy(event.getGuild().getId());
                     }
                 } else {
                     logger.info("Disconnected from {} in {} ({})",
@@ -37,7 +37,7 @@ public final class UserVoiceEvents extends ListenerAdapter {
                         event.getGuild().getName(),
                         event.getGuild().getId());
                 if (event.getChannelJoined().getMembers().size() == 1) {
-                    event.getGuild().getAudioManager().closeAudioConnection();
+                    Player.destroy(event.getGuild().getId());
                 }else{
                     Player.get(event.getGuild().getId()).updateChannel(event.getChannelJoined());
                 }
@@ -46,7 +46,7 @@ public final class UserVoiceEvents extends ListenerAdapter {
             AudioManager manager = event.getGuild().getAudioManager();
             if(event.getChannelLeft() == manager.getConnectedChannel()){
                 if(event.getChannelLeft().getMembers().size() == 1){
-                   manager.closeAudioConnection();
+                    Player.destroy(event.getGuild().getId());
                 }
             }
         }

@@ -77,13 +77,22 @@ is ever exposed or compromised, you can regenerate it by clicking the `Reset Tok
 11. You can open the generated URL in your browser to invite the bot to your server. Save this URL
 for later if you plan on inviting the bot to other servers.
 
-##### `OWNER_ID`
+##### OWNER_ID
 This is where you put your Discord ID. This variable will allow you to use the owner 
 commands associated with the bot. Here is how you can obtain it:
 1. Open your Discord client.
 2. Open settings and navigate to advanced.
 3. Enable "Developer Mode".
 4. Exit settings, click on your username in the bottom left, and click `Copy User ID`.
+
+##### QUEUE_LIMIT
+This one is pretty simple. It's just an integer that indicates the maximum amount of songs that can 
+put into a queue per server. It must be a positive whole number or there will be issues with trying 
+to use the bot (I would recommend 500). If you set the value to 0, the max amount of songs will be 
+infinite.
+
+##### SPOTIFY_CLIENT_ID & SPOTIFY_CLIENT_SECRET (Optional)
+
 
 ### Hosting With Docker
 The easiest way to host the bot is with docker. If you have docker installed on your machine or server

@@ -128,6 +128,9 @@ public final class Player {
             logger.info("Destroyed player in {} ({})",
                     player.guild.getName(),
                     player.guild.getId());
+            player.getGuild().getAudioManager().closeAudioConnection();
+        }else{
+            logger.warn("Destroy was used when there was no active player.");
         }
     }
 
