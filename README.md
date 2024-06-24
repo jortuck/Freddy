@@ -46,8 +46,12 @@ instructions below.
   [my website](https://jortuck.com/#contact), email the email listed on my
   [GitHub profile](https://github.com/jortuck), or add me on Discord `@driedsponge`.
 
-### Prerequisites
+## Self Hosting
 
+<details>
+<summary>*Instructions*</summary>
+
+### Prerequisites
 #### Java
 As you can see from the repository, this bot was written in Java. Any attempt to run this bot
 requires **Java 21**, or any later version
@@ -104,6 +108,7 @@ You'll be asked to enter a name for your app and a description. Fill in these fi
 Check the boxes to agree to the terms and conditions, then click on the Create button.  
 You'll be redirected to your app's dashboard. Here, you can see your Client ID and Client Secret.  
 Remember to keep your Client ID and Client Secret confidential. If your Client Secret gets compromised, you can regenerate it from the app's dashboard.
+</details>
 </details>
 ### Hosting Without Docker (Easy)
 
