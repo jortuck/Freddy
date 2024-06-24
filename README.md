@@ -102,11 +102,13 @@ If you do not plan on needing Spotify support, please set both of these variable
 
 1. Visit the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).  
 2. Log in with your Spotify account. If you don't have a Spotify account, you'll need to create one.  
-3. Once you're logged in, click on the Create an App button.  
+3. Once you're logged in, click on the `Create app` button.  
 4. You'll be asked to enter a name for your app and a description. Fill in these fields with appropriate information.  
-5. Check the boxes to agree to the terms and conditions, then click on the Create button.  
-6. You'll be redirected to your app's dashboard. Here, you can see your Client ID and Client Secret.  
-7. Remember to keep your Client ID and Client Secret confidential. If your Client Secret gets compromised,
+5. You will also be asked to supply a redirect URL, just put `http://localhost`.
+6. For API/SDKs, select `Web API`.
+7. Once you have crated your app, click `Settings` in the top right, and under `Basic Information`
+you will see your Client ID and a button that says `View client secret`. Those are the credentials you will need.
+8. Remember to keep your Client ID and Client Secret confidential. If your Client Secret gets compromised,
 you can regenerate it from the app's dashboard.
 
 </details>
@@ -114,6 +116,14 @@ you can regenerate it from the app's dashboard.
 
 <details>
 <summary>Hosting Without Docker (Easy)</summary>
+
+> [!NOTE]
+> You must have Java 21+ installed.
+
+1. Head to the [releases page](https://github.com/jortuck/Freddy/releases) and download the latest
+jar artifact from the most recent release. 
+
+
 </details>
 
 <details>
