@@ -47,15 +47,15 @@ instructions below.
   [GitHub profile](https://github.com/jortuck), or add me on Discord `@driedsponge`.
 
 ## Self Hosting
-<details>
 
-<summary>Prerequisites</summary>
-
-#### Java
-As you can see from the repository, this bot was written in Java. Any attempt to run this bot
+> [!NOTE]
+> As you can see from the repository, this bot was written in Java. Any attempt to run this bot
 requires **Java 21**, or any later version
 
-#### Environment Variables
+<details>
+
+<summary>Environment Variables</summary>
+
 There are certain variables required for the operation of the bot. Below is a description of each one.
 Where each one is set depends on how you decide to host the bot.
 
@@ -116,9 +116,6 @@ you can regenerate it from the app's dashboard.
 
 <details>
 <summary>Hosting Without Docker (Easy)</summary>
-
-> [!NOTE]
-> You must have Java 21+ installed.
 
 1. Head to the [releases page](https://github.com/jortuck/Freddy/releases) and download the latest
 jar artifact from the most recent release. 
