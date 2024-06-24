@@ -50,7 +50,7 @@ instructions below.
 
 > [!NOTE]
 > As you can see from the repository, this bot was written in Java. Any attempt to run this bot
-requires **Java 21**, or any later version
+requires **Java 21**, or any later version.
 
 <details>
 
