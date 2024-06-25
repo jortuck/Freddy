@@ -1,39 +1,54 @@
 package net.driedsponge;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.guild.voice.*;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.AudioManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.awt.*;
+public final class UserVoiceEvents extends ListenerAdapter {
 
-public class UserVoiceEvents extends ListenerAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(UserVoiceEvents.class);
+
     @Override
-    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event){
-        if(event.getChannelLeft() !=null && event.getMember().getUser() == event.getJDA().getSelfUser() && PlayerStore.get(event.getGuild()) != null){
-            PlayerStore.get(event.getGuild()).leave();
-        } else if (event.getGuild().getAudioManager().isConnected() && event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() == 1){
-            PlayerStore.get(event.getGuild()).leave();
-        }
-    }
-
-    /**
-     * Trys to make the bot deafen itself
-     * Deprecated because the bot can now deafen on its own without doing it through the server.
-     * @param event Event that provides context
-     */
-    @Deprecated
-    private void selfDeafen(GenericGuildVoiceEvent event){
-        if(event.getMember().hasPermission(Permission.VOICE_DEAF_OTHERS)){
-            event.getMember().deafen(true).queue();
-        }else{
-            VoiceController vc = PlayerStore.get(event.getGuild());
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(Color.RED);
-            embed.setTitle("Please give me permission to deafen!");
-            embed.setDescription("Please give me permission to deafen so I can deafean myself." +
-                    " This will help save my resources. **You can also manually sever deafen me.**");
-            vc.getTextChannel().sendMessageEmbeds(embed.build()).queue();
+    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
+        if (event.getEntity().getJDA().getSelfUser().getId().equals(event.getEntity().getId())) {
+            if (!(event.getChannelLeft() != null && event.getChannelJoined() != null)) {
+                if (event.getChannelJoined() != null) {
+                    logger.info("Connected to {} in {} ({})",
+                            event.getChannelJoined().getName(),
+                            event.getGuild().getName(),
+                            event.getGuild().getId());
+                    if(event.getChannelJoined().getMembers().size()==1){
+                        Player.destroy(event.getGuild().getId());
+                    }
+                } else {
+                    logger.info("Disconnected from {} in {} ({})",
+                            event.getChannelLeft().getName(),
+                            event.getGuild().getName(),
+                            event.getGuild().getId());
+                    Player.destroy(event.getGuild().getId());
+                }
+            } else {
+                logger.info("Moving from from {} to {} in {} ({})",
+                        event.getChannelLeft().getName(),
+                        event.getChannelJoined().getName(),
+                        event.getGuild().getName(),
+                        event.getGuild().getId());
+                if (event.getChannelJoined().getMembers().size() == 1) {
+                    Player.destroy(event.getGuild().getId());
+                }else{
+                    Player.get(event.getGuild().getId()).updateChannel(event.getChannelJoined());
+                }
+            }
+        }else if(event.getGuild().getAudioManager().isConnected()){
+            AudioManager manager = event.getGuild().getAudioManager();
+            if(event.getChannelLeft() == manager.getConnectedChannel()){
+                if(event.getChannelLeft().getMembers().size() == 1){
+                    Player.destroy(event.getGuild().getId());
+                }
+            }
         }
     }
 }

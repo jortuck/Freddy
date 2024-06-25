@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 
-public class ButtonListener extends ListenerAdapter {
+public final class ButtonListener extends ListenerAdapter {
 
     private static final HashMap<String, ButtonCommand> commands = new HashMap<>();
 

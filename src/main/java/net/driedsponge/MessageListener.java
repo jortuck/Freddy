@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class MessageListener extends ListenerAdapter {
+public final class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
         if(event.getAuthor().isBot()) return;
@@ -24,7 +24,7 @@ public class MessageListener extends ListenerAdapter {
                         .setActionRow(Entertaining.ENTERTAINING_BUTTON)
                         .queue();
             }else if(event.getMessage().getContentRaw().startsWith("!entertaining")){
-                EmbedBuilder embedBuilder = Owner.statistics(event);
+                EmbedBuilder embedBuilder = Owner.callList(event.getJDA());
                 event.getMessage().replyEmbeds(embedBuilder.build()).queue();
             }
         }

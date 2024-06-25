@@ -5,8 +5,15 @@
             <pattern>%d{HH:mm:ss.SSS} %boldCyan(%-34.-34thread) %red(%10.10X{jda.shard}) %boldGreen(%-15.-15logger{0}) %highlight(%-6level) %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>freddy.log</file>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <root level="info">
+        <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

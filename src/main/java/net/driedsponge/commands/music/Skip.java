@@ -1,16 +1,43 @@
 package net.driedsponge.commands.music;
 
-import net.driedsponge.PlayerStore;
-import net.driedsponge.VoiceController;
-import net.driedsponge.commands.CommonChecks;
+import net.driedsponge.Embeds;
+import net.driedsponge.Player;
 import net.driedsponge.commands.SlashCommand;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
-public class Skip extends SlashCommand {
-    public Skip() {
-        super("skip");
+public final class Skip implements SlashCommand {
+
+    public static final Skip INSTANCE = new Skip();
+
+    private Skip() {}
+
+    /**
+     * Skips the current song.
+     *
+     * @param member The person who is skipping the song.
+     * @param guild  The guild where the song is being skipped
+     * @param amount The amount of songs to skip.
+     * @return A message indicating what was skipped.
+     * @throws IllegalStateException If the user is not listening to music with the bot.
+     */
+    public static String skip(Member member, Guild guild, int amount) {
+        Player player = Player.get(guild.getId());
+        if (player != null && player.getNowPlaying() != null) {
+            if (player.getVoiceChannel().asVoiceChannel() == member.getVoiceState().getChannel()) {
+                player.skip(amount);
+                return "Skipping " + amount + " song(s)...";
+            } else {
+                throw new IllegalStateException("You must be in the same channel as me to skip!");
+            }
+        } else {
+            throw new IllegalStateException("Nothing to skip.");
+        }
     }
 
     @Override
@@ -19,42 +46,21 @@ public class Skip extends SlashCommand {
             int skipAmount = 1;
             try {
                 skipAmount = Math.abs(event.getInteraction().getOption("position").getAsInt());
-            }catch (Exception ignored){}
-            String skip = skip(event.getMember(),event.getGuild(),skipAmount);
-            event.reply(skip).setEphemeral(true).queue();
-        }catch (Exception e){
+            } catch (Exception ignored) {
+            }
+            String skip = skip(event.getMember(), event.getGuild(), skipAmount);
+            event.replyEmbeds(
+                    Embeds.basic(skip).build()
+            ).queue();
+        } catch (Exception e) {
             event.reply(e.getMessage()).setEphemeral(true).queue();
         }
     }
 
-    /**
-     * Skips the current song.
-     * @param member Who is skipping the song?
-     * @param guild Where the song is being skipped?
-     * @param amount The amount of songs to skip.
-     * @return
-     * @throws Exception
-     */
-    public static String skip(Member member, Guild guild, int amount) throws Exception{
-        if(!CommonChecks.listeningMusic(member,guild)){
-            throw new Exception("You need to be in a voice channel with the bot to skip.");
-        }
-        if(CommonChecks.playingMusic(guild)){
-            VoiceController vc = PlayerStore.get(guild);
-            if(!vc.getTrackScheduler().getQueue().isEmpty()){
-                if(vc.getTrackScheduler().getQueue().size() >= amount){
-                    vc.skip(member, amount);
-                    return "Skipping "+amount+" song(s)...";
-                }else{
-                    throw new Exception("That is an invalid amount of songs to skip!");
-                }
-            }else{
-                vc.skip(member, amount);
-                return "No more songs left in the queue!";
-            }
-        }else{
-            throw new Exception("Nothing to skip.");
-        }
-
+    @Override
+    public SlashCommandData[] getCommand() {
+        return new SlashCommandData[]{Commands.slash("skip", "Skips the current song.")
+                .addOptions(new OptionData(OptionType.INTEGER, "position", "If you wish to skip to a specific number in the queue, enter it here.").setMinValue(1).setRequired(false))
+                .setGuildOnly(true)};
     }
 }

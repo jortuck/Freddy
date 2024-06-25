@@ -1,42 +1,41 @@
 package net.driedsponge.commands.music;
 
-import net.driedsponge.Main;
-import net.driedsponge.PlayerStore;
-import net.driedsponge.VoiceController;
+import net.driedsponge.Embeds;
+import net.driedsponge.Player;
 import net.driedsponge.commands.SlashCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.managers.AudioManager;
 
-public class Leave extends SlashCommand {
+import java.util.Objects;
 
-    public Leave() {
-        super("leave");
-    }
+public final class Leave implements SlashCommand {
+    public static final Leave INSTANCE = new Leave();
+
+    private Leave(){}
 
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-            leave(event);
+        leave(event);
     }
 
-    private void leave(SlashCommandInteractionEvent event){
-        AudioManager audioManager = event.getGuild().getAudioManager();
-        if(audioManager.isConnected() && event.getGuild().getAudioManager().isConnected()){
-            VoiceChannel channel = audioManager.getConnectedChannel().asVoiceChannel();
-            Member member = event.getMember();
-            if(member.getVoiceState().inAudioChannel() && member.getVoiceState().getChannel() == channel || member.hasPermission(Permission.MANAGE_CHANNEL)) {
-                VoiceController vc = PlayerStore.get(event.getGuild());
-                EmbedBuilder embedBuilder = new EmbedBuilder()
-                        .setColor(Main.PRIMARY_COLOR)
-                        .setTitle(String.format(":wave: Leaving %s! Goodbye!",vc.getVoiceChannel().getName()));
-                vc.leave();
-                event.replyEmbeds(embedBuilder.build()).queue();
-            }else{
-                event.reply("You must have the **MANAGE_CHANNEL** permission to use this command or you must be currently connected to "+channel.getName()+".").queue();
+    @Override
+    public SlashCommandData[] getCommand() {
+        return new SlashCommandData[]{Commands.slash("leave", "Tells the bot to leave the current voice channel.").setGuildOnly(true)};
+    }
+
+    private void leave(SlashCommandInteractionEvent event) {
+        AudioManager audioManager = Objects.requireNonNull(event.getGuild()).getAudioManager();
+        if (audioManager.isConnected()) {
+            if (audioManager.getConnectedChannel() == event.getMember().getVoiceState().getChannel()) {
+                event.replyEmbeds(Embeds.basic("Leaving!").build()).queue();
+                Player.destroy(event.getGuild().getId());
+            } else {
+                event.reply("You need to be in the same voice call as me!")
+                        .setEphemeral(true).queue();
             }
-        }else{
+        } else {
             event.reply("I am not in any call.").setEphemeral(true).queue();
         }
 
