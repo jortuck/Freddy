@@ -32,7 +32,7 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0")
     implementation ('se.michaelthelin.spotify:spotify-web-api-java:8.4.0');
     implementation ('ch.qos.logback:logback-classic:1.5.6');
-    implementation("dev.lavalink.youtube:v2:1.4.0")
+    implementation("dev.lavalink.youtube:v2:1.5.1")
     implementation 'com.google.code.gson:gson:2.11.0'
 
 }
