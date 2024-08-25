@@ -1,4 +1,3 @@
-version: '3.9'
 networks:
   freddy:
 
@@ -24,6 +23,8 @@ services:
       - ./settings.env
   freddy:
     image: freddy
+    build:
+      dockerfile: Dockerfile
     networks:
       - freddy
     restart: unless-stopped
