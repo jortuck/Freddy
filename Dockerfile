@@ -5,4 +5,4 @@ COPY .  .
 RUN sh gradlew shadowJar;
 
 #Entrypoint runs when container actually starts!!!
-ENTRYPOINT ["java", "-jar", "/build/libs/Freddy-2.0.2-all.jar"]
+ENTRYPOINT ["java", "-jar", "/build/libs/Freddy-2.0.3-all.jar"]
