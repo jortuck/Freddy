@@ -8,10 +8,7 @@ import com.google.gson.stream.JsonReader;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
-import dev.lavalink.youtube.clients.AndroidTestsuiteWithThumbnail;
-import dev.lavalink.youtube.clients.AndroidWithThumbnail;
-import dev.lavalink.youtube.clients.MusicWithThumbnail;
-import dev.lavalink.youtube.clients.WebWithThumbnail;
+import dev.lavalink.youtube.clients.*;
 import net.driedsponge.buttons.ButtonListener;
 import net.driedsponge.commands.CommandListener;
 import net.dv8tion.jda.api.JDA;
@@ -50,7 +47,7 @@ public class Main {
         // Register player manager
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,
-                new MusicWithThumbnail(), new WebWithThumbnail(), new AndroidTestsuiteWithThumbnail());
+                new WebWithThumbnail(), new AndroidMusicWithThumbnail(), new TvHtml5EmbeddedWithThumbnail(), new MusicWithThumbnail());
         playerManager.registerSourceManager(youtube);
         PLAYER_MANAGER = playerManager;
         logger.info("Registered player manager with YouTube source.");
