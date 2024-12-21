@@ -47,7 +47,7 @@ public class Main {
         // Register player manager
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,
-                new WebWithThumbnail(), new AndroidMusicWithThumbnail(), new TvHtml5EmbeddedWithThumbnail(), new MusicWithThumbnail());
+                new MWebWithThumbnail());
         playerManager.registerSourceManager(youtube);
         PLAYER_MANAGER = playerManager;
         logger.info("Registered player manager with YouTube source.");
