@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import dev.lavalink.youtube.clients.*;
+import dev.lavalink.youtube.clients.skeleton.Client;
 import net.driedsponge.buttons.ButtonListener;
 import net.driedsponge.commands.CommandListener;
 import net.dv8tion.jda.api.JDA;
@@ -47,7 +48,7 @@ public class Main {
         // Register player manager
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,
-                new MWebWithThumbnail());
+                new Client[] {new Tv(), new TvHtml5Embedded()});
         playerManager.registerSourceManager(youtube);
         PLAYER_MANAGER = playerManager;
         logger.info("Registered player manager with YouTube source.");
