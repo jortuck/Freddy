@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'net.driedsponge'
-version '2.0.4'
+version '2.0.5'
 
 apply plugin: 'application'
 mainClassName = 'net.driedsponge.Main'
@@ -30,7 +30,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     implementation "dev.arbjerg:lavaplayer:2.2.2"
     implementation("net.dv8tion:JDA:5.1.0")
-    implementation ('se.michaelthelin.spotify:spotify-web-api-java:8.4.0');
+    implementation ('se.michaelthelin.spotify:spotify-web-api-java:9.1.0');
     implementation ('ch.qos.logback:logback-classic:1.5.6');
     implementation("dev.lavalink.youtube:v2:1.11.3")
     implementation 'com.google.code.gson:gson:2.11.0'

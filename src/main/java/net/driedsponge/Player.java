@@ -170,19 +170,20 @@ public final class Player {
                 String[] paths = song.getPath().split("/", 3);
                 if (paths[1].equals("playlist") && paths[2] != null) {
                     try {
+                        System.out.println("test 1");
                         SpotifyPlaylist playlist = SpotifyPlaylist.fromId(paths[2], Main.QUEUE_LIMIT - queue.size());
                         SpotifyResultLoader loader = new SpotifyResultLoader(event);
                         List<PlaylistTrack> songs = playlist.getSongs();
                         if (player.getPlayingTrack() == null || now) {
                             PlaylistTrack firstSong = songs.removeFirst();
                             Main.PLAYER_MANAGER.loadItem(
-                                    "ytmsearch:" + firstSong.getTrack().getName(),
+                                    "ytsearch:" + firstSong.getTrack().getName(),
                                     new StandardResultLoader(event, true)
                             );
                         }
                         for (PlaylistTrack spotify : songs) {
                             Main.PLAYER_MANAGER.loadItem(
-                                    "ytmsearch:" + spotify.getTrack().getName(), loader);
+                                    "ytsearch:" + spotify.getTrack().getName(), loader);
                         }
                         event.getHook().sendMessageEmbeds(
                                 Embeds.playlistEmbed(
