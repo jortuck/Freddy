@@ -1,7 +1,6 @@
 # Freddy Bot
 
-An open source Discord bot I made to play music for my friends since all the other ones were taken
-down by Google.
+An open source Discord bot I made to play music for my friends.
 
 - To access the bots help menu, use `/help` or mention the bot in a text channel.
 
