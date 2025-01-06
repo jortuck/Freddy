@@ -4,7 +4,6 @@ An open source Discord bot I made to play music for my friends since all the oth
 down by Google.
 
 - To access the bots help menu, use `/help` or mention the bot in a text channel.
-- [Invite The Bot](https://discord.com/api/oauth2/authorize?client_id=914454054808211476&permissions=414476271168&scope=bot%20applications.commands)
 
 ## Features:
 
